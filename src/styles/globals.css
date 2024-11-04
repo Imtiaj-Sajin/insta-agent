@@ -1,21 +1,95 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Reset some default browser styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Global font and color settings */
+:root {
+  --font-geist-sans: 'GeistSans', sans-serif;
+  --font-geist-mono: 'GeistMono', monospace;
+  --background-color: #f7f7f7;
+  --text-color: #333;
+  --primary-color: #0070f3;
+  --navbar-background: #fff;
+  --navbar-text-color: #0070f3;
+  --navbar-active-bg: #e0e0e0;
+}
+
+/* Apply basic font settings */
+body {
+  font-family: var(--font-geist-sans);
+  color: var(--text-color);
+  background-color: var(--background-color);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Main layout styles */
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1;
+  padding: 1rem;
+}
+
+/* Navbar styles */
+nav {
+  background: var(--navbar-background);
+  color: var(--navbar-text-color);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* Adjust navbar for mobile view */
+@media (max-width: 768px) {
+  nav {
+    flex-direction: row;
+    justify-content: space-around;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-top: 1px solid #ddd;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+/* Navbar buttons */
+button {
+  font-family: inherit;
+  font-size: 1rem;
+  background: none;
+  border: none;
+  color: var(--navbar-text-color);
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: background-color 0.3s;
+}
+
+button:hover,
+button:focus {
+  background-color: var(--navbar-active-bg);
+}
+
+button:focus {
+  outline: none;
+}
+
+/* Content sections */
+.content div {
+  padding: 1rem;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 1rem 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }

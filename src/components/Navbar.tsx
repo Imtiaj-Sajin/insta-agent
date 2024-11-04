@@ -1,11 +1,20 @@
-import React from 'react';
+// components/Navbar.tsx
 
-const Navbar = () => {
-  return (
-    <nav className="bg-blue-600 text-white p-4">
-      <h1 className="text-lg font-bold">Insta Agent</h1>
-    </nav>
-  );
+"use client";
+
+import React from "react";
+
+type NavbarProps = {
+  onSelect: (section: string) => void;
 };
 
-export default Navbar;
+export default function Navbar({ onSelect }: NavbarProps) {
+  return (
+    <nav>
+      <button onClick={() => onSelect("home")}>Home</button>
+      <button onClick={() => onSelect("search")}>Search</button>
+      <button onClick={() => onSelect("messages")}>Messages</button>
+      <button onClick={() => onSelect("profile")}>Profile</button>
+    </nav>
+  );
+}
