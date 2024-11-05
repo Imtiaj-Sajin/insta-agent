@@ -93,3 +93,65 @@ button:focus {
   margin: 1rem 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
+
+
+/* Messages Page */
+
+.messages-container {
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.filter-dropdown {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.message-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.message-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.message-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.message-item .text {
+  margin-left: 10px;
+}
+
+.message-item .text h2 {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.message-item .text p {
+  color: #555;
+  font-size: 0.875rem;
+}
+.profile-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
