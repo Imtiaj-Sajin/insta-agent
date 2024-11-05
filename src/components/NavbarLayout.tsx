@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Navbar from "./Navbar";
 import Messages from "./Messages";
-
+import Automation from "./admin/automation";
 export default function NavbarLayout({
   children,
 }: {
@@ -20,7 +20,7 @@ export default function NavbarLayout({
       case "messages":
         return <Messages/>;
       case "profile":
-        return <div>Profile Content</div>;
+        return <Automation/>;
       default:
         return <div>Home Content</div>;
     }
