@@ -5,6 +5,7 @@ import Navbar from "./Navbar";
 import Messages from "./Messages";
 import Settings from "./Settings";
 import Automation from "./admin/automation";
+import "../styles/globals.css"
 
 export default function NavbarLayout({
   children,
@@ -33,7 +34,7 @@ export default function NavbarLayout({
   return (
     <div className="app">
       <Navbar onSelect={setSelectedContent} />
-      <main className="content">
+      <main className="content" >
         {renderContent()}
         {children}
       </main>

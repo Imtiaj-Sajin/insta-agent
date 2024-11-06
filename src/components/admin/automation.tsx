@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Automation.css';
+import CreateAutomation from './CreateAutomation';  
 
 const Automation = () => {
     const [selectedContent, setSelectedContent] = useState('');
@@ -32,9 +33,28 @@ const Automation = () => {
             ← Automation                    
             </div>
             
-        <div className="contentt">
+        <div className="contentt" style={{padding: "0", margin: "1 rem", border: "0", boxShadow: "0 4px 8px rgba(0, 0, 0, 0)"}}>
             {/* Left Div with Buttons */}
-            <div className={`left-div ${showRightDiv ? 'hide' : 'show'}`}>
+            <div className={`left-div ${showRightDiv ? 'hide' : 'show'}`} style={{overflow: "auto", borderRadius:'0'}}>
+                <button style={{backgroundColor: "rgb(7,77,88)"}} onClick={() => showContent( <CreateAutomation/>)}>Create Automation</button>
+                <button onClick={() => showContent('Content for Button 1')}>Button 1</button>
+                <button onClick={() => showContent('Content for Button 2')}>Button 2</button>
+                <button onClick={() => showContent('Content for Button 3')}>Button 3</button>
+                <button onClick={() => showContent('Content for Button 4')}>Button 4</button>
+                <button onClick={() => showContent('Content for Button 1')}>Button 1</button>
+                <button onClick={() => showContent('Content for Button 2')}>Button 2</button>
+                <button onClick={() => showContent('Content for Button 3')}>Button 3</button>
+                <button onClick={() => showContent('Content for Button 4')}>Button 4</button>
+                <button onClick={() => showContent('Content for Button 1')}>Button 1</button>
+                <button onClick={() => showContent('Content for Button 2')}>Button 2</button>
+                <button onClick={() => showContent('Content for Button 3')}>Button 3</button>
+                <button onClick={() => showContent('Content for Button 4')}>Button 4</button>
+                <button onClick={() => showContent('Content for Button 4')}>Button 4</button>
+                <button onClick={() => showContent('Content for Button 1')}>Button 1</button>
+                <button onClick={() => showContent('Content for Button 2')}>Button 2</button>
+                <button onClick={() => showContent('Content for Button 3')}>Button 3</button>
+                <button onClick={() => showContent('Content for Button 4')}>Button 4</button>
+                <button onClick={() => showContent('Content for Button 4')}>Button 4</button>
                 <button onClick={() => showContent('Content for Button 1')}>Button 1</button>
                 <button onClick={() => showContent('Content for Button 2')}>Button 2</button>
                 <button onClick={() => showContent('Content for Button 3')}>Button 3</button>
@@ -42,7 +62,7 @@ const Automation = () => {
             </div>
 
             {/* Right Div for Displaying Content */}
-            <div className={`right-div ${showRightDiv ? 'show' : 'hide'}`}>
+            <div className={`right-div ${showRightDiv ? 'show' : 'hide'}`} style={{borderRadius:0}}>
                 
                 <div id="content-display">
                     {selectedContent || 'Select a button to see content here.'}
