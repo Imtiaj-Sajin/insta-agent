@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Navbar from "./Navbar";
 import Messages from "./Messages";
+import Settings from "./Settings";
 
 export default function NavbarLayout({
   children,
@@ -21,6 +22,8 @@ export default function NavbarLayout({
         return <Messages/>;
       case "profile":
         return <div>Profile Content</div>;
+      case "settings":
+        return <Settings/>;
       default:
         return <div>Home Content</div>;
     }
