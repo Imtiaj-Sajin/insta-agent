@@ -17,6 +17,7 @@ export default function Navbar({ onSelect }: NavbarProps) {
       <button onClick={() => onSelect("messages")}>Messages</button>
       <button onClick={() => onSelect("profile")}>Profile</button>
       <button onClick={() => onSelect("settings")}>Settings</button>
+      <button onClick={() => onSelect("chats")}>Chats</button>
     </nav>
   );
 }

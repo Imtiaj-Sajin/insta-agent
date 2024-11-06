@@ -5,6 +5,8 @@ import Navbar from "./Navbar";
 import Messages from "./Messages";
 import Settings from "./Settings";
 import Automation from "./admin/automation";
+import Chats from "./Chats";
+
 import "../styles/globals.css"
 
 export default function NavbarLayout({
@@ -26,6 +28,8 @@ export default function NavbarLayout({
         return <Settings/>;
       case "settings":  
         return <Automation/>;
+      case "chats":  
+        return <Chats/>;
       default:
         return <div>Home Content</div>;
     }
