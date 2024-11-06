@@ -1,0 +1,64 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 1em;
+    margin: -1 rem;
+  }
+  
+  .dropdown {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .dropdown label {
+    font-weight: bold;
+    margin-bottom: 0.5em;
+  }
+  
+  select {
+    padding: 0.5em;
+    font-size: 1em;
+  }
+  
+  .keywords,
+  .answer-list {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .keyword-input, .answer-input {
+    display: flex;
+    gap: 0.5em;
+    margin-top: 0.5em;
+  }
+  
+  input[type="text"] {
+    flex-grow: 1;
+    padding: 0.5em;
+    font-size: 1em;
+  }
+  
+  button {
+    padding: 0.5em;
+    font-size: 1em;
+    cursor: pointer;
+  }
+  
+  .keyword-list {
+    display: flex;
+    gap: 0.5em;
+    flex-wrap: wrap;
+    margin-top: 0.5em;
+  }
+  
+  .keyword {
+    background-color: #e0e0e0;
+    padding: 0.3em 0.5em;
+    border-radius: 0.5em;
+  }
+  
+  .upload-csv {
+    margin-top: 0.5em;
+  }
+  
