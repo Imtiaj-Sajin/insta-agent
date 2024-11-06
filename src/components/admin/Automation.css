@@ -1,0 +1,74 @@
+/* Base layout styling */
+.contentt {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Left and Right Div Styling */
+.left-div, .right-div {
+    width: 50%;
+    padding: 0px;
+}
+
+.left-div {
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.right-div {
+    background-color: #ffffff;
+    overflow-y: auto;
+    position: relative;
+    display: none;
+}
+
+/* Back arrow styling */
+.back-arrow {
+    top: 0px;
+    left: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 10;
+    position: sticky;    
+    padding: 0rem;
+    background-color: white;
+    border: 0px solid #ffffff;
+    border-radius: 8px;
+    margin: 1rem 0;
+    box-shadow: 0 ;
+}
+
+/* Show both divs side-by-side on larger screens */
+@media (min-width: 768px) {
+    .contentt {
+        display: flex;
+    }
+    .left-div, .right-div {
+        display: block;
+    }
+}
+
+/* Mobile view: Each div takes up full space and can toggle */
+@media (max-width: 767px) {
+    .contentt {
+        flex-direction: column;
+    }
+
+    /* Full width and height for both divs on mobile */
+    .left-div.show,
+    .right-div.show {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    .left-div.hide,
+    .right-div.hide {
+        display: none;
+    }
+}

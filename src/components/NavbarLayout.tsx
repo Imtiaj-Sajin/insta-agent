@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Navbar from "./Navbar";
 import Messages from "./Messages";
 import Settings from "./Settings";
+import Automation from "./admin/automation";
 
 export default function NavbarLayout({
   children,
@@ -21,9 +22,9 @@ export default function NavbarLayout({
       case "messages":
         return <Messages/>;
       case "profile":
-        return <div>Profile Content</div>;
-      case "settings":
         return <Settings/>;
+      case "settings":  
+        return <Automation/>;
       default:
         return <div>Home Content</div>;
     }
