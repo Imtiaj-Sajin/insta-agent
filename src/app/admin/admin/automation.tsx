@@ -36,7 +36,10 @@ const Automation = () => {
         <div className="contentt" style={{padding: "0", margin: "1 rem", border: "0", boxShadow: "0 4px 8px rgba(0, 0, 0, 0)"}}>
             {/* Left Div with Buttons */}
             <div className={`left-div ${showRightDiv ? 'hide' : 'show'}`} style={{overflow: "auto", borderRadius:'0'}}>
-                <button style={{backgroundColor: "rgb(7,77,88)"}} onClick={() => showContent( <CreateAutomation/>)}>Create Automation</button>
+                <div style={{display: 'flex', flexDirection: 'column'}}>
+                    <label htmlFor="">Create new automation </label>
+                    <button style={{backgroundColor: "var(--create-button-color)", color:'#fff', width:'30%', marginTop:4, padding:4, textAlign: 'center'}} onClick={() => showContent( <CreateAutomation/>)}>New</button>
+                </div>
                 <button onClick={() => showContent('Content for Button 1')}>Button 1</button>
                 <button onClick={() => showContent('Content for Button 2')}>Button 2</button>
                 <button onClick={() => showContent('Content for Button 3')}>Button 3</button>

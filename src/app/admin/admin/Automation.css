@@ -41,7 +41,7 @@
 }
 
 .left-div button:hover {
-    background-color: #74b6f4;
+    background-color: var(--button-hover-color);
 }
 
 

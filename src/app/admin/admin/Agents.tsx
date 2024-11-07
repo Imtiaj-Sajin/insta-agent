@@ -38,9 +38,9 @@ const Agent = () => {
             <div className={`left-div ${showRightDiv ? 'hide' : 'show'}`} style={{overflow: "auto", borderRadius:'0'}}>
                 <div style={{display: 'flex', flexDirection: 'column'}}>
                     <label htmlFor="">Create new moderator account </label>
-                    <button style={{backgroundColor: "var(--create-button-color)", color:'#fff', width:'30%', marginTop:4, padding:4}} onClick={() => showContent( <AddAgent/>)}>New +</button>
+                    <button style={{backgroundColor: "var(--create-button-color)", color:'#fff', width:'30%', marginTop:4, padding:4, textAlign: 'center'}} onClick={() => showContent( <AddAgent/>)}>New +</button>
                 </div>
-                <button onClick={() => showContent('Content for Button 1')}>Button 1</button>
+                <button style={{}} onClick={() => showContent('Content for Button 1')}>Button 1</button>
                 <button onClick={() => showContent('Content for Button 2')}>Button 2</button>
                 <button onClick={() => showContent('Content for Button 3')}>Button 3</button>
                 <button onClick={() => showContent('Content for Button 4')}>Button 4</button>
