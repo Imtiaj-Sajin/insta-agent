@@ -7,6 +7,7 @@ import Settings from "../../components/Settings";
 import Automation from "./admin/automation";
 import Chats from "../../components/Chats";
 import "../../styles/globals.css"
+import Agent from "./admin/Agents";
 
 export default function NavbarLayout({
   children,
@@ -17,18 +18,18 @@ export default function NavbarLayout({
 
   const renderContent = () => {
     switch (selectedContent) {
-      case "home":
-        return <div>Home Content</div>;
-      case "search":
-        return <div>Search Content</div>;
+      case "updates":
+        return <div>update Content</div>;
       case "messages":
         return <Messages/>;
-      case "profile":
+      case "settings":
         return <Settings/>;
-      case "settings":  
+      case "automation":  
         return <Automation/>;
       case "chats":  
         return <Chats/>;
+      case "agents":  
+        return <Agent/>;
       default:
         return <div>Home Content</div>;
     }

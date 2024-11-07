@@ -12,12 +12,12 @@ type NavbarProps = {
 export default function Navbar({ onSelect }: NavbarProps) {
   return (
     <nav>
-      <button onClick={() => onSelect("home")}>Home</button>
-      <button onClick={() => onSelect("search")}>Search</button>
-      <button onClick={() => onSelect("messages")}>Messages</button>
-      <button onClick={() => onSelect("profile")}>Profile</button>
-      <button onClick={() => onSelect("settings")}>Settings</button>
+      <button onClick={() => onSelect("messages")}>Message</button>
+      <button onClick={() => onSelect("automation")}>Automation</button>
+      <button onClick={() => onSelect("updates")}>Updates</button>
+      <button onClick={() => onSelect("agents")}>Agents</button>
       <button onClick={() => onSelect("chats")}>Chats</button>
+      <button onClick={() => onSelect("settings")}>Settings</button>
     </nav>
   );
 }
