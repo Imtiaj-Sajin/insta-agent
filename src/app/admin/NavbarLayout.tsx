@@ -19,7 +19,7 @@ export default function NavbarLayout({
   const renderContent = () => {
     switch (selectedContent) {
       case "updates":
-        return <div>update Content</div>;
+        return <h1 className="text-3xl font-bold text-blue-600">Hello, Tailwind CSS!</h1>;
       case "messages":
         return <Messages/>;
       case "settings":
