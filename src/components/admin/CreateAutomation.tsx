@@ -37,7 +37,7 @@ const CreateAutomation = () => {
           <option>see more</option>
         </select>
       </div>
-
+      <input type="file" className="upload-csv" />
       <div className="keywords">
         <label>Keywords</label>
         <div className="keyword-input">
@@ -51,7 +51,7 @@ const CreateAutomation = () => {
               }
             }}
           />
-          <button onClick={() => addKeyword('')}>+</button>
+          <button onClick={() => addKeyword('')}>Add</button>
         </div>
         <div className="keyword-list">
           {keywords.map((keyword, index) => (
@@ -73,10 +73,17 @@ const CreateAutomation = () => {
               }
             }}
           />
-          <button onClick={() => addAnswer('Inbox')}>Inbox +</button>
+          <button onClick={() => addAnswer('')}>Add</button>
         </div>
-        <input type="file" className="upload-csv" />
+        <div className="keyword-list">
+          {answerList.map((keyword, index) => (
+            <span key={index} className="keyword">{keyword}</span>
+          ))}
+        </div>
+        
       </div>
+      <div><button>Submit</button></div>
+      
     </>
   );
 };
