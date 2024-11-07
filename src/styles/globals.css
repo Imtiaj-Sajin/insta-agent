@@ -48,60 +48,67 @@
     padding: 1rem;
     overflow: hidden;
   }
-  @media (max-width: 768px) {
-    .content {
-      flex: 1;
-      padding: 1rem;
-      margin-left: 0px;
-    }
-  }
 
   /* Navbar styles */
-  nav {
-    background: var(--navbar-background);
-    color: var(--navbar-text-color);
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-  }
+ /* Navbar Container */
+nav {
+  background: linear-gradient(135deg, #8058ac, #5a3c87); /* Aesthetic gradient */
+  color: var(--navbar-text-color);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 2rem 1.5rem;
+  /* border-radius: 12px; */
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  width: 220px;
+  max-height: 100vh;
+  overflow-y: auto;
+}
 
-  /* Adjust navbar for mobile view */
-  @media (max-width: 768px) {
-    nav {
-      flex-direction: row;
-      justify-content: space-around;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      border-top: 1px solid #ddd;
-    }
-  }
+/* Navbar Button Style */
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center ;
+  gap: 0.75rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--navbar-text-color);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+  width: 100%; /* Full width for buttons */
+  position: relative;
+}
 
-  /* Navbar buttons */
-  button {
-    font-family: inherit;
-    font-size: 1rem;
-    background: none;
-    border: none;
-    color: var(--navbar-text-color);
-    cursor: pointer;
-    padding: 0.5rem;
-    transition: background-color 0.3s;
-  }
+/* Hover and Focus Styles */
+button:hover,
+button:focus {
+  background: var(--navbar-active-bg);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transform: translateX(5px); /* Slide-in effect */
+}
 
-  button:hover,
-  button:focus {
-    background-color: var(--navbar-active-bg);
-    /* width: 110%; */
-    border-radius:10%;
-  }
+button:focus {
+  outline: none;
+}
 
-  button:focus {
-    outline: none;
-  }
+/* Active Pressed Effect */
+button:active {
+  transform: scale(0.98);
+  box-shadow: none;
+}
+
+
+
+
+
 
   /* Content sections */
   .content div {
@@ -161,3 +168,53 @@
   color: #555;
   font-size: 0.75rem;
 }
+
+
+
+
+/* /-------------------------------------------------------------- */
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  nav {
+    flex-direction: row;
+    justify-content: space-around;
+    /* padding: 1rem 0; Increased padding for height */
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.15);
+    width: 100%; /* Full-width for mobile */
+    border-radius: 0; /* Remove rounding */
+  }
+
+  button {
+    font-size: 3rem; /* Increase icon size for visibility */
+    gap: 0;
+    padding: 0px;
+    height: 40px;
+    justify-content: center; /* Center-align icons */
+    width: 50%; /* Full width for buttons */
+    /* border-radius: 0; Remove rounding from buttons */
+  }
+
+  button span {
+    display: none; /* Hide text in mobile view */
+  }
+
+    
+
+
+  .content {
+      /* background-color: #333;
+      flex: 1;
+      padding: 1rem;
+      margin-left: 0px; */
+  }
+
+
+}
+
