@@ -27,91 +27,135 @@ const AddAgent: React.FC = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-gray-100 p-6 max-w-md mx-auto rounded-lg shadow-md space-y-4"
+      style={{
+        backgroundColor: '#ffffff',
+        padding: '0rem',
+        margin: '0 auto',
+        borderRadius: '0.5rem',
+      }}
     >
-      <h2 className="text-lg font-semibold text-gray-700 mb-4">Personal Details</h2>
+      <h2 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#4a5568', marginBottom: '1rem' }}>
+        Personal Details
+      </h2>
 
-        {/* Each label and input pair is wrapped in a flex container */}
-        <div className="flex flex-col sm:flex-row sm:items-center">
-          <label className="text-gray-600 sm:w-1/3 sm:text-right pr-4">Name</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full sm:w-2/3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+      {/* Input fields */}
+      <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '1rem', padding:0, boxShadow:"0 4px 8px rgba(0, 0, 0, 0)"  }}>
+        <input
+          placeholder="Name"
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          style={{
+            width: '100%',
+            padding: '0.5rem',
+            border: '1px solid #718096',
+            borderRadius: '0.375rem',
+            
+          }}
+        />
+      </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center">
-          <label className="text-gray-600 sm:w-1/3 sm:text-right pr-4">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full sm:w-2/3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+      <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '1rem', padding:0, boxShadow:"0 4px 8px rgba(0, 0, 0, 0)" }}>
+        <input
+          placeholder="Email"
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          style={{
+            width: '100%',
+            padding: '0.5rem',
+            border: '1px solid #d2d6dc',
+            borderRadius: '0.375rem',
+            
+          }}
+        />
+      </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center">
-          <label className="text-gray-600 sm:w-1/3 sm:text-right pr-4">Phone</label>
-          <input
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="w-full sm:w-2/3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+      <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '1rem', padding:0 , boxShadow:"0 4px 8px rgba(0, 0, 0, 0)" }}>
+        <input
+          placeholder="Phone"
+          type="tel"
+          name="phone"
+          value={formData.phone}
+          onChange={handleChange}
+          style={{
+            width: '100%',
+            padding: '0.5rem',
+            border: '1px solid #d2d6dc',
+            borderRadius: '0.375rem',
+            
+          }}
+        />
+      </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center">
-          <label className="text-gray-600 sm:w-1/3 sm:text-right pr-4">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full sm:w-2/3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+      <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '1rem', padding:0, boxShadow:"0 4px 8px rgba(0, 0, 0, 0)" }}>
+        <input
+          placeholder="Password"
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          style={{
+            width: '100%',
+            padding: '0.5rem',
+            border: '1px solid #d2d6dc',
+            borderRadius: '0.375rem',
+            
+          }}
+        />
+      </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center">
-          <input
-            placeholder='Username'
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            className="w-full sm:w-2/3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+      <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '1rem', padding:0, boxShadow:"0 4px 8px rgba(0, 0, 0, 0)" }}>
+        <input
+          placeholder="Username"
+          type="text"
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+          style={{
+            width: '100%',
+            padding: '0.5rem',
+            border: '1px solid #d2d6dc',
+            borderRadius: '0.375rem',
+            
+          }}
+        />
+      </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center">
-          <input
-            placeholder='Title'
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            className="w-full sm:w-2/3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-      <div className="mt-4 flex items-center">
-        <label className="text-gray-600 pr-2">Send email notification to agent</label>
+      {/* Checkbox */}
+      <div style={{ marginTop: '1rem', display: 'flex', borderWidth:0, alignItems: 'center', boxShadow:"0 4px 8px rgba(0, 0, 0, 0)" }}>
+        <label style={{ color: '#4a5568', paddingRight: '0.5rem'}}>
+          Send email notification to agent
+        </label>
         <input
           type="checkbox"
           name="sendNotification"
           checked={formData.sendNotification}
           onChange={handleChange}
-          className="h-5 w-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+          style={{
+            height: '1.25rem',
+            width: '1.25rem',
+            color: '#4299e1',
+            borderRadius: '0.375rem',
+          }}
         />
       </div>
 
+      {/* Submit Button */}
       <button
         type="submit"
-        className="w-full mt-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        style={{
+          width: '100%',
+          marginTop: '1.5rem',
+          padding: '0.5rem',
+          backgroundColor: 'var(--create-button-color)',
+          color: '#fff',
+          fontWeight: '600',
+          borderRadius: '0.375rem',
+          cursor: 'pointer',
+        }}
       >
         Confirm
       </button>

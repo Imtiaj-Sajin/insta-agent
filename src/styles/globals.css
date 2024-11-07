@@ -17,6 +17,13 @@
     --navbar-background: #8058ac;
     --navbar-text-color: #f0f0f0;
     --navbar-active-bg: #36086b;
+
+    /* --navbar-background: #fff; */
+    /* --navbar-text-color: #0070f3; */
+    /* --navbar-active-bg: #e0e0e0; */
+    --create-button-color:#680ba5;
+    --button-hover-color:#670ba561;
+
   }
 
   /* Apply basic font settings */
