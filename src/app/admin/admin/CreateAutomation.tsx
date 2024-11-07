@@ -28,7 +28,7 @@ const CreateAutomation = () => {
         </select>
       </div>
 
-      <div className="dropdown">
+      <div className="dropdown" style={{border:0}}>
         <label>Select Post</label>
         <select>
           <option>Only 2250 tk..! (Here you go..)</option>

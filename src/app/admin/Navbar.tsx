@@ -1,5 +1,5 @@
 // components/Navbar.tsx
-import NavbarLayout from "../components/NavbarLayout";
+import NavbarLayout from "./NavbarLayout";
 
 "use client";
 
