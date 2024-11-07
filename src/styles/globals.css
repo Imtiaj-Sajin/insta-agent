@@ -14,9 +14,9 @@
     --background-color: #f7f7f7;
     --text-color: #333;
     --primary-color: #0070f3;
-    --navbar-background: #fff;
-    --navbar-text-color: #0070f3;
-    --navbar-active-bg: #e0e0e0;
+    --navbar-background: #8058ac;
+    --navbar-text-color: #f0f0f0;
+    --navbar-active-bg: #36086b;
   }
 
   /* Apply basic font settings */
@@ -88,6 +88,8 @@
   button:hover,
   button:focus {
     background-color: var(--navbar-active-bg);
+    /* width: 110%; */
+    border-radius:10%;
   }
 
   button:focus {
