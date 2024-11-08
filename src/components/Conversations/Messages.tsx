@@ -76,11 +76,12 @@ const Messages = () => {
             <div
               key={msg.id}
               className="message-item flex items-center p-2 cursor-pointer"
+              id='chat'
               onClick={() => handleSelectMessage(msg)}
-              style={{ backgroundColor: selectedMessage?.id === msg.id ? "rgb(240,240,240)" : "white" }}
+              style={{ backgroundColor: selectedMessage?.id === msg.id ? "rgb(240,240,240)" : "white", boxShadow: "0 4px 8px rgba(0, 0, 0, 0)", border:0, marginTop:0, marginBottom:0}}
             >
               <img src={msg.avatar} alt={msg.name} className="avatar w-8 h-8 rounded-full mr-2" />
-              <div className="text">
+              <div className="text" style={{margin:0, padding:0, border:0, boxShadow:"0 4px 8px rgba(0, 0, 0, 0)", backgroundColor:"rgba(255,255,255,0)"}}>
                 <h2 className="font-semibold">{msg.name}</h2>
                 <p className="text-sm text-gray-500 truncate">{msg.messages[0].text}</p>
               </div>

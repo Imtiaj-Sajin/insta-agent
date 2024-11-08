@@ -8,6 +8,7 @@ import Automation from "./admin/automation";
 import Chats from "../../components/Chats";
 import "../../styles/globals.css"
 import Agent from "./admin/Agents";
+import Updates from "./admin/Updates";
 
 export default function NavbarLayout({
   children,
@@ -19,7 +20,7 @@ export default function NavbarLayout({
   const renderContent = () => {
     switch (selectedContent) {
       case "updates":
-        return <h1 className="text-3xl font-bold text-blue-600">Hello, Tailwind CSS!</h1>;
+        return <Updates/>;
       case "messages":
         return <Messages/>;
       case "settings":

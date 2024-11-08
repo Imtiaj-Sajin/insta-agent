@@ -147,7 +147,7 @@
   .inbox-send-button:hover {
     color: #005bb5;
   }
-  
+
   .inbox-placeholder {
     color: #999;
     font-size: 1rem;
@@ -155,7 +155,9 @@
     padding: 2rem;
   }
   
-
+  #chat:hover {
+    background-color: #B2BEB5; /* Ash color */
+}
   /* -------------------------- */
   /* mobile */
  /* Mobile adjustments */
@@ -163,7 +165,10 @@
   .inbox-header {
     display: none;
   }
-
+  .inbox-container .inbox-message-input {
+    margin-bottom: 180px;
+   
+  }
   .left-div.hide, .back-arrow.show {
     display: none;
   }
