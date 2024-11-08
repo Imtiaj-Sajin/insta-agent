@@ -1,22 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import Inbox from './Inbox';
-import msgs from '../../public/messages.json'
+import msgs from '../../../public/messages.json';
+import './conversations.css';
 
 const Messages = () => {
   const [messages, setMessages] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [showRightDiv, setShowRightDiv] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
-    // Fetch messages from the JSON file in the public folder
     fetch("/messages.json")
       .then((response) => response.json())
       .then((data) => setMessages(data))
       .catch((error) => console.error("Error loading messages:", error));
+
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
   
-
   const filteredMessages = messages.filter((msg) => {
     if (selectedFilter === "All") return true;
     if (selectedFilter === "Unanswered") return msg.status === "unanswered";
@@ -27,7 +31,9 @@ const Messages = () => {
 
   const handleSelectMessage = (message) => {
     setSelectedMessage(message);
-    setShowRightDiv(true);
+    if (isMobile) {
+      setShowRightDiv(true);
+    }
   };
 
   const toggleDivs = () => {
@@ -36,18 +42,24 @@ const Messages = () => {
 
   return (
     <div style={{ margin: "-1rem" }}>
-      <div className="back-arrow" onClick={toggleDivs} style={{
-        boxShadow: "0 4px 8px rgba(0, 0, 0, 0)",
-        backgroundColor: "white",
-        border: "0px solid #ffffff",
-        margin: "-1rem"
-      }}>
-        ← Message
-      </div>
+      {isMobile && showRightDiv && (
+        <div 
+          className="back-arrow" 
+          onClick={toggleDivs} 
+          style={{
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0)",
+            backgroundColor: "white",
+            border: "0px solid #ffffff",
+            margin: "-1rem"
+          }}
+        >
+          ← {selectedMessage?.name || "Message"}
+        </div>
+      )}
 
-      <div className="contentt" style={{ padding: "0", margin: "1rem", border: "0", boxShadow: "0 4px 8px rgba(0, 0, 0, 0)" }}>
-        <div className={`left-div ${showRightDiv ? 'hide' : 'show'}`} style={{ overflow: "auto", borderRadius: '0' }}>
-          <div className="header flex items-center justify-between mb-4">
+      <div className="contentt" style={{ padding: "0", margin: '0rem', marginTop: "1rem", paddingBottom: '5%', border: "0", boxShadow: "0 4px 8px rgba(0, 0, 0, 0)" }}>
+        <div className={`left-div ${showRightDiv && isMobile ? 'hide' : 'show'}`} style={{ overflow: "auto", borderRadius: '0' }}>
+          <div className="header flex items-center justify-between mb-4" style={{ display: showRightDiv && isMobile ? 'none' : 'flex' }}>
             <h1 className="text-xl font-bold">Inbox</h1>
             <select
               value={selectedFilter}
@@ -76,10 +88,8 @@ const Messages = () => {
           ))}
         </div>
 
-        <div className={`right-div ${showRightDiv ? 'show' : 'hide'}`} style={{ borderRadius: 0, overflow:'hidden' }}>
-          {/* <div id="content-display" style={{ marginBottom: 100 }}> */}
-            <Inbox selectedMessage={selectedMessage} />
-          {/* </div> */}
+        <div className={`right-div ${showRightDiv ? 'show' : 'hide'}`} style={{ borderRadius: 0, overflow: 'hidden' }}>
+          <Inbox selectedMessage={selectedMessage} />
         </div>
       </div>
     </div>

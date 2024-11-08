@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Navbar from "./Navbar";
-import Messages from "../../components/Messages";
+import Messages from "../../components/Conversations/Messages";
 import Settings from "../../components/Settings";
 import Automation from "./admin/automation";
 import Chats from "../../components/Chats";
