@@ -1,0 +1,138 @@
+[
+    {
+      "id": 1,
+      "name": "John Doe",
+      "avatar": "https://img.freepik.com/free-vector/smiling-young-man-illustration_1308-174669.jpg",
+      "status": "unanswered",
+      "messages": [
+        {
+          "text": "Hello! How are you?",
+          "sender": "John Doe",
+          "timestamp": "2024-11-06T14:32:00Z"
+        },
+        {
+          "text": "I'm doing well, thanks for asking!",
+          "sender": "Agent",
+          "timestamp": "2024-11-06T14:35:00Z"
+        },
+        {
+          "text": "Could you check this product?",
+          "sender": "John Doe",
+          "timestamp": "2024-11-06T14:38:00Z",
+          "attachments": [
+            {
+              "type": "image",
+              "url": "https://i.ytimg.com/vi/eNFmh5gv-9g/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCmvWHipinHzO4LIJGar0qOXIQV1A"
+            }
+          ]
+        },
+        {
+          "text": "Looks good! Is this the right model?",
+          "sender": "Agent",
+          "timestamp": "2024-11-06T14:40:00Z"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Jane Doe",
+      "avatar": "https://source.unsplash.com/random/50x50?sig=2",
+      "status": "answered-agent1",
+      "messages": [
+        {
+          "text": "Can you help with my order?",
+          "sender": "Jane Doe",
+          "timestamp": "2024-11-06T15:00:00Z"
+        },
+        {
+          "text": "Here is the item I ordered.",
+          "sender": "Jane Doe",
+          "timestamp": "2024-11-06T15:02:00Z",
+          "attachments": [
+            {
+              "type": "image",
+              "url": "https://cdn.runrepeat.com/storage/gallery/product_content/38821/new-balance-9060-vevqv-20996279-main.jpg"
+            }
+          ]
+        },
+        {
+          "text": "Yes, that’s the correct model. How can I assist you?",
+          "sender": "Agent",
+          "timestamp": "2024-11-06T15:03:00Z"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Alice Smith",
+      "avatar": "https://source.unsplash.com/random/50x50?sig=3",
+      "status": "answered-agent2",
+      "messages": [
+        {
+          "text": "I need a refund on this device.",
+          "sender": "Alice Smith",
+          "timestamp": "2024-11-06T13:15:00Z",
+          "attachments": [
+            {
+              "type": "image",
+              "url": "https://i.ytimg.com/vi/APHawye2JH8/maxresdefault.jpg"
+            }
+          ]
+        },
+        {
+          "text": "Refund process initiated. You’ll receive a confirmation email soon.",
+          "sender": "Agent",
+          "timestamp": "2024-11-06T13:20:00Z"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Bob Johnson",
+      "avatar": "https://source.unsplash.com/random/50x50?sig=4",
+      "status": "in-progress",
+      "messages": [
+        {
+          "text": "Can you confirm the model of my device?",
+          "sender": "Bob Johnson",
+          "timestamp": "2024-11-06T16:00:00Z",
+          "attachments": [
+            {
+              "type": "image",
+              "url": "https://cdn.i-scmp.com/sites/default/files/d8/video/thumbnail/2021/04/16/chinese_smartphones_thumbnail_web_plain.jpg"
+            }
+          ]
+        },
+        {
+          "text": "Yes, that’s the model we have on record for you.",
+          "sender": "Agent",
+          "timestamp": "2024-11-06T16:02:00Z"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Chris Evans",
+      "avatar": "https://source.unsplash.com/random/50x50?sig=5",
+      "status": "awaiting-feedback",
+      "messages": [
+        {
+          "text": "Here’s the photo of my damaged device.",
+          "sender": "Chris Evans",
+          "timestamp": "2024-11-05T10:00:00Z",
+          "attachments": [
+            {
+              "type": "image",
+              "url": "/adf.jpeg"
+            }
+          ]
+        },
+        {
+          "text": "I’ll review this and get back to you with next steps.",
+          "sender": "Agent",
+          "timestamp": "2024-11-05T10:05:00Z"
+        }
+      ]
+    }
+  ]
+  

@@ -1,18 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Inbox from './Inbox';
-
-const sampleMessages = [
-  { id: 1, name: "John Doe", text: "Hello! How are you?", avatar: "https://img.freepik.com/free-vector/smiling-young-man-illustration_1308-174669.jpg", status: "unanswered" },
-  { id: 2, name: "Jane Doe", text: "Can you help with my order?", avatar: "https://source.unsplash.com/random/50x50?sig=2", status: "answered-agent1" },
-  { id: 3, name: "Alice", text: "Thank you for your response!", avatar: "https://source.unsplash.com/random/50x50?sig=3", status: "answered-agent2" },
-];
+import msgs from '../../public/messages.json'
 
 const Messages = () => {
+  const [messages, setMessages] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [showRightDiv, setShowRightDiv] = useState(false);
 
-  const filteredMessages = sampleMessages.filter((msg) => {
+  useEffect(() => {
+    // Fetch messages from the JSON file in the public folder
+    fetch("/messages.json")
+      .then((response) => response.json())
+      .then((data) => setMessages(data))
+      .catch((error) => console.error("Error loading messages:", error));
+  }, []);
+  
+
+  const filteredMessages = messages.filter((msg) => {
     if (selectedFilter === "All") return true;
     if (selectedFilter === "Unanswered") return msg.status === "unanswered";
     if (selectedFilter === "Agent1") return msg.status === "answered-agent1";
@@ -41,7 +46,6 @@ const Messages = () => {
       </div>
 
       <div className="contentt" style={{ padding: "0", margin: "1rem", border: "0", boxShadow: "0 4px 8px rgba(0, 0, 0, 0)" }}>
-        {/* Left Div with Message List and Filter */}
         <div className={`left-div ${showRightDiv ? 'hide' : 'show'}`} style={{ overflow: "auto", borderRadius: '0' }}>
           <div className="header flex items-center justify-between mb-4">
             <h1 className="text-xl font-bold">Inbox</h1>
@@ -66,17 +70,16 @@ const Messages = () => {
               <img src={msg.avatar} alt={msg.name} className="avatar w-8 h-8 rounded-full mr-2" />
               <div className="text">
                 <h2 className="font-semibold">{msg.name}</h2>
-                <p className="text-sm text-gray-500 truncate">{msg.text}</p>
+                <p className="text-sm text-gray-500 truncate">{msg.messages[0].text}</p>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Right Div for Displaying Inbox */}
         <div className={`right-div ${showRightDiv ? 'show' : 'hide'}`} style={{ borderRadius: 0 }}>
-          <div id="content-display" style={{ marginBottom: 100 }}>
+          {/* <div id="content-display" style={{ marginBottom: 100 }}> */}
             <Inbox selectedMessage={selectedMessage} />
-          </div>
+          {/* </div> */}
         </div>
       </div>
     </div>
