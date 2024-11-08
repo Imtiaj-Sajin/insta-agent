@@ -37,8 +37,8 @@ const Inbox: React.FC<InboxProps> = ({ selectedMessage }) => {
 
   return selectedMessage ? (
     <div className="inbox-container">
-      <h2 className="inbox-header">{selectedMessage.name}</h2>
-      <div className="inbox-messages">
+      <h2 className="inbox-header" style={{margin:0}}>{selectedMessage.name}</h2>
+      <div className="inbox-messages" style={{marginBottom:0,border:0, boxShadow:'0 0px 0px'}}>
         {selectedMessage.messages.map((msg, index) => (
           <div
             key={index}
@@ -73,7 +73,7 @@ const Inbox: React.FC<InboxProps> = ({ selectedMessage }) => {
           </div>
         ))}
       </div>
-      <div className="inbox-message-input">
+      <div className="inbox-message-input" style={{margin:0,marginBottom:40,borderRadius:40,padding:0}}>
         <label htmlFor="file-input" className="inbox-attach-icon">
           <FiPaperclip />
           <input

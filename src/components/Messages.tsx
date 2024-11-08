@@ -76,7 +76,7 @@ const Messages = () => {
           ))}
         </div>
 
-        <div className={`right-div ${showRightDiv ? 'show' : 'hide'}`} style={{ borderRadius: 0 }}>
+        <div className={`right-div ${showRightDiv ? 'show' : 'hide'}`} style={{ borderRadius: 0, overflow:'hidden' }}>
           {/* <div id="content-display" style={{ marginBottom: 100 }}> */}
             <Inbox selectedMessage={selectedMessage} />
           {/* </div> */}

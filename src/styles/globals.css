@@ -203,7 +203,7 @@ button:active {
   border-radius: 15px;
   font-size: 0.95rem;
   line-height: 1.4;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
   position: relative;
 }
 
@@ -268,12 +268,11 @@ button:active {
 .inbox-message-input {
   display: flex;
   align-items: center;
-  padding: 0.5rem;
+  padding: 0rem;
   border: 1px solid #ddd;
   border-radius: 25px;
-  background-color: #fff;
+  background-color: #ff0000;
   margin: 1rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   position: sticky;
   bottom: 0;
   z-index: 10;
