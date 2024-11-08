@@ -1,0 +1,37 @@
+{
+    "notifications": [
+      {
+        "id": 1,
+        "type": "like",
+        "icon": "L",
+        "content": "User A liked your post.",
+        "timestamp": "2024-11-08T10:30:00Z",
+        "postLink": "https://instagram.com/post/12345"
+      },
+      {
+        "id": 2,
+        "type": "comment",
+        "icon": "C",
+        "content": "User B commented: 'Great post!'",
+        "timestamp": "2024-11-08T09:45:00Z",
+        "postLink": "https://instagram.com/post/67890"
+      },
+      {
+        "id": 3,
+        "type": "reply",
+        "icon": "D",
+        "content": "User C replied to your comment.",
+        "timestamp": "2024-11-08T08:15:00Z",
+        "postLink": "https://instagram.com/post/11223"
+      },
+      {
+        "id": 4,
+        "type": "follow",
+        "icon": "U",
+        "content": "User D started following you.",
+        "timestamp": "2024-11-08T07:50:00Z",
+        "postLink": "https://instagram.com/user/user_d"
+      }
+    ]
+  }
+  
