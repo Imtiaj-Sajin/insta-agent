@@ -53,7 +53,7 @@ const CreateAutomation = () => {
           />
           <button onClick={() => addKeyword('')}>Add</button>
         </div>
-        <div className="keyword-list">
+        <div className="keyword-list" style={{margin:0,padding:0.1, border:0, boxShadow:'0 0px 0px'}}>
           {keywords.map((keyword, index) => (
             <span key={index} className="keyword">{keyword}</span>
           ))}
@@ -75,14 +75,14 @@ const CreateAutomation = () => {
           />
           <button onClick={() => addAnswer('')}>Add</button>
         </div>
-        <div className="keyword-list">
+        <div className="keyword-list" style={{margin:0,padding:0.1, border:0, boxShadow:'0 0px 0px'}}>
           {answerList.map((keyword, index) => (
             <span key={index} className="keyword">{keyword}</span>
           ))}
         </div>
         
       </div>
-      <div><button>Submit</button></div>
+      <div style={{padding:'0px',border:0,boxShadow:'0 0px 0px',alignContent:'center', justifyItems:'center'}}><button style={{minHeight:30}}>Submit</button></div>
       
     </>
   );
