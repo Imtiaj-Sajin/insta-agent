@@ -71,10 +71,10 @@ nav {
 button {
   display: flex;
   align-items: center;
-  justify-content: center ;
+  justify-content:center ;
   gap: 0.75rem;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 500;
   color: var(--navbar-text-color);
   background: transparent;
@@ -91,6 +91,7 @@ button {
 button:hover,
 button:focus {
   background: var(--navbar-active-bg);
+  color: whitesmoke;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   transform: translateX(5px); /* Slide-in effect */
 }

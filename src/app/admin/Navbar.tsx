@@ -11,20 +11,20 @@ type NavbarProps = {
 
 export default function Navbar({ onSelect }: NavbarProps) {
   return (
-    <nav className="navbar flex space-x-4 p-4 bg-gray-100 shadow-md">
-      <button onClick={() => onSelect("messages")} className="flex items-center space-x-2">
+    <nav className="navbar flex space-x-4 p-4 bg-gray-100 shadow-md" >
+      <button onClick={() => onSelect("messages")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>
         <FaComments />
         <span>Message</span>
       </button>
-      <button onClick={() => onSelect("automation")} className="flex items-center space-x-2">
+      <button onClick={() => onSelect("automation")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>
         <FaRobot />
         <span>Automation</span>
       </button>
-      <button onClick={() => onSelect("updates")} className="flex items-center space-x-2">
+      <button onClick={() => onSelect("updates")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>
         <FaBell />
         <span>Updates</span>
       </button>
-      <button onClick={() => onSelect("agents")} className="flex items-center space-x-2">
+      <button onClick={() => onSelect("agents")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>
         <FaUser />
         <span>Agents</span>
       </button>
@@ -32,7 +32,7 @@ export default function Navbar({ onSelect }: NavbarProps) {
         <FaComments />
         <span>Chats</span>
       </button> */}
-      <button onClick={() => onSelect("settings")} className="flex items-center space-x-2">
+      <button onClick={() => onSelect("settings")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>
         <FaCog />
         <span>Settings</span>
       </button>
