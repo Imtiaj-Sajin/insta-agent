@@ -52,7 +52,7 @@
   /* Navbar styles */
  /* Navbar Container */
 nav {
-  background: linear-gradient(135deg, #8058ac, #5a3c87); /* Aesthetic gradient */
+  background: linear-gradient(135deg, #8058ac, #2e0d61); /* Aesthetic gradient */
   color: var(--navbar-text-color);
   display: flex;
   flex-direction: column;
@@ -171,7 +171,6 @@ button:active {
 }
 
 /* -------------------------agent-tags----------------------------- */
-/* global.css */
 .tag {
   display: inline-block;
   padding: 0.25rem 0.5rem;
