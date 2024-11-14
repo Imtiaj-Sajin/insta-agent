@@ -23,7 +23,7 @@ const Messages = () => {
   
   const filteredMessages = messages.filter((msg) => {
     if (selectedFilter === "All") return true;
-    if (selectedFilter === "Unanswered") return msg.status === "unanswered";
+    if (selectedFilter === "Unanswered") return msg.status === "unassigned";
     if (selectedFilter === "Agent1") return msg.status === "answered-agent1";
     if (selectedFilter === "Agent2") return msg.status === "answered-agent2";
     return true;
@@ -82,10 +82,19 @@ const Messages = () => {
             >
               <img src={msg.avatar} alt={msg.name} className="avatar w-8 h-8 rounded-full mr-2" />
               <div className="text" style={{margin:0, padding:0, border:0, boxShadow:"0 4px 8px rgba(0, 0, 0, 0)", backgroundColor:"rgba(255,255,255,0)"}}>
-                <h2 className="font-semibold">{msg.name}</h2>
+                <h2 className="font-semibold flex items-center">
+                  {msg.name}
+                </h2>
                 <p className="text-sm text-gray-500 truncate">{msg.messages[0].text}</p>
+                
               </div>
+              <span
+                className={`tag ml-2 ${msg.status === 'unassigned' ? 'tag-unassigned' : msg.status === 'answered-agent1' ? 'tag-agent1' : 'tag-agent2'}`}
+              >
+                {msg.status === 'unassigned' ? 'Unassigned' : msg.status === 'answered-agent1' ? 'Agent1' : 'Agent2'}
+              </span>
             </div>
+            
           ))}
         </div>
 

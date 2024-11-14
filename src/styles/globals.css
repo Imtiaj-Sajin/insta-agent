@@ -170,7 +170,36 @@ button:active {
   font-size: 0.75rem;
 }
 
+/* -------------------------agent-tags----------------------------- */
+/* global.css */
+.tag {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px; /* Fully rounded */
+  border: 1px solid transparent;
+  background-color: #f3f4f6; /* Light background */
+  color: #4b5563; /* Gray text color */
+}
 
+.tag-agent1 {
+  background-color: #ebf8ff;
+  color: #3182ce;
+  border-color: #3182ce;
+}
+
+.tag-agent2 {
+  background-color: #e6fffa;
+  color: #2c7a7b;
+  border-color: #2c7a7b;
+}
+
+.tag-unassigned {
+  background-color: #edf2f7;
+  color: #a0aec0;
+  border-color: #a0aec0;
+}
 
 /* /-------------------------------------------------------------- */
 /* Mobile Adjustments */
