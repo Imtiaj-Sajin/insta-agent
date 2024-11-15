@@ -202,7 +202,7 @@ button:active {
   border-color: #a0aec0;
 }
 
-/* /-------------------------------------------------------------- */
+/* /--------------------mobile------------------------------------------ */
 /* Mobile Adjustments */
 @media (max-width: 768px) {
   nav {
@@ -236,6 +236,16 @@ button:active {
     width: 50%; /* Full width for buttons */
     /* border-radius: 0; Remove rounding from buttons */
   }
+  nav button {
+    font-size: 1.2rem; /* Increase icon size for visibility */
+    gap: 0;
+    padding: 0px;
+    height: 40px;
+    justify-content: center !important; /* Center-align icons */
+    width: 50% !important; /* Full width for buttons */
+    /* border-radius: 0; Remove rounding from buttons */
+    
+  } 
 
   button span {
     display: none; /* Hide text in mobile view */

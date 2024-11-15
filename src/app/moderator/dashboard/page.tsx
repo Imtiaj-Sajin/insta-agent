@@ -1,5 +1,5 @@
 const ModeratorDashboard: React.FC = () => {
-    return <div>Welcome to the Moderator Dashboard</div>;
+    return '';
   };
   
 export default ModeratorDashboard;

@@ -7,10 +7,13 @@ import Settings from "../../components/Settings";
 import Automation from "../admin/admin/automation";
 import Chats from "../../components/Chats";
 import Profile from '../../components/profile/moderatorProfile';
+import Insights from "@/components/Insights/Insights";
 
 import "../../styles/globals.css"
 import "../../styles/index.css";
 import { ImOpt } from "react-icons/im";
+import '../admin/admin/Automation.css';
+
 
 // import Agent from "../admin/admin/Agents";
 // import Updates from "../admin/admin/Updates";
@@ -30,8 +33,8 @@ export default function NavbarLayout({
         return <Messages/>;
       case "settings":
         return <Settings/>;
-      case "automation":  
-        return <Automation/>;
+      case "insights":  
+        return <Insights/>;
       case "chats":  
         return <Chats/>;
       case "profile":  

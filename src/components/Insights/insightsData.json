@@ -1,0 +1,64 @@
+{
+  "agents": [
+    {
+      "id": "agent123",
+      "name": "John Doe",
+      "insights": {
+        "dailyMessages": [
+          { "date": "2024-11-01", "messagesReplied": 34, "newConversations": 12, "followUps": 5 },
+          { "date": "2024-11-02", "messagesReplied": 21, "newConversations": 8, "followUps": 4 },
+          { "date": "2024-11-03", "messagesReplied": 45, "newConversations": 20, "followUps": 10 },
+          { "date": "2024-11-04", "messagesReplied": 50, "newConversations": 18, "followUps": 15 },
+          { "date": "2024-11-05", "messagesReplied": 37, "newConversations": 10, "followUps": 7 },
+          { "date": "2024-11-06", "messagesReplied": 29, "newConversations": 14, "followUps": 6 },
+          { "date": "2024-11-07", "messagesReplied": 54, "newConversations": 25, "followUps": 13 }
+        ],
+        "monthlySummary": {
+          "totalMessagesReplied": 270,
+          "totalNewConversations": 107,
+          "totalFollowUps": 60
+        }
+      }
+    },
+    {
+      "id": "agent456",
+      "name": "Jane Smith",
+      "insights": {
+        "dailyMessages": [
+          { "date": "2024-11-01", "messagesReplied": 25, "newConversations": 10, "followUps": 8 },
+          { "date": "2024-11-02", "messagesReplied": 28, "newConversations": 15, "followUps": 5 },
+          { "date": "2024-11-03", "messagesReplied": 38, "newConversations": 12, "followUps": 9 },
+          { "date": "2024-11-04", "messagesReplied": 42, "newConversations": 18, "followUps": 14 },
+          { "date": "2024-11-05", "messagesReplied": 34, "newConversations": 8, "followUps": 11 },
+          { "date": "2024-11-06", "messagesReplied": 31, "newConversations": 14, "followUps": 12 },
+          { "date": "2024-11-07", "messagesReplied": 49, "newConversations": 20, "followUps": 13 }
+        ],
+        "monthlySummary": {
+          "totalMessagesReplied": 247,
+          "totalNewConversations": 97,
+          "totalFollowUps": 72
+        }
+      }
+    },
+    {
+      "id": "agent789",
+      "name": "Alice Johnson",
+      "insights": {
+        "dailyMessages": [
+          { "date": "2024-11-01", "messagesReplied": 40, "newConversations": 18, "followUps": 7 },
+          { "date": "2024-11-02", "messagesReplied": 35, "newConversations": 10, "followUps": 6 },
+          { "date": "2024-11-03", "messagesReplied": 47, "newConversations": 22, "followUps": 15 },
+          { "date": "2024-11-04", "messagesReplied": 55, "newConversations": 25, "followUps": 18 },
+          { "date": "2024-11-05", "messagesReplied": 39, "newConversations": 14, "followUps": 10 },
+          { "date": "2024-11-06", "messagesReplied": 32, "newConversations": 12, "followUps": 8 },
+          { "date": "2024-11-07", "messagesReplied": 60, "newConversations": 28, "followUps": 20 }
+        ],
+        "monthlySummary": {
+          "totalMessagesReplied": 308,
+          "totalNewConversations": 129,
+          "totalFollowUps": 84
+        }
+      }
+    }
+  ]
+}

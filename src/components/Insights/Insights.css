@@ -1,0 +1,135 @@
+/* src/components/Insights/Insights.css */
+
+/* General Styles */
+.insights-container {
+    padding: 1rem;
+    background-color: #f7f9fc;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+  
+  .insights-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  .selector-wrapper {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  .agent-selector {
+    padding: 0.5rem 0.8rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Chart Section */
+  .chart-wrapper {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+  }
+  
+  .chart {
+    height: 300px; /* Adjusted for better mobile fit */
+    width: 100%;
+  }
+  
+  /* Insights Boxes */
+  .insights-boxes {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .insight-box {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .insight-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .insight-box h2 {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+  }
+  
+  .insight-box p {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .insight-box.total {
+    background: #4a90e2;
+    color: #fff;
+  }
+  
+  .insight-box.new-conversations {
+    background: #7ed321;
+    color: #fff;
+  }
+  
+  .insight-box.follow-ups {
+    background: #f5a623;
+    color: #fff;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .insights-container {
+      padding: 0.8rem;
+    }
+  
+    .insights-title {
+      font-size: 1.5rem;
+    }
+  
+    .chart-wrapper {
+      padding: 0.8rem;
+    }
+  
+    .chart {
+      height: 250px;
+    }
+  
+    .insights-boxes {
+      gap: 0rem;
+    }
+  
+    .insight-box {
+      padding: 0.2rem !important;
+    }
+  
+    .insight-box h2 {
+      font-size: 1rem;
+    }
+  
+    .insight-box p {
+      font-size: 1.5rem;
+    }
+  
+    .agent-selector {
+      width: 100%; /* Make dropdown fill the screen for better usability */
+      padding: 0.6rem;
+    }
+  }
+  
