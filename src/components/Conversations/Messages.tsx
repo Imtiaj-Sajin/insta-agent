@@ -65,6 +65,14 @@ const Messages = () => {
               value={selectedFilter}
               onChange={(e) => setSelectedFilter(e.target.value)}
               className="filter-dropdown"
+              style={{
+                color:'white',
+                marginLeft: 'auto',
+                backgroundColor:'#3A1C71',
+                padding: '4px 8px',
+                borderRadius: '4px',
+                fontSize: '0.9rem',
+              }}
             >
               <option>All</option>
               <option>Unanswered</option>
