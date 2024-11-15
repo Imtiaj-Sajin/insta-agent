@@ -83,7 +83,7 @@ const Messages = () => {
           {filteredMessages.map((msg) => (
             <div
               key={msg.id}
-              className="message-item flex items-center p-2 cursor-pointer"
+              className="message-item flex items-center justify-between p-2 cursor-pointer"
               id='chat'
               onClick={() => handleSelectMessage(msg)}
               style={{ backgroundColor: selectedMessage?.id === msg.id ? "rgb(240,240,240)" : "white", boxShadow: "0 4px 8px rgba(0, 0, 0, 0)", border:0, marginTop:0, marginBottom:0}}
@@ -96,7 +96,7 @@ const Messages = () => {
                 <p className="text-sm text-gray-500 truncate">{msg.messages[0].text}</p>
                 
               </div>
-              <span
+              <span style={{marginRight:'1px'}}
                 className={`tag ml-2 ${msg.status === 'unassigned' ? 'tag-unassigned' : msg.status === 'answered-agent1' ? 'tag-agent1' : 'tag-agent2'}`}
               >
                 {msg.status === 'unassigned' ? 'Unassigned' : msg.status === 'answered-agent1' ? 'Agent1' : 'Agent2'}

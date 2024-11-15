@@ -6,6 +6,7 @@ import Messages from "../../components/Conversations/Messages";
 import Settings from "../../components/Settings";
 import Automation from "../admin/admin/automation";
 import Chats from "../../components/Chats";
+import Profile from '../../components/profile/moderatorProfile';
 
 import "../../styles/globals.css"
 import "../../styles/index.css";
@@ -33,8 +34,8 @@ export default function NavbarLayout({
         return <Automation/>;
       case "chats":  
         return <Chats/>;
-      case "agents":  
-        // return <Agent/>;
+      case "profile":  
+        return <Profile/>;
       default:
         return <div>Home Content</div>;
     }

@@ -52,7 +52,7 @@
   /* Navbar styles */
  /* Navbar Container */
 nav {
-  background: linear-gradient(135deg, #8058ac, #49267e); /* Aesthetic gradient */
+  background: linear-gradient(135deg, #8058ac, #49267e); 
   color: var(--navbar-text-color);
   display: flex;
   flex-direction: column;
@@ -180,6 +180,8 @@ button:active {
   border: 1px solid transparent;
   background-color: #f3f4f6; /* Light background */
   color: #4b5563; /* Gray text color */
+  margin-right: 5px;
+  margin-left: auto;
 }
 
 .tag-agent1 {
