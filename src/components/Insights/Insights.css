@@ -1,6 +1,7 @@
 /* src/components/Insights/Insights.css */
 
 /* General Styles */
+/* General Styles */
 .insights-container {
     padding: 1rem;
     background-color: #f7f9fc;
@@ -40,14 +41,14 @@
   }
   
   .chart {
-    height: 300px; /* Adjusted for better mobile fit */
+    height: 300px;
     width: 100%;
   }
   
   /* Insights Boxes */
   .insights-boxes {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: grid; /* Switch to grid layout */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Auto-adjust for screen size */
     gap: 1rem;
     margin-bottom: 1.5rem;
   }
@@ -93,6 +94,7 @@
     color: #fff;
   }
   
+  
   /* Responsive Styles */
   @media (max-width: 768px) {
     .insights-container {
@@ -112,15 +114,16 @@
     }
   
     .insights-boxes {
-      gap: 0rem;
+      grid-template-columns: repeat(2, 1fr); /* Two boxes per row */
+      gap: 1rem;
     }
   
     .insight-box {
-      padding: 0.2rem !important;
+      padding: 0.8rem;
     }
   
     .insight-box h2 {
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
   
     .insight-box p {
@@ -128,8 +131,12 @@
     }
   
     .agent-selector {
-      width: 100%; /* Make dropdown fill the screen for better usability */
+      width: 100%;
       padding: 0.6rem;
     }
+    
+    .insight-box:nth-child(3) {
+        grid-column: span 2; /* Spans two columns */
+      }
   }
   
