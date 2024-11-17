@@ -37,7 +37,7 @@ export default function NavbarLayout({
       case "insights":
         return <Insights/>;
       default:
-        return <div>Home Content</div>;
+        return <Messages/>;
     }
   };
 

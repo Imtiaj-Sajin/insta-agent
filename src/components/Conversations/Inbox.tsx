@@ -15,11 +15,27 @@ type Message = {
   }[];
 };
 
-interface InboxProps {
-  selectedMessage: Message | null;
+interface Message1 {
+  from: { username: string; id: string };
+  to: { data: { username: string; id: string }[] };
+  message: string;
+  created_time: string;
+  id: string;
+  attachments?: { type: string; url: string }[];
 }
 
-const Inbox: React.FC<InboxProps> = ({ selectedMessage }) => {
+interface Conversation {
+  id: string;
+  messages: { data: Message1[] };
+  updated_time: string;
+  avatar: string;
+  status: string;
+}
+interface InboxProps {
+  selectedConversation: Conversation | null;
+}
+
+const Inbox: React.FC<InboxProps> = ({ selectedConversation }) => {
   const [newMessage, setNewMessage] = useState('');
   const [attachments, setAttachments] = useState<File[]>([]);
 
@@ -36,20 +52,20 @@ const Inbox: React.FC<InboxProps> = ({ selectedMessage }) => {
     setAttachments((prev) => [...prev, ...files]);
   };
 
-  return selectedMessage ? (
+  return selectedConversation ? (
     <div className="inbox-container" style={{padding:0}}>
-      <h2 className="inbox-header" style={{margin:0}}>{selectedMessage.name}</h2>
+      <h2 className="inbox-header" style={{margin:0}}>{selectedConversation.messages.data[0].from.username}</h2>
       <div className="inbox-messages" style={{marginBottom:0,border:0, boxShadow:'0 0px 0px'}}>
-        {selectedMessage.messages.map((msg, index) => (
+        {selectedConversation.messages.data.map((message) => (
           <div
-            key={index}
-            className={`inbox-message ${msg.sender === "Agent" ? "inbox-message-agent" : "inbox-message-user"}`}
+            key={message.id}
+            className={`inbox-message ${message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? "inbox-message-agent" : "inbox-message-user"}`}
           >
-            <p className="inbox-timestamp">{new Date(msg.timestamp).toLocaleString()}</p>
+            <p className="inbox-timestamp">{new Date(message.created_time).toLocaleString()}</p>
             <p className="inbox-text">
-              {msg.text}
+              {message.message}
             </p>
-            {msg.attachments?.map((attachment, idx) => (
+            {message.attachments?.map((attachment, idx) => (
               <div key={idx} className="inbox-attachment-container" style={{margin:0,  padding:0, border:0}}>
                 {attachment.type === "image" ? (
                   <img
