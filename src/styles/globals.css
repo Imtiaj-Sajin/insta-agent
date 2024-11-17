@@ -250,7 +250,9 @@ button:active {
   button span {
     display: none; /* Hide text in mobile view */
   }
-
+  button:focus {
+    background: linear-gradient(235deg,#c0392b,#8128a5) !important;
+    }
     
 
 

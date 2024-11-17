@@ -4,6 +4,7 @@
 
 import React from "react";
 import { FaEnvelope, FaRobot, FaBell, FaUser, FaComments, FaCog } from "react-icons/fa";
+import { ImStatsBars2 } from "react-icons/im";
 
 type NavbarProps = {
   onSelect: (section: string) => void;
@@ -28,6 +29,12 @@ export default function Navbar({ onSelect }: NavbarProps) {
         <FaUser />
         <span>Agents</span>
       </button>
+
+      <button onClick={() => onSelect("insights")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>
+        <ImStatsBars2 />
+        <span>Insights</span>
+      </button>
+
       {/* <button onClick={() => onSelect("chats")} className="flex items-center space-x-2">
         <FaComments />
         <span>Chats</span>

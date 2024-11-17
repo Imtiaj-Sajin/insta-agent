@@ -19,10 +19,41 @@ const AddAgent: React.FC = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form data:', formData);
+  
+    try {
+      const response = await fetch("/api/addAgent", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        alert("Agent added successfully!");
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          password: "",
+          username: "",
+          title: "",
+          sendNotification: true,
+        });
+      } else {
+        console.error("Error adding agent:", result.error);
+        alert("Failed to add agent: " + result.error);
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("An unexpected error occurred.");
+    }
   };
+  
 
   return (
     <form

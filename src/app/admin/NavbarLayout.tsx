@@ -10,6 +10,9 @@ import "../../styles/globals.css"
 import Agent from "./admin/Agents";
 import Updates from "./admin/Updates";
 
+import Insights from "@/components/Insights/Insights";
+
+
 export default function NavbarLayout({
   children,
 }: {
@@ -31,6 +34,8 @@ export default function NavbarLayout({
         return <Chats/>;
       case "agents":  
         return <Agent/>;
+      case "insights":
+        return <Insights/>;
       default:
         return <div>Home Content</div>;
     }
