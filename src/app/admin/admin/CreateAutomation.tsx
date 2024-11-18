@@ -17,7 +17,7 @@ const CreateAutomation = () => {
   // Function to fetch Instagram posts
   const fetchInstagramPosts = async () => {
     const url =
-      "https://graph.facebook.com/v21.0/17841470292534936?fields=media%7Bcaption%7D&access_token=EAAnZByvmjelsBO4B4rKxBlUTwTBuAZBv9bjIGRZCw1hiYZADy7TvrA20gpEKxqoV1BnJIP9ZCmnZACgyfvqodmR9D8nhWIwWpZAC1zHiYRGBwwZCrvEdpiUmP42VPfgkqBFCzHLfv8mTkq1uxFE73BYjajd2QmySFShIP8aYxJFN4laq8mZCGFN5pvfMMr2ew04qZBTyhhekHLvTFMJ42OVc09hy4ZD";
+      "https://graph.facebook.com/v21.0/17841470292534936?fields=media%7Bcaption%7D&access_token=EAAnZByvmjelsBOx4AMdYExJ6EJaAd9d19bBfAZAk22LiDFVOV4Dx5uq0y1E44cg4GCT3WhYBjNPXZAaEZADZCvuvzIcyjEmDX7OBwYmnCQ98ZAvwWwGG5CvXbLEa2wTsFphEgNmfDEKzqZBDFONYZAdM1DVIm5J1cO0JU63nlcPZBtHN27xXdYhUV56Fgs6ZAIM4OhJkhtKxUxPMFMZCK49HqCopoXk";
 
     try {
       const response = await fetch(url);
@@ -59,7 +59,8 @@ const CreateAutomation = () => {
 
   return (
     <>
-      <div className="dropdown">
+    <div className="container" style={{borderRadius:30,paddingTop:20,paddingBottom:20,background:'linear-gradient(135deg, #D76D77, #49267e)'}}>
+      <div className="dropdown" style={{ borderRadius:25,border: 0,marginTop:0,marginBottom:0,}}>
         <label>Select Type</label>
         <select onChange={(e) => setSelectedType(e.target.value)} value={selectedType}>
           <option>Reply to Comment</option>
@@ -68,7 +69,7 @@ const CreateAutomation = () => {
         </select>
       </div>
 
-      <div className="dropdown" style={{ border: 0 }}>
+      <div className="dropdown" style={{ borderRadius:25,border: 0,marginTop:0,marginBottom:0}}>
         <label>Select Post</label>
         <select onChange={(e) => setSelectedPost(e.target.value)} value={selectedPost || ""}>
           <option value="" disabled>
@@ -81,6 +82,7 @@ const CreateAutomation = () => {
           ))}
         </select>
       </div>
+    </div>
 
       <input type="file" className="upload-csv" />
 
@@ -170,7 +172,7 @@ const CreateAutomation = () => {
       )}
 
       <div style={{ padding: "0px", border: 0, boxShadow: "0 0px 0px", alignContent: "center", justifyItems: "center" }}>
-        <button style={{ minHeight: 30 }}>Submit</button>
+        <button style={{ minHeight: 30,background:'linear-gradient(135deg, #D76D77, #49267e)' }}>Submit</button>
       </div>
     </>
   );
