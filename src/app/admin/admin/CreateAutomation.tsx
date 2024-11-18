@@ -1,10 +1,49 @@
-import React, { useState } from 'react';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+
+// Define the structure of an Instagram post
+interface InstagramPost {
+  id: string;
+  caption: string;
+}
 
 const CreateAutomation = () => {
   const [keywords, setKeywords] = useState<string[]>([]);
   const [answerList, setAnswerList] = useState({ comment: [], dm: [] });
   const [selectedType, setSelectedType] = useState("Reply to Comment");
+  const [posts, setPosts] = useState<InstagramPost[]>([]); // Store Instagram posts
+  const [selectedPost, setSelectedPost] = useState<string | null>(null); // Selected post ID
+
+  // Function to fetch Instagram posts
+  const fetchInstagramPosts = async () => {
+    const url =
+      "https://graph.facebook.com/v21.0/17841470292534936?fields=media%7Bcaption%7D&access_token=EAAnZByvmjelsBO4B4rKxBlUTwTBuAZBv9bjIGRZCw1hiYZADy7TvrA20gpEKxqoV1BnJIP9ZCmnZACgyfvqodmR9D8nhWIwWpZAC1zHiYRGBwwZCrvEdpiUmP42VPfgkqBFCzHLfv8mTkq1uxFE73BYjajd2QmySFShIP8aYxJFN4laq8mZCGFN5pvfMMr2ew04qZBTyhhekHLvTFMJ42OVc09hy4ZD";
+
+    try {
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch posts: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      // Transform and set posts
+      const formattedPosts = data.media.data.map((post: { id: string; caption?: string }) => ({
+        id: post.id,
+        caption: post.caption || "No caption available",
+      }));
+
+      setPosts(formattedPosts);
+    } catch (error) {
+      console.error("Error fetching Instagram posts:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch posts on component mount
+    fetchInstagramPosts();
+  }, []);
 
   const addKeyword = (keyword: string) => {
     if (keyword && !keywords.includes(keyword)) {
@@ -31,40 +70,47 @@ const CreateAutomation = () => {
 
       <div className="dropdown" style={{ border: 0 }}>
         <label>Select Post</label>
-        <select>
-          <option>Only 2250 tk..! (Here you go..)</option>
-          <option>Get the best quality at..</option>
-          <option>Freaking comfortable..</option>
-          <option>see more</option>
+        <select onChange={(e) => setSelectedPost(e.target.value)} value={selectedPost || ""}>
+          <option value="" disabled>
+            Select a post
+          </option>
+          {posts.map((post) => (
+            <option key={post.id} value={post.id}>
+              {post.caption}
+            </option>
+          ))}
         </select>
       </div>
-      
+
       <input type="file" className="upload-csv" />
-      
+
       <div className="keywords">
         <label>Keywords</label>
         <div className="keyword-input">
           <input
-            type="text" 
+            type="text"
             placeholder="Add keyword"
             onKeyPress={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === "Enter") {
                 addKeyword(e.currentTarget.value);
-                e.currentTarget.value = '';
+                e.currentTarget.value = "";
               }
             }}
-            style={{minWidth:'20%'}}
+            style={{ minWidth: "20%" }}
           />
-          <button onClick={() => addKeyword('')} style={{maxWidth:'20%'}}>Add</button>
+          <button onClick={() => addKeyword("")} style={{ maxWidth: "20%" }}>
+            Add
+          </button>
         </div>
-        <div className="keyword-list" style={{ margin: 0, padding: 0.1, border: 0, boxShadow: '0 0px 0px' }}>
+        <div className="keyword-list" style={{ margin: 0, padding: 0.1, border: 0, boxShadow: "0 0px 0px" }}>
           {keywords.map((keyword, index) => (
-            <span key={index} className="keyword">{keyword}</span>
+            <span key={index} className="keyword">
+              {keyword}
+            </span>
           ))}
         </div>
       </div>
 
-      {/* Conditionally render answer lists based on selected type */}
       {(selectedType === "Reply to Comment" || selectedType === "Comment+DM") && (
         <div className="answer-list">
           <label>Answer List (Comment)</label>
@@ -73,18 +119,22 @@ const CreateAutomation = () => {
               type="text"
               placeholder="Add answer"
               onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  addAnswer(e.currentTarget.value, 'comment');
-                  e.currentTarget.value = '';
+                if (e.key === "Enter") {
+                  addAnswer(e.currentTarget.value, "comment");
+                  e.currentTarget.value = "";
                 }
               }}
-              style={{minWidth:'20%'}}
+              style={{ minWidth: "20%" }}
             />
-            <button style={{maxWidth:'20%'}} onClick={() => addAnswer('', 'comment')}>Add</button>
+            <button style={{ maxWidth: "20%" }} onClick={() => addAnswer("", "comment")}>
+              Add
+            </button>
           </div>
-          <div className="keyword-list" style={{ margin: 0, padding: 0.1, border: 0, boxShadow: '0 0px 0px' }}>
+          <div className="keyword-list" style={{ margin: 0, padding: 0.1, border: 0, boxShadow: "0 0px 0px" }}>
             {answerList.comment.map((answer, index) => (
-              <span key={index} className="keyword">{answer}</span>
+              <span key={index} className="keyword">
+                {answer}
+              </span>
             ))}
           </div>
         </div>
@@ -98,24 +148,28 @@ const CreateAutomation = () => {
               type="text"
               placeholder="Add answer"
               onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  addAnswer(e.currentTarget.value, 'dm');
-                  e.currentTarget.value = '';
+                if (e.key === "Enter") {
+                  addAnswer(e.currentTarget.value, "dm");
+                  e.currentTarget.value = "";
                 }
               }}
-              style={{minWidth:'20%'}}
+              style={{ minWidth: "20%" }}
             />
-            <button style={{maxWidth:'20%'}} onClick={() => addAnswer('', 'dm')}>Add</button>
+            <button style={{ maxWidth: "20%" }} onClick={() => addAnswer("", "dm")}>
+              Add
+            </button>
           </div>
-          <div className="keyword-list" style={{ margin: 0, padding: 0.1, border: 0, boxShadow: '0 0px 0px' }}>
+          <div className="keyword-list" style={{ margin: 0, padding: 0.1, border: 0, boxShadow: "0 0px 0px" }}>
             {answerList.dm.map((answer, index) => (
-              <span key={index} className="keyword">{answer}</span>
+              <span key={index} className="keyword">
+                {answer}
+              </span>
             ))}
           </div>
         </div>
       )}
 
-      <div style={{ padding: '0px', border: 0, boxShadow: '0 0px 0px', alignContent: 'center', justifyItems: 'center' }}>
+      <div style={{ padding: "0px", border: 0, boxShadow: "0 0px 0px", alignContent: "center", justifyItems: "center" }}>
         <button style={{ minHeight: 30 }}>Submit</button>
       </div>
     </>
