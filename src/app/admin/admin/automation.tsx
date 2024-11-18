@@ -67,9 +67,9 @@ const Automation = () => {
             </div>
 
             {/* Right Div for Displaying Content */}
-            <div className={`right-div ${showRightDiv ? 'show' : 'hide'}`} style={{borderRadius:0}}>
+            <div className={`right-div ${showRightDiv ? 'show' : 'hide'}`} style={{borderRadius:0,margin:0,padding:0}}>
                 {/* , marginBottom:"100px"*/}
-                <div id="content-display" style={{marginBottom:100}}>
+                <div id="content-display" style={{margin:0,padding:0,boxShadow: "0 0px 0px rgba(0, 0, 0, 0)",border:0,marginBottom:200}}>
                     {selectedContent || 'Select a button to see content here.'}
                 </div>
             </div>

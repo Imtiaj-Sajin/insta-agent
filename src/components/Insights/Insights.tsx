@@ -96,8 +96,8 @@ const Insights = () => {
           <p>{selectedAgent.insights.monthlySummary.totalNewConversations}</p>
         </div>
         <div className="insight-box follow-ups">
-          <h2>Total Follow-Ups</h2>
-          <p>{selectedAgent.insights.monthlySummary.totalFollowUps}</p>
+          <h2>Average Response Time</h2>
+          <p>{selectedAgent.insights.monthlySummary.totalFollowUps}s</p>
         </div>
       </div>
     </div>
