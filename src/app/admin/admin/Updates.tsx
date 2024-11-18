@@ -8,7 +8,7 @@ const Updates = () => {
       icon: '❤️',
       content: 'John Doe liked your post.',
       timestamp: '2024-11-08T10:30:00Z',
-      postLink: 'https://www.instagram.com/p/DA528GnvQ1Y/',
+      postLink: 'https://graph.facebook.com/v21.0/instagram_oembed?url=https://www.instagram.com/p/DCPfINGTqHV/&access_token=EAAnZByvmjelsBOx4AMdYExJ6EJaAd9d19bBfAZAk22LiDFVOV4Dx5uq0y1E44cg4GCT3WhYBjNPXZAaEZADZCvuvzIcyjEmDX7OBwYmnCQ98ZAvwWwGG5CvXbLEa2wTsFphEgNmfDEKzqZBDFONYZAdM1DVIm5J1cO0JU63nlcPZBtHN27xXdYhUV56Fgs6ZAIM4OhJkhtKxUxPMFMZCK49HqCopoXk',
     },
     {
       id: 2,
@@ -65,10 +65,10 @@ const Updates = () => {
           onClick={toggleDivs}
           style={{
             boxShadow: '0 4px 8px rgba(0, 0, 0, 0)',
-            backgroundColor: 'white',
+            backgroundColor: 'None',
             border: '0px solid #ffffff',
             margin: '-1rem',
-            padding: '10px',
+            padding: '0px',
             textAlign: 'center',
             cursor: 'pointer',
             fontSize: '18px',
@@ -98,7 +98,7 @@ const Updates = () => {
             display: showRightDiv && isMobile ? 'none' : 'flex',
             flexDirection: 'column',
             padding: '10px',
-            backgroundColor: '#f9f9f9',
+            backgroundColor: '#ffffff',
           }}
         >
           <div
@@ -107,6 +107,7 @@ const Updates = () => {
               display: showRightDiv && isMobile ? 'none' : 'flex',
               justifyContent: 'space-between',
               marginBottom: '1rem',
+              backgroundColor: "None"
             }}
           >
             <h1 style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>Updates</h1>
@@ -120,7 +121,7 @@ const Updates = () => {
                 display: 'flex',
                 alignItems: 'center',
                 padding: '10px',
-                margin: '5px 0',
+                margin: '0',
                 backgroundColor:
                   selectedContent === notification.postLink ? 'rgb(240,240,240)' : 'white',
                 cursor: 'pointer',
@@ -133,7 +134,7 @@ const Updates = () => {
               }}
             >
               <span style={{ marginRight: '8px' }}>{notification.icon}</span>
-              <div style={{ margin: 0, padding: 0, flex: 1 }}>
+              <div style={{ margin: 0, padding: 0, flex: 1, border:0, boxShadow: "0 4px 8px rgba(0, 0, 0, 0)", backgroundColor: "rgba(0,0,0,0)"}}>
                 <span>{notification.content}</span>
               </div>
               <span
