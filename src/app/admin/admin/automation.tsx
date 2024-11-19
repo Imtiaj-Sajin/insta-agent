@@ -42,28 +42,10 @@ const Automation = () => {
                     {/* <button style={{backgroundColor: "var(--create-button-color)", color:'#fff', width:'30%', marginTop:4, padding:4, textAlign: 'center',display:'block', margin:'0'}} onClick={() => showContent( <AddAgent/>)}>New +</button> */}
  
                 </div>
-                <button onClick={() => showContent('Content for Button 1')}>Button 1</button>
-                <button onClick={() => showContent('Content for Button 2')}>Button 2</button>
+                <button onClick={() => showContent('Content for Button 1')}>Reply comment: Air Jordan 3</button>
+                <button onClick={() => showContent('Content for Button 2')}>DM+Comment: New Balance 574</button>
                 <button onClick={() => showContent('Content for Button 3')}>Button 3</button>
-                <button onClick={() => showContent('Content for Button 4')}>Button 4</button>
-                <button onClick={() => showContent('Content for Button 1')}>Button 1</button>
-                <button onClick={() => showContent('Content for Button 2')}>Button 2</button>
-                <button onClick={() => showContent('Content for Button 3')}>Button 3</button>
-                <button onClick={() => showContent('Content for Button 4')}>Button 4</button>
-                <button onClick={() => showContent('Content for Button 1')}>Button 1</button>
-                <button onClick={() => showContent('Content for Button 2')}>Button 2</button>
-                <button onClick={() => showContent('Content for Button 3')}>Button 3</button>
-                <button onClick={() => showContent('Content for Button 4')}>Button 4</button>
-                <button onClick={() => showContent('Content for Button 4')}>Button 4</button>
-                <button onClick={() => showContent('Content for Button 1')}>Button 1</button>
-                <button onClick={() => showContent('Content for Button 2')}>Button 2</button>
-                <button onClick={() => showContent('Content for Button 3')}>Button 3</button>
-                <button onClick={() => showContent('Content for Button 4')}>Button 4</button>
-                <button onClick={() => showContent('Content for Button 4')}>Button 4</button>
-                <button onClick={() => showContent('Content for Button 1')}>Button 1</button>
-                <button onClick={() => showContent('Content for Button 2')}>Button 2</button>
-                <button onClick={() => showContent('Content for Button 3')}>Button 3</button>
-                <button onClick={() => showContent('Content for Button 4')}>Button 4</button>
+                
             </div>
 
             {/* Right Div for Displaying Content */}

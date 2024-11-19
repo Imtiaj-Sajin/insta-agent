@@ -172,7 +172,7 @@ const CreateAutomation = () => {
       )}
 
       <div style={{ padding: "0px", border: 0, boxShadow: "0 0px 0px", alignContent: "center", justifyItems: "center" }}>
-        <button style={{ minHeight: 30,background:'linear-gradient(135deg, #D76D77, #49267e)' }}>Submit</button>
+        <button style={{color:'white', minHeight: 30,background:'linear-gradient(135deg, #D76D77, #49267e)' }}>Submit</button>
       </div>
     </>
   );
