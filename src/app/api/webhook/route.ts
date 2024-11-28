@@ -1,22 +1,6 @@
 //app/api/webhook/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { Server } from 'socket.io';
-import { createServer } from 'http';
-import io from 'socket.io-client'
-
-// Connect to the WebSocket server
-
-let socket: any;
-
-function initializeSocket() {
-  if (!socket || !socket.connected) {
-     socket = io("https://j7f0x0n5-3001.asse.devtunnels.ms/");
-    // socket.on('connect', () => console.log('Socket connected:', socket.id));
-    // socket.on('disconnect', () => console.log('Socket disconnected'));
-  }
-}
-
 
 const VERIFY_TOKEN = 'v_token'; // Store in .env.local
 const APP_SECRET = process.env.NEXT_PUBLIC_FACEBOOK_APP_SECRET || ''; // Store in .env.local
@@ -50,17 +34,15 @@ export async function GET(req: NextRequest) {
   }
   
 
-// Handle POST requests for Webhook Notifications
 export async function POST(req: NextRequest) {
     try {
       const body = await req.text(); // Capture raw body
       const signature = req.headers.get('x-hub-signature-256') || ''; // Get Meta signature header
   
-      console.log('Received POST Request:');
-      console.log('Body:', body);
-      console.log('Signature:', signature);
+      // console.log('Received POST Request:');
+      // console.log('Body:', body);
+      // console.log('Signature:', signature);
   
-      // Verify the payload signature
       if (!verifySignature(body, signature)) {
         console.error('Signature verification failed');
         return new Response('Forbidden', { status: 403 });
@@ -68,15 +50,16 @@ export async function POST(req: NextRequest) {
   
       // Parse the payload
       const payload = JSON.parse(body);
-      console.log('Parsed Payload:', payload);
-      initializeSocket();
-      try{
-        socket.emit('sendMessage9', payload);
-        console.log('Payload emitted to socket');
-      } catch (err) {
-          console.error('Error emitting to socket:', err);
-      }
-      // Check if this is a message notification
+      // console.log('Parsed Payload:', payload);
+
+  
+      await fetch("https://nkf448kn-3001.asse.devtunnels.ms/api/sendMessage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: body }),
+      });
+
+
       if (payload.object === 'page') {
         payload.entry.forEach((entry: any) => {
           entry.messaging?.forEach((event: any) => {
@@ -132,3 +115,5 @@ function handlePostback(event: any) {
   console.log(`Received postback from ${senderId}: ${payload}`);
   // Add your logic here to process the postback
 }
+
+
