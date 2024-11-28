@@ -11,9 +11,9 @@ let socket: any;
 
 function initializeSocket() {
   if (!socket || !socket.connected) {
-    socket = io('https://nkf448kn-4000.asse.devtunnels.ms');
-    socket.on('connect', () => console.log('Socket connected:', socket.id));
-    socket.on('disconnect', () => console.log('Socket disconnected'));
+     socket = io("https://j7f0x0n5-3001.asse.devtunnels.ms/");
+    // socket.on('connect', () => console.log('Socket connected:', socket.id));
+    // socket.on('disconnect', () => console.log('Socket disconnected'));
   }
 }
 
@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
       console.log('Parsed Payload:', payload);
       initializeSocket();
       try{
-        socket.emit('webhook-event', payload);
+        socket.emit('sendMessage9', payload);
         console.log('Payload emitted to socket');
       } catch (err) {
           console.error('Error emitting to socket:', err);

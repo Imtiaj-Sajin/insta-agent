@@ -1,42 +1,33 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { useState, useEffect } from "react";
+import { io } from "socket.io-client";
 
-const Settings = () => {
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const [messages, setMessages] = useState<string[]>([]);
+// Connect to the server
+const socket = io("https://j7f0x0n5-3001.asse.devtunnels.ms/");
+
+export default function Settings() {
+  const [username, setUsername] = useState("");
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<String[]>([]);
 
   useEffect(() => {
-    // Create socket connection
-    const newSocket = io('https://nkf448kn-4000.asse.devtunnels.ms', {
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000
+    // Listen for messages from the server
+    socket.on("receiveMessage", (data) => {
+      setMessages((prev) => [...prev, data]);
     });
 
-    // Set up connection and event listeners
-    newSocket.on('connect', () => {
-      console.log('Socket connected:', newSocket.id);
-    });
-
-    newSocket.on('webhook-event', (payload: any) => {
-      console.log('Received payload:', payload);
-      setMessages((prev) => [...prev, JSON.stringify(payload, null, 2)]);
-    });
-
-    newSocket.on('connect_error', (error) => {
-      console.error('Connection error:', error);
-    });
-
-    // Store socket instance
-    setSocket(newSocket);
-
-    // Cleanup on unmount
     return () => {
-      newSocket.disconnect();
+      socket.off("receiveMessage");
     };
-  }, []); // Empty dependency array ensures this runs only once
+  }, []);
+
+  const sendMessage = () => {
+    if (username && message) {
+      socket.emit("sendMessage", { username, message });
+      setMessage(""); // Clear the input field after sending
+    }
+  };
 
   return (
     <div>
@@ -47,7 +38,7 @@ const Settings = () => {
         ) : (
           messages.map((msg, idx) => (
             <pre key={idx} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
-              {msg}
+              {message}
             </pre>
           ))
         )}
@@ -56,4 +47,3 @@ const Settings = () => {
   );
 };
 
-export default Settings;
