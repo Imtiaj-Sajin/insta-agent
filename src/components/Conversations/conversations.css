@@ -38,16 +38,24 @@
   }
   
   .inbox-message-user {
-    background-color: #f0f0f0;
+    background-color: #f0f0f0 !important;
     align-self: flex-start;
     border-top-left-radius: 0;
+    box-shadow: "0 4px 8px rgba(0,0,0,0)";
+    border: 0px solid !important;
+    padding: 0px;
+    margin: "0rem 0" !important;
   }
   
   .inbox-message-agent {
-    background-color: #0070f3;
+    background-color: #BFACE2 !important;
     color: white;
     align-self: flex-end;
     border-top-right-radius: 0;
+    box-shadow: #007bff;
+    border: 0px solid !important;
+    margin: "0 rem" !important;
+
   }
   
   .inbox-timestamp {

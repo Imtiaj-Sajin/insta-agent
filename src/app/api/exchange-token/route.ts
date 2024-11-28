@@ -58,9 +58,26 @@ export async function POST(req: NextRequest) {
         }
 
         console.log('Page access token:', pageAccessToken);
-
         // Return both the long-lived user access token and the page access token
-        return NextResponse.json({ access_token: longLivedTokenData.access_token, page_access_token: pageAccessToken });
+
+        const res = NextResponse.json({ success: true });
+        
+        res.cookies.set('longLivedToken', longLivedTokenData.access_token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 60 * 60 * 24 * 60, // 60 days
+        });
+
+        res.cookies.set('pageAccessToken', pageAccessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 60 * 60 * 24 * 60, // 60 days
+        });
+
+        return res;
+        //return NextResponse.json({ access_token: longLivedTokenData.access_token, page_access_token: pageAccessToken });
 
     } catch (error) {
         console.error('Token exchange error:', error);

@@ -1,21 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Inbox from './Inbox';
-import msgs from '../../../public/messages.json';
 import './conversations.css';
-
-interface Message {
-  from: { username: string; id: string };
-  to: { data: { username: string; id: string }[] };
-  message: string;
-  created_time: string;
-  id: string;
-  attachments?: { type: string; url: string }[];
-}
 
 interface Conversation {
   id: string;
-  messages: { data: Message[] };
+  name: string;
   updated_time: string;
+  last_message: string;
   avatar: string;
   status: string;
 }
@@ -25,7 +16,7 @@ const Messages = () => {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
+  let [pageAccessToken, setPageAccessToken] = useState<string | null>(null);
   const username = process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME;
 
   const [messages, setMessages] = useState([]);
@@ -56,18 +47,44 @@ const Messages = () => {
           setLoading(false);
       }
   };
+  const fetchConversationList=async (pageAccessToken:string)=>{
+    setLoading(true);
+    try{
+      console.log("fetch conversation list: ", pageAccessToken )
+        const response=await fetch(`/api/conversations?accessToken=${pageAccessToken}`,{
+          method: 'GET',
+        });
+        const data =await response.json();
+        console.log("inside messages ", data)
+        if(response.ok){
+            setConversations(data ||[]);
+            console.log("everythings ok:", data);
+        }
+        else{
+          setError(data.error_message || 'failed to fetch conversation list');
+          console.log("everythings baddddd:", data);
+
+        }
+    }
+    catch(err){
+      setError('Error fetching conversations');
+      console.error('Error:', err);
+    }
+    finally{
+      setLoading(false);
+    }
+  }
 
   const exchangeToken = async (code: string) => {
       try {
-          const tokenResponse = await fetch('/api/exchange-token', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ code }),
-          });
-          const tokenData = await tokenResponse.json();
+        const tokenResponse = await fetch('/api/get-tokens');
+        const tokenData = await tokenResponse.json();
           if (tokenResponse.ok) {
-              setAccessToken(tokenData.access_token);
-              fetchConversations(tokenData.page_access_token);
+            const { pageAccessToken } = tokenData;
+              console.log("inside the token response block", pageAccessToken);
+              setPageAccessToken(pageAccessToken);
+              //fetchConversations(tokenData.page_access_token);
+              fetchConversationList(pageAccessToken);
           } else {
               setError(tokenData.error_message || 'Failed to exchange token');
           }
@@ -90,10 +107,10 @@ const Messages = () => {
     return () => window.removeEventListener("resize", handleResize);
 }, []);
 
-const isMessageForCurrentUser = (message: Message): boolean => {
-  // Check if the message is directed to the current user
-  return message.to?.data?.some((recipient) => recipient.username === username);
-};
+// const isMessageForCurrentUser = (message: Message): boolean => {
+//   // Check if the message is directed to the current user
+//   return message.to?.data?.some((recipient) => recipient.username === username);
+// };
 
 
   const filteredMessages = messages.filter((msg) => {
@@ -128,7 +145,7 @@ const isMessageForCurrentUser = (message: Message): boolean => {
             margin: "-1rem"
           }}
         >
-          ← {selectedConversation?.messages.data[0].from.username || "Message"}
+          ← {selectedConversation?.name || "Message"}
         </div>
       )}
 
@@ -166,11 +183,9 @@ const isMessageForCurrentUser = (message: Message): boolean => {
               <img src={conversation.avatar} alt={conversation.id} className="avatar w-8 h-8 rounded-full mr-2" />
               <div className="text" style={{margin:0, padding:0, border:0, boxShadow:"0 4px 8px rgba(0, 0, 0, 0)", backgroundColor:"rgba(255,255,255,0)"}}>
                 <h2 className="font-semibold flex items-center">
-                {conversation.messages?.data?.[0]?.to?.data?.[0]?.username === username
-                    ? `${conversation.messages.data[0].from.username}`
-                    : `${conversation.messages.data[0].to.data[0].username}`}
+                {conversation.name}
                 </h2>
-                <p className="text-sm text-gray-500 truncate">{conversation.messages.data[conversation.messages.data.length - 1].message}</p>
+                <p className="text-sm text-gray-500 truncate">{conversation.last_message}</p>
                 
               </div>
               <span style={{marginRight:'1px'}}
@@ -184,7 +199,8 @@ const isMessageForCurrentUser = (message: Message): boolean => {
         </div>
 
         <div className={`right-div ${showRightDiv ? 'show' : 'hide'}`} style={{ borderRadius: 0, overflow: 'hidden' }}>
-          <Inbox selectedConversation={selectedConversation} />
+          <Inbox pageAccessToken= {pageAccessToken} selectedConversation={selectedConversation} />
+          
         </div>
       </div>
     </div>

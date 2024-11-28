@@ -1,19 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiPaperclip, FiSend } from 'react-icons/fi';
 import './conversations.css';
-
-type Message = {
-  id: number;
-  name: string;
-  avatar: string;
-  status: string;
-  messages: {
-    text: string;
-    sender: string;
-    timestamp: string;
-    attachments?: { type: string; url: string }[];
-  }[];
-};
 
 interface Message1 {
   from: { username: string; id: string };
@@ -21,76 +8,420 @@ interface Message1 {
   message: string;
   created_time: string;
   id: string;
-  attachments?: { type: string; url: string }[];
+  attachments?: { data: { type?: string; image_data?: { url: string }; video_data?:{width: number, height: number, url:string, preview_url:string} }[] };
 }
 
 interface Conversation {
   id: string;
-  messages: { data: Message1[] };
+  name: string;
   updated_time: string;
+  last_message: string;
   avatar: string;
   status: string;
 }
+
 interface InboxProps {
+  pageAccessToken: string | null;
   selectedConversation: Conversation | null;
 }
 
-const Inbox: React.FC<InboxProps> = ({ selectedConversation }) => {
+const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) => {
+  const [messages, setMessages] = useState<Message1[]>([]);
   const [newMessage, setNewMessage] = useState('');
-  const [attachments, setAttachments] = useState<File[]>([]);
+  const [attachments, setAttachments] = useState<{ file: File; previewUrl: string }[]>([]);
 
-  const handleSendMessage = () => {
-    if (newMessage || attachments.length) {
-      console.log("Sending message:", newMessage, attachments);
-      setNewMessage('');
-      setAttachments([]);
+  const pageId=process.env.NEXT_PUBLIC_FACEBOOK_PAGE_ID;
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      if (selectedConversation) {
+        try {
+          const response = await fetch(
+            `/api/fetch-messagess?accessToken=${pageAccessToken}&conversationId=${selectedConversation.id}`
+          );
+          const data = await response.json();
+          if (response.ok && data) {
+            setMessages(data.messages.data);
+          } else {
+            console.error('Failed to fetch messages', data);
+          }
+        } catch (error) {
+          console.error('Error fetching messages:', error);
+        }
+      }
+    };
+
+    fetchMessages();
+  }, [selectedConversation]);
+
+  const uploadImage = async (imageUrl: string) => {
+    const endpoint = `https://graph.facebook.com/v21.0/${pageId}/message_attachments`;
+    const payload = {
+      access_token: pageAccessToken,
+      message: {
+        attachment: {
+          type: 'image',
+          payload: {
+            url: imageUrl,
+            is_reusable: true,
+          },
+        },
+      },
+    };
+  
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        return data.attachment_id;  // Return the attachment ID for use in the next step
+      } else {
+        console.error('Failed to upload image:', data);
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
     }
   };
 
+  const uploadImageFromFile = async (file: File) => {
+    const formData = new FormData();
+    formData.append('filedata', file);
+    formData.append('message', JSON.stringify({
+      attachment: {
+        type: 'image',
+      },
+    }));
+    formData.append('type', 'image/png'); // Adjust according to your file type
+  
+    const endpoint = `https://graph.facebook.com/v21.0/${pageId}/message_attachments?access_token=${pageAccessToken}`;
+    
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await response.json();
+      if (response.ok) {
+        return data.attachment_id;  // Return the attachment ID
+      } else {
+        console.error('Failed to upload image from file:', data);
+      }
+    } catch (error) {
+      console.error('Error uploading image from file:', error);
+    }
+  };
+
+  const sendMessageWithImage = async (recipientId: string, attachmentId: string, messageText?: string) => {
+    const endpoint = `https://graph.facebook.com/v21.0/${pageId}/messages?access_token=${pageAccessToken}`;
+    
+    const payload = {
+      recipient: {
+        id: recipientId,
+      },
+      message: {
+        attachment: {
+          type: 'image',
+          payload: {
+            attachment_id: attachmentId,
+          },
+        },
+      },
+    };
+  
+    // If you want to send a message along with the image, add the text to the payload
+    // if (messageText) {
+    //   payload.message.text = messageText;
+    // }
+  
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Message sent successfully:', data);
+      } else {
+        console.error('Failed to send message:', data);
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
+  
+  const sendImageMessage = async (recipientId: string, imageUrl: string, messageText: string) => {
+    try {
+      // Step 1: Upload the image
+      const attachmentId = await uploadImage(imageUrl);
+      if (attachmentId) {
+        // Step 2: Send the image with the message
+        await sendMessageWithImage(recipientId, attachmentId, messageText);
+      }
+    } catch (error) {
+      console.error('Error sending image message:', error);
+    }
+  };
+
+  const sendVideo = async ({ pageId, recipientId, accessToken, file }) => {
+    try {
+      const endpoint = `https://graph.facebook.com/v21.0/${pageId}/messages`;
+  
+      const formData = new FormData();
+      formData.append('recipient', JSON.stringify({ id: recipientId }));
+      formData.append(
+        'message',
+        JSON.stringify({
+          attachment: {
+            type: "video", // 'audio' or 'video'
+          },
+        })
+      );
+      formData.append('filedata', file); // Provide the file path or stream
+      formData.append('access_token', accessToken);
+  
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        body: formData,
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log('Media message sent successfully:', data);
+        return data; // Return the successful response
+      } else {
+        console.error('Failed to send media message:', data);
+        throw new Error(data.error.message);
+      }
+    } catch (error) {
+      console.error('Error while sending media message:', error.message);
+      throw error; // Re-throw for external handling
+    }
+  };
+
+  function determineFileType(file: File | undefined): string {
+    if (!file) {
+      console.warn("File is undefined or null.");
+      return "unknown";
+    }
+  
+    if (file.type) {
+      const mimeType = file.type;
+      if (mimeType.startsWith('image/')) return 'image';
+      if (mimeType.startsWith('audio/')) return 'audio';
+      if (mimeType.startsWith('video/')) return 'video';
+    }
+  
+    if(file.name){
+          const extension = file.name.split('.').pop().toLowerCase();
+    if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(extension)) return 'image';
+    if (['mp3', 'wav', 'ogg', 'aac', 'flac', 'm4a'].includes(extension)) return 'audio';
+    if (['mp4', 'mov', 'avi', 'mkv', 'webm', 'flv'].includes(extension)) return 'video';
+  
+    }
+
+    return 'unknown';
+  }
+
+  const handleSendMessage = async () => {
+    if (newMessage || attachments.length) {
+      const recipientId =
+        messages[0].from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME
+          ? messages[0].to.data[0].id
+          : messages[0].from.id;
+  
+      const attachment = attachments[0]?.file;
+      const fileType = determineFileType(attachment);
+      console.log("Detected file type:", fileType);
+
+      const newMessageToAdd = {
+        from: { username: process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME, id: pageId }, // Use appropriate user info
+        to: { data: [{ id: recipientId }] },
+        message: fileType === 'video' ? 'Sending a video...' : newMessage,
+        created_time: new Date().toISOString(),
+        id: Math.random().toString(36).substr(2, 9), // Temporary ID, replaced later if needed
+        attachments: [],
+      };
+  
+      setMessages((prevMessages) => [newMessageToAdd, ...prevMessages]); 
+  
+      if (fileType === "video") {
+        console.log("Video type detected");
+        (async () => {
+          const pageId = process.env.NEXT_PUBLIC_FACEBOOK_PAGE_ID;
+          const accessToken = pageAccessToken;
+  
+          try {
+            setNewMessage(''); // Clear the text input
+            setAttachments([]); // Clear the attachments
+            const response = await sendVideo({
+              pageId,
+              recipientId,
+              accessToken,
+              file: attachment, // Pass the File object directly
+            });
+            console.log('Response:', response);
+            const updatedMessages = [...messages];
+          const tempMessageIndex = updatedMessages.findIndex(
+            (msg) => msg.id === newMessageToAdd.id
+          );
+          if (tempMessageIndex > -1) {
+            updatedMessages[tempMessageIndex] = {
+              ...updatedMessages[tempMessageIndex],
+              message: 'Video sent successfully', // Or update as needed
+              attachments: [
+                {
+                  type: 'video',
+                  video_data: { url: response?.video_url, width: 640, height: 360 }, // Example URL and size
+                },
+              ],
+            };
+            setMessages(updatedMessages);
+          }
+           
+          } catch (error) {
+            console.error('Failed to send video:', error.message);
+          }
+        })();
+      } else if (fileType === "image") {
+        const attachmentId = await uploadImageFromFile(attachment); // Upload image from file
+        if (attachmentId) {
+          await sendMessageWithImage(recipientId, attachmentId, newMessage); // Send message with the uploaded image
+          setNewMessage(''); // Clear the text input
+          setAttachments([]); // Clear the attachments
+        }
+      } else {
+        // Send plain text message
+        const endpoint = `https://graph.facebook.com/v21.0/me/messages?access_token=${pageAccessToken}`;
+        const payload = {
+          recipient: { id: recipientId },
+          message: { text: newMessage },
+        };
+  
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+          });
+  
+          const data = await response.json();
+          if (response.ok) {
+            console.log('Message sent successfully:', data);
+            setNewMessage(''); // Clear the input field
+          } else {
+            console.error('Failed to send message:', data);
+          }
+        } catch (error) {
+          console.error('Error sending message:', error);
+        }
+      }
+    }
+  };
+  
+  
+  
+
   const handleAttachmentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files ? Array.from(event.target.files) : [];
-    setAttachments((prev) => [...prev, ...files]);
+    const updatedAttachments = files.map((file) => ({
+      file,
+      previewUrl: URL.createObjectURL(file),
+    }));
+    setAttachments((prev) => [...prev, ...updatedAttachments]);
+  };
+
+  function isLink(message) {
+    const urlRegex = /https?:\/\/[^\s]+/; // Regex to detect HTTP/HTTPS URLs
+    return urlRegex.test(message); // Returns true if a link is found
+  }
+  const removeAttachment = (index: number) => {
+    setAttachments((prev) => prev.filter((_, i) => i !== index));
   };
 
   return selectedConversation ? (
-    <div className="inbox-container" style={{padding:0}}>
-      <h2 className="inbox-header" style={{margin:0}}>{selectedConversation.messages.data[0].from.username}</h2>
-      <div className="inbox-messages" style={{marginBottom:0,border:0, boxShadow:'0 0px 0px'}}>
-        {selectedConversation.messages.data.map((message) => (
+    <div className="inbox-container" style={{ padding: 0 }}>
+      <h2 className="inbox-header" style={{ margin: 0 }}>{selectedConversation.name}</h2>
+      <div className="inbox-messages" style={{ marginBottom: 0, border: 0, boxShadow: '0 0px 0px rgba(0,0,0,0)', backgroundColor: "unset"}}>
+        {messages.slice().reverse().map((message) => (
           <div
+          style={{boxShadow: '0 0px 0px rgba(0,0,0,0)', margin: "unset"}}
             key={message.id}
-            className={`inbox-message ${message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? "inbox-message-agent" : "inbox-message-user"}`}
+            className={`inbox-message ${message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? 'inbox-message-agent' : 'inbox-message-user'}`}
           >
             <p className="inbox-timestamp">{new Date(message.created_time).toLocaleString()}</p>
-            <p className="inbox-text">
-              {message.message}
-            </p>
-            {message.attachments?.map((attachment, idx) => (
-              <div key={idx} className="inbox-attachment-container" style={{margin:0,  padding:0, border:0}}>
-                {attachment.type === "image" ? (
-                  <img
-                    src={attachment.url}
-                    alt="attachment"
-                    className="inbox-attachment-media" 
-
-                  />
-                ) : attachment.type === "video" ? (
-                  <video
-                    controls
-                    src={attachment.url}
-                    className="inbox-attachment-media"
-                  />
+            <p className="inbox-text">{isLink(message.message)?<a href={message.message} target="_blank" rel="noopener noreferrer" className="inbox-attachment"> > Open link</a>:message.message}</p>
+            {message.attachments?.data?.map((attachment, idx) => (
+              <div key={idx} className="inbox-attachment-container" style={{ margin: 0, padding: 0, border: 0 }}>
+                {attachment.type === 'link' ? (
+                  <a href={attachment.image_data?.url} target="_blank" rel="noopener noreferrer" className="inbox-attachment">📄 File</a>
+                ) : attachment.video_data? (
+                  <video controls src={attachment.video_data?.url} className="inbox-attachment-media" />
                 ) : (
-                  <a href={attachment.url} target="_blank" rel="noopener noreferrer" className="inbox-attachment">
-                    📄 File
-                  </a>
+                  <img src={attachment.image_data?.url} alt="attachment" className="inbox-attachment-media" />
                 )}
               </div>
             ))}
           </div>
         ))}
       </div>
-      <div className="inbox-message-input" style={{borderRadius:40,padding:0}}>
+
+      <div className="inbox-message-input" style={{ borderRadius: 40, padding: 0, flexDirection: 'column', backgroundColor:'rgba(0,0,0,0)', border: "unset", boxShadow:"unset"}}>
+      {attachments.length > 0 && (
+        <div
+          className="attachment-preview-section"
+          style={{
+            all: 'unset',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px',
+            marginBottom: '0px',
+            marginTop: "0 rem", 
+            border: '0px solid #ddd',
+            borderRadius: '10px',
+            backgroundColor: '#ffffff',
+          }}
+        >
+          {attachments.map((attachment, index) => (
+            <div key={index} style={{ position: 'relative', margin: "0px",marginLeft: "5px", padding: "0px", width: 50, height: 50, overflow: 'hidden', borderRadius: 8 }}>
+              <img
+                src={attachment.previewUrl}
+                alt="Preview"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+              <button
+                onClick={() => removeAttachment(index)}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  background: 'rgba(255, 0, 0, 0.8)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: 20,
+                  height: 20,
+                  cursor: 'pointer',
+                }}
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+        <div className='inbox-textarea' style={{display: 'flex',alignItems: 'center',width: '100%',gap: '10px', margin: "unset"}}>
         <label htmlFor="file-input" className="inbox-attach-icon">
           <FiPaperclip />
           <input
@@ -107,11 +438,12 @@ const Inbox: React.FC<InboxProps> = ({ selectedConversation }) => {
           placeholder="Type a message..."
           className="inbox-textarea"
           rows={1}
-          style={{ height: `${Math.min(120, 24 + newMessage.split("\n").length * 20)}px` }}
+          style={{ height: `${Math.min(120, 24 + newMessage.split('\n').length * 20)}px` }}
         />
         <button onClick={handleSendMessage} className="inbox-send-button">
           <FiSend />
         </button>
+        </div>
       </div>
     </div>
   ) : (
