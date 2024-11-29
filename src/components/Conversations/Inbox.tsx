@@ -313,9 +313,10 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
             // Handle message read event
             return {
               type: 'message_read',
-              senderId: event.sender.id,
-              recipientId: event.recipient.id,
-              timestamp: event.timestamp,
+              from: { username: "string", id: event.sender.id },
+              to: { data: { username: "string", id: event.recipient.id } },
+              message: "Seen",
+              created_time: new Date(event.timestamp),
               id: event.read.mid,
             };
           }
