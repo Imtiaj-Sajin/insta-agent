@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
       const payload = JSON.parse(body);
       // console.log('Parsed Payload:', payload);
 
-  
+      //const parsedObject = parseWebhookPayload(payload);
       await fetch("https://nkf448kn-3001.asse.devtunnels.ms/api/sendMessage", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

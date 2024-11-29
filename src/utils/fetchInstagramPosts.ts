@@ -4,7 +4,7 @@ export interface InstagramPost {
   }
   
   export const fetchInstagramPosts = async (): Promise<InstagramPost[]> => {
-    const url = `https://graph.facebook.com/v21.0/17841470292534936?fields=media%7Bcaption%7D&access_token=EAAnZByvmjelsBO4B4rKxBlUTwTBuAZBv9bjIGRZCw1hiYZADy7TvrA20gpEKxqoV1BnJIP9ZCmnZACgyfvqodmR9D8nhWIwWpZAC1zHiYRGBwwZCrvEdpiUmP42VPfgkqBFCzHLfv8mTkq1uxFE73BYjajd2QmySFShIP8aYxJFN4laq8mZCGFN5pvfMMr2ew04qZBTyhhekHLvTFMJ42OVc09hy4ZD`;
+    const url = `https://graph.facebook.com/v21.0/17841470292534936?fields=media,caption&access_token=EAAnZByvmjelsBOZCS79aRQzzj3IX4iKTkwpCNYjskuCBiGqXfcczhEfK7KUk4LGA2ILwFIgXogF6Yq2R3UiwvOFLD2iNHznkUQk1VXpVaFEf77Glf5qu2wUZCT7yBbb5pn5VwamoFa3Ajhnsq4NJZC0kZCuM6RItbjhZBfZBKJYw25uUH1chEgeTFNSfZAR8lHkZD`;
   
     try {
       const response = await fetch(url);

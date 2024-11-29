@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { FiPaperclip, FiSend } from 'react-icons/fi';
 import './conversations.css';
+import io from 'socket.io-client';
+
+const socket = io('https://nkf448kn-3001.asse.devtunnels.ms/'); // Replace with your Socket.IO server URL
 
 interface Message1 {
   from: { username: string; id: string };
@@ -53,6 +56,21 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
 
     fetchMessages();
   }, [selectedConversation]);
+
+  useEffect(() => {
+    socket.on("receiveMessage", (data) => {
+      console.log("Received data:", data);
+      const data1=parseWebhookPayload(JSON.parse(data))
+      console.log("yjjjjjjjjjjjjjjyy",data1)
+      if(!data1.is_echo) setMessages((prevMessages) => [data1, ...prevMessages]); 
+
+    });
+
+    return () => {
+      socket.off("receiveMessage");
+    };
+  }, []);
+
 
   const uploadImage = async (imageUrl: string) => {
     const endpoint = `https://graph.facebook.com/v21.0/${pageId}/message_attachments`;
@@ -230,7 +248,99 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
 
     return 'unknown';
   }
-
+  function parseWebhookPayload(payload: any): any {
+    console.log("hello")
+    if (payload.object === 'instagram' && payload.entry) {
+      console.log("hello payload")
+      for (const entry of payload.entry) {
+        console.log("hello payload entry")
+  
+        const messaging = entry.messaging;
+        for (const event of messaging) {
+          console.log("hello payload entry messaging")
+  
+          if (event.message) {
+            console.log("hello payload entry messaging event")
+  
+            // Check for message type
+            if (event.message.attachments && event.message.attachments.length > 0) {
+              console.log("Processing event with attachments");
+            
+              const attachmentType = event.message.attachments[0].type;
+              const attachmentUrl = event.message.attachments[0].payload.url;
+            
+              let attachmentData;
+              if (attachmentType === "image") {
+                attachmentData = {
+                  type: attachmentType,
+                  image_data: {
+                    url: attachmentUrl,
+                  },
+                };
+              } else if (attachmentType === "video") {
+                attachmentData = {
+                  type: attachmentType,
+                  video_data: {
+                    url: attachmentUrl,
+                    preview_url: attachmentUrl,
+                  },
+                };
+              }
+            
+              return {
+                from: { username: "string", id: event.sender.id },
+                to: { data: [{ username: "string", id: event.recipient.id }] },
+                message: event.message.text,
+                created_time: new Date(event.timestamp),
+                id: event.message.mid,
+                is_echo: event.message.is_echo,
+                attachments: { data: [attachmentData] },
+              };
+            }
+             else {
+              console.log("hello payload entry messaging event text")
+              return {
+                type: 'text_message',
+                from: { username: "string", id: event.sender.id },
+                to: { data: { username: "string", id: event.recipient.id } },
+                message: event.message.text,
+                created_time: new Date(event.timestamp),
+                id: event.message.mid,
+                is_echo:  event.message.is_echo,
+              };
+            }
+          } else if (event.read) {
+            // Handle message read event
+            return {
+              type: 'message_read',
+              senderId: event.sender.id,
+              recipientId: event.recipient.id,
+              timestamp: event.timestamp,
+              id: event.read.mid,
+            };
+          }
+        }
+  
+        const changes = entry.changes || [];
+        for (const change of changes) {
+          if (change.field === 'comments') {
+            // Handle comment events
+            return {
+              type: 'comment',
+              commenterId: change.value.from.id,
+              commenterUsername: change.value.from.username,
+              mediaId: change.value.media.id,
+              text: change.value.text,
+              timestamp: entry.time,
+            };
+          }
+        }
+      }
+    }
+  
+    // Default response if no recognizable event is found
+    return { type: 'unknown_event', payload };
+  }
   const handleSendMessage = async () => {
     if (newMessage || attachments.length) {
       const recipientId =
@@ -369,6 +479,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
                   <video controls src={attachment.video_data?.url} className="inbox-attachment-media" />
                 ) : (
                   <img src={attachment.image_data?.url} alt="attachment" className="inbox-attachment-media" />
+                  
                 )}
               </div>
             ))}
@@ -452,3 +563,5 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
 };
 
 export default Inbox;
+
+
