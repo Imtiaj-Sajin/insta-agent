@@ -83,7 +83,7 @@ const Agent = () => {
         {/* Left Div with Buttons */}
         <div
           className={`left-div ${showRightDiv ? "hide" : "show"}`}
-          style={{ overflow: "auto", borderRadius: "0" }}
+          style={{ overflow: "auto", borderRadius: "0" ,paddingRight:20}}
         >
           <div style={{ display: "flex", flexDirection: "column" }}>
             <label>Create new moderator account </label>

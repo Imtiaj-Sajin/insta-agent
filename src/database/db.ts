@@ -1,13 +1,22 @@
 import { Pool } from "pg";
 
 const pool = new Pool({
-  user: "your_db_user",
-  host: "localhost",
-  database: "instaAgent",
-  password: "1234",
-  port: 5432, // Default PostgreSQL port
+  user: "postgres", // Replace with your PostgreSQL username
+  host: "localhost", // Replace with your database host
+  database: "instaAgent", // Replace with your database name
+  password: "1234", // Replace with your PostgreSQL password
+  port: 5432, // Replace with your PostgreSQL port (default is 5432)
 });
 
-export const query = (text: string, params?: any[]) => pool.query(text, params);
+// Test the database connection
+(async () => {
+  try {
+    const client = await pool.connect();
+    console.log("Connected to PostgreSQL database successfully!");
+    client.release();
+  } catch (error) {
+    console.error("Database connection failed:", error.message);
+  }
+})();
 
-export default pool;
+export { pool };

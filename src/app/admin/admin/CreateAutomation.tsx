@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import postss from "./posts.json";
 
 // Define the structure of an Instagram post
 interface InstagramPost {
@@ -19,25 +20,26 @@ const CreateAutomation = () => {
     const url =
       "https://graph.facebook.com/v21.0/17841470292534936?fields=media%7Bcaption%7D&access_token=EAAnZByvmjelsBOx4AMdYExJ6EJaAd9d19bBfAZAk22LiDFVOV4Dx5uq0y1E44cg4GCT3WhYBjNPXZAaEZADZCvuvzIcyjEmDX7OBwYmnCQ98ZAvwWwGG5CvXbLEa2wTsFphEgNmfDEKzqZBDFONYZAdM1DVIm5J1cO0JU63nlcPZBtHN27xXdYhUV56Fgs6ZAIM4OhJkhtKxUxPMFMZCK49HqCopoXk";
 
-    try {
-      const response = await fetch(url);
+    // try {
+    //   const response = await fetch(url);
 
-      if (!response.ok) {
-        throw new Error(`Failed to fetch posts: ${response.statusText}`);
-      }
+    //   if (!response.ok) {
+    //     throw new Error(`Failed to fetch posts: ${response.statusText}`);
+    //   }
 
-      const data = await response.json();
-
+      //const data = await response.json();
+      const data =postss
       // Transform and set posts
-      const formattedPosts = data.media.data.map((post: { id: string; caption?: string }) => ({
-        id: post.id,
+      //const formattedPosts = data.media.data.map((post: { id: string; caption?: string }) => ({
+        const formattedPosts = data.data.map((post: { id: string; caption?: string }) => ({
+          id: post.id,
         caption: post.caption || "No caption available",
       }));
 
       setPosts(formattedPosts);
-    } catch (error) {
-      console.error("Error fetching Instagram posts:", error);
-    }
+    // } catch (error) {
+    //   console.error("Error fetching Instagram posts:", error);
+    // }
   };
 
   useEffect(() => {
@@ -56,6 +58,49 @@ const CreateAutomation = () => {
       setAnswerList((prev) => ({ ...prev, [type]: [...prev[type], answer] }));
     }
   };
+
+  const handleSubmit = async () => {
+    if (!selectedPost || !keywords.length) {
+      alert("Please select a post and add keywords.");
+      return;
+    }
+  
+    const autoType =
+      selectedType === "Reply to Comment"
+        ? 1
+        : selectedType === "Send DM"
+        ? 2
+        : 3;
+  
+    try {
+      const response = await fetch("/api/addAautomation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          post_id: selectedPost,
+          auto_type: autoType,
+          keywords,
+          commentAnswers: answerList.comment,
+          dmAnswers: answerList.dm,
+        }),
+      });
+  
+      if (response.ok) {
+        alert("Automation created successfully!");
+        setKeywords([]);
+        setAnswerList({ comment: [], dm: [] });
+        setSelectedPost(null);
+        setSelectedType("Reply to Comment");
+      } else {
+        const { error } = await response.json();
+        alert(error || "Failed to create automation.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred while submitting the automation.");
+    }
+  };
+  
 
   return (
     <>
@@ -77,7 +122,8 @@ const CreateAutomation = () => {
           </option>
           {posts.map((post) => (
             <option key={post.id} value={post.id}>
-              {post.caption}
+              {/* {post.id} */}
+              {post.caption.slice(0,30)+" ..."}
             </option>
           ))}
         </select>
@@ -172,7 +218,12 @@ const CreateAutomation = () => {
       )}
 
       <div style={{ padding: "0px", border: 0, boxShadow: "0 0px 0px", alignContent: "center", justifyItems: "center" }}>
-        <button style={{color:'white', minHeight: 30,background:'linear-gradient(135deg, #D76D77, #49267e)' }}>Submit</button>
+      <button
+          style={{ color: "white", minHeight: 30, background: "linear-gradient(135deg, #D76D77, #49267e)" }}
+          onClick={handleSubmit}
+        >
+          Submit
+      </button>
       </div>
     </>
   );

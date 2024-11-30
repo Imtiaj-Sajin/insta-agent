@@ -23,7 +23,7 @@ const AddAgent: React.FC = () => {
     e.preventDefault();
   
     try {
-      const response = await fetch("/api/addAgent", {
+      const response = await fetch("api/addAgent", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
