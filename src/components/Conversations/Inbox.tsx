@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { FiPaperclip, FiSend } from 'react-icons/fi';
 import './conversations.css';
 import io from 'socket.io-client';
@@ -29,47 +30,87 @@ interface InboxProps {
 }
 
 const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) => {
-  const [messages, setMessages] = useState<Message1[]>([]);
+  //const [messages, setMessages] = useState<Message1[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [attachments, setAttachments] = useState<{ file: File; previewUrl: string }[]>([]);
 
   const pageId=process.env.NEXT_PUBLIC_FACEBOOK_PAGE_ID;
+  const queryClient = useQueryClient();
+  //useEffect(() => {
+    // const fetchMessages = async (pageAccessToken:string, selectedConversation:string): Promise<Message1[]> => {
+    //   if (selectedConversation) {
+    //     //try {
+    //       const response = await fetch(
+    //         `/api/fetch-messagess?accessToken=${pageAccessToken}&conversationId=${selectedConversation}`,{method: "GET"}
+    //       );
+    //       if (!response.ok) {
+    //         throw new Error('Failed to fetch conversation list');
+    //       }
+      
+    //       return response.json();
 
-  useEffect(() => {
-    const fetchMessages = async () => {
-      if (selectedConversation) {
-        try {
-          const response = await fetch(
-            `/api/fetch-messagess?accessToken=${pageAccessToken}&conversationId=${selectedConversation.id}`
-          );
-          const data = await response.json();
-          if (response.ok && data) {
-            setMessages(data.messages.data);
-          } else {
-            console.error('Failed to fetch messages', data);
-          }
-        } catch (error) {
-          console.error('Error fetching messages:', error);
-        }
+        //   const data = await response.json();
+        //   if (response.ok && data) {
+        //     setMessages(data.messages.data);
+        //   } else {
+        //     console.error('Failed to fetch messages', data);
+        //   }
+        // } catch (error) {
+        //   console.error('Error fetching messages:', error);
+        // }
+    //   }
+    // };
+
+   // fetchMessages();
+ // }, [selectedConversation]);
+  //   const a='aWdfZAG06MTpJR01lc3NhZA2VUaHJlYWQ6MTc4NDE0NzAyOTI1MzQ5MzY6MzQwMjgyMzY2ODQxNzEwMzAxMjQ0Mjc2MjAyNTk0OTcxNTQwODA5'
+  // const { data: messages = [], isLoading } = useQuery({
+  //   queryKey: ['messages', pageAccessToken, a],
+  //   queryFn: () => fetchMessages(pageAccessToken as string, a as string),
+  //   enabled: !!selectedConversation, // Ensure query runs only when selectedConversation is available
+  //   staleTime: 1000 * 60 * 5,  // Cache the data for 5 minutes
+  //   }
+  // );
+  const fetchMessages = async (pageAccessToken: string, selectedConversationId: string): Promise<Message1[]> => {
+    if (selectedConversationId) {
+      const response = await fetch(`/api/fetch-messagess?accessToken=${pageAccessToken}&conversationId=${selectedConversationId}`, { method: 'GET' });
+      if (!response.ok) {
+        throw new Error('Failed to fetch messages');
       }
-    };
+      const data = await response.json();
+      // Ensure the data is returned as Message1[]
+      return data.messages.data as Message1[];
+    }
+    return [];
+  };s
 
-    fetchMessages();
-  }, [selectedConversation]);
+  // Hardcoded for testing purposes, replace with actual selectedConversation.id
+  const selectedConversationId = selectedConversation?.id ;//|| 'aWdfZAG06MTpJR01lc3NhZA2VUaHJlYWQ6MTc4NDE0NzAyOTI1MzQ5MzY6MzQwMjgyMzY2ODQxNzEwMzAxMjQ0Mjc2MjAyNTk0OTcxNTQwODA5';
+
+  // Query to fetch messages
+  const { data: messages = [], isLoading, error } = useQuery({
+    queryKey: ['messages', pageAccessToken, selectedConversationId],
+    queryFn: () => fetchMessages(pageAccessToken as string, selectedConversationId),
+    enabled: !!selectedConversation, // Ensure query runs only when selectedConversation is available
+    staleTime: 1000 * 60 * 5, // Cache the data for 5 minutes
+  });
 
   useEffect(() => {
     socket.on("receiveMessage", (data) => {
       console.log("Received data:", data);
-      const data1=parseWebhookPayload(JSON.parse(data))
-      console.log("yjjjjjjjjjjjjjjyy",data1)
-      if(!data1.is_echo) setMessages((prevMessages) => [data1, ...prevMessages]); 
-
+      const incomingMessage = parseWebhookPayload(JSON.parse(data));
+      
+      if (!incomingMessage.is_echo) {
+        queryClient.setQueryData(['messages', pageAccessToken, selectedConversationId], (oldMessages?: Message1[]) => {
+          return oldMessages ? [incomingMessage, ...oldMessages] : [incomingMessage];
+        });
+      }
     });
 
     return () => {
       socket.off("receiveMessage");
     };
-  }, []);
+  }, [queryClient, pageAccessToken, selectedConversationId]);
 
 
   const uploadImage = async (imageUrl: string) => {
@@ -463,8 +504,8 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
   return selectedConversation ? (
     <div className="inbox-container" style={{ padding: 0 }}>
       <h2 className="inbox-header" style={{ margin: 0 }}>{selectedConversation.name}</h2>
-      <div className="inbox-messages" style={{ marginBottom: 0, border: 0, boxShadow: '0 0px 0px rgba(0,0,0,0)', backgroundColor: "unset"}}>
-        {messages.slice().reverse().map((message) => (
+      <div className="inbox-messages" style={{ flexDirection: "column-reverse" ,marginBottom: 0, border: 0, boxShadow: '0 0px 0px rgba(0,0,0,0)', backgroundColor: "unset"}}>
+        {messages.map((message) => (
           <div
           style={{boxShadow: '0 0px 0px rgba(0,0,0,0)', margin: "unset"}}
             key={message.id}

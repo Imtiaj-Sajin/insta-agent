@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Inbox from './Inbox';
 import './conversations.css';
+import { useQuery } from '@tanstack/react-query';
 
 interface Conversation {
   id: string;
@@ -12,117 +13,81 @@ interface Conversation {
 }
 
 const Messages = () => {
-  const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  let [pageAccessToken, setPageAccessToken] = useState<string | null>(null);
-  const username = process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME;
-
-  const [messages, setMessages] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("All");
-  const [selectedMessage, setSelectedMessage] = useState(null);
   const [showRightDiv, setShowRightDiv] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [pageAccessToken, setPageAccessToken] = useState<string | null>(null);
 
-  useEffect(() => {
+  const username = process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME;
 
-    const fetchConversations = async (pageAccessToken: string) => {
-      setLoading(true);
-      try {
-          const response = await fetch(`/api/fetch-messages?accessToken=${pageAccessToken}`, {
-              method: 'GET',
-          });
+  // Function to fetch conversation list using React Query
+  const fetchConversationList = async (accessToken: string): Promise<Conversation[]> => {
+    const response = await fetch(`/api/conversations?accessToken=${accessToken}`, {
+      method: 'GET',
+    });
 
-          const data = await response.json();
-          if (response.ok) {
-              setConversations(data.data || []);
-          } else {
-              setError(data.error_message || 'Failed to fetch conversations');
-          }
-      } catch (err) {
-          setError('Error fetching conversations');
-          console.error('Error:', err);
-      } finally {
-          setLoading(false);
-      }
-  };
-  const fetchConversationList=async (pageAccessToken:string)=>{
-    setLoading(true);
-    try{
-      console.log("fetch conversation list: ", pageAccessToken )
-        const response=await fetch(`/api/conversations?accessToken=${pageAccessToken}`,{
-          method: 'GET',
-        });
-        const data =await response.json();
-        console.log("inside messages ", data)
-        if(response.ok){
-            setConversations(data ||[]);
-            console.log("everythings ok:", data);
-        }
-        else{
-          setError(data.error_message || 'failed to fetch conversation list');
-          console.log("everythings baddddd:", data);
-
-        }
+    if (!response.ok) {
+      throw new Error('Failed to fetch conversation list');
     }
-    catch(err){
-      setError('Error fetching conversations');
-      console.error('Error:', err);
-    }
-    finally{
-      setLoading(false);
-    }
-  }
 
-  const exchangeToken = async (code: string) => {
-      try {
-        const tokenResponse = await fetch('/api/get-tokens');
-        const tokenData = await tokenResponse.json();
-          if (tokenResponse.ok) {
-            const { pageAccessToken } = tokenData;
-              console.log("inside the token response block", pageAccessToken);
-              setPageAccessToken(pageAccessToken);
-              //fetchConversations(tokenData.page_access_token);
-              fetchConversationList(pageAccessToken);
-          } else {
-              setError(tokenData.error_message || 'Failed to exchange token');
-          }
-      } catch (err) {
-          setError('Error fetching access token');
-          console.error('Error:', err);
-      }
+    return response.json();
   };
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const code = urlParams.get('code');
-  if (code) {
-      exchangeToken(code);
-  } else {
-      setError('Authorization code not found');
-  }
-
-  const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-}, []);
-
-// const isMessageForCurrentUser = (message: Message): boolean => {
-//   // Check if the message is directed to the current user
-//   return message.to?.data?.some((recipient) => recipient.username === username);
-// };
-
-
-  const filteredMessages = messages.filter((msg) => {
-    if (selectedFilter === "All") return true;
-    if (selectedFilter === "Unanswered") return true;
-    if (selectedFilter === "Agent1") return true;
-    if (selectedFilter === "Agent2") return true;
-    return true;
+  // Using React Query to fetch and cache conversation list
+  const { data: conversations = [], isLoading } = useQuery({
+    queryKey: ['conversationList', pageAccessToken],
+    queryFn: () => fetchConversationList(pageAccessToken as string),
+    enabled: !!pageAccessToken, // Run query only when the access token is available
+    staleTime: 1000 * 60 * 5,  // Cache the data for 5 minutes
   });
 
-  const handleSelectConversation = (conversation) => {
+  // Function to exchange code for access token
+  const exchangeToken = async (code: string) => {
+    try {
+      const tokenResponse = await fetch('/api/get-tokens');
+      const tokenData = await tokenResponse.json();
+      if (tokenResponse.ok) {
+        const { pageAccessToken } = tokenData;
+        setPageAccessToken(pageAccessToken);
+      } else {
+        console.error('Failed to exchange token');
+      }
+    } catch (err) {
+      console.error('Error fetching access token', err);
+    }
+  };
+
+  // Handle URL parameter (authorization code)
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    if (code) {
+      exchangeToken(code);
+    } else {
+      console.error('Authorization code not found');
+    }
+  }, []);
+
+  // Handle mobile resizing
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Filter conversations based on selected filter
+  const filteredConversations = conversations.filter((conversation) => {
+    if (selectedFilter === "All") return true;
+    if (selectedFilter === "Unanswered" && conversation.status === "unassigned") return true;
+    if (selectedFilter === "Agent1" && conversation.status === "answered-agent1") return true;
+    if (selectedFilter === "Agent2" && conversation.status === "answered-agent2") return true;
+    return false;
+  });
+
+  const handleSelectConversation = (conversation: Conversation) => {
     setSelectedConversation(conversation);
+    console.log(conversation)
     if (isMobile) {
       setShowRightDiv(true);
     }
@@ -172,35 +137,37 @@ const Messages = () => {
               <option>Agent2</option>
             </select>
           </div>
-          {conversations.map((conversation) => (
-            <div
-              key={conversation.id}
-              className="message-item flex items-center justify-between p-2 cursor-pointer"
-              id='chat'
-              onClick={() => handleSelectConversation(conversation)}
-              style={{ backgroundColor: selectedConversation?.id === conversation.id ? "rgb(240,240,240)" : "white", boxShadow: "0 4px 8px rgba(0, 0, 0, 0)", border:0, marginTop:0, marginBottom:0}}
-            >
-              <img src={conversation.avatar} alt={conversation.id} className="avatar w-8 h-8 rounded-full mr-2" />
-              <div className="text" style={{margin:0, padding:0, border:0, boxShadow:"0 4px 8px rgba(0, 0, 0, 0)", backgroundColor:"rgba(255,255,255,0)"}}>
-                <h2 className="font-semibold flex items-center">
-                {conversation.name}
-                </h2>
-                <p className="text-sm text-gray-500 truncate">{conversation.last_message}</p>
-                
-              </div>
-              <span style={{marginRight:'1px'}}
-                className={`tag ml-2 ${conversation.status === 'unassigned' ? 'tag-unassigned' : conversation.status === 'answered-agent1' ? 'tag-agent1' : 'tag-agent2'}`}
+
+          {isLoading ? (
+            <div>Loading...</div>
+          ) : (
+            filteredConversations.map((conversation) => (
+              <div
+                key={conversation.id}
+                className="message-item flex items-center justify-between p-2 cursor-pointer"
+                id='chat'
+                onClick={() => handleSelectConversation(conversation)}
+                style={{ backgroundColor: selectedConversation?.id === conversation.id ? "rgb(240,240,240)" : "white", boxShadow: "0 4px 8px rgba(0, 0, 0, 0)", border:0, marginTop:0, marginBottom:0}}
               >
-                {conversation.status === 'unassigned' ? 'Unassigned' : conversation.status === 'answered-agent1' ? 'Agent1' : 'Agent2'}
-              </span>
-            </div>
-            
-          ))}
+                <img src={conversation.avatar} alt={conversation.id} className="avatar w-8 h-8 rounded-full mr-2" />
+                <div className="text" style={{margin:0, padding:0, border:0, boxShadow:"0 4px 8px rgba(0, 0, 0, 0)", backgroundColor:"rgba(255,255,255,0)"}}>
+                  <h2 className="font-semibold flex items-center">
+                    {conversation.name}
+                  </h2>
+                  <p className="text-sm text-gray-500 truncate">{conversation.last_message}</p>
+                </div>
+                <span style={{marginRight:'1px'}}
+                  className={`tag ml-2 ${conversation.status === 'unassigned' ? 'tag-unassigned' : conversation.status === 'answered-agent1' ? 'tag-agent1' : 'tag-agent2'}`}
+                >
+                  {conversation.status === 'unassigned' ? 'Unassigned' : conversation.status === 'answered-agent1' ? 'Agent1' : 'Agent2'}
+                </span>
+              </div>
+            ))
+          )}
         </div>
 
         <div className={`right-div ${showRightDiv ? 'show' : 'hide'}`} style={{ borderRadius: 0, overflow: 'hidden' }}>
-          <Inbox pageAccessToken= {pageAccessToken} selectedConversation={selectedConversation} />
-          
+          <Inbox pageAccessToken={pageAccessToken} selectedConversation={selectedConversation} />
         </div>
       </div>
     </div>
