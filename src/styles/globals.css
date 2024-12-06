@@ -53,6 +53,8 @@
  /* Navbar Container */
 nav {
   background: linear-gradient(135deg, #8058ac, #49267e); 
+  /* background: radial-gradient(circle at 10% 90%, #1a1a1d, #7f03e6a2, #31003d); */
+
   color: var(--navbar-text-color);
   display: flex;
   flex-direction: column;

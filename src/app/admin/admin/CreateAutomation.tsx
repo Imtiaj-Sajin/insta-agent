@@ -130,7 +130,7 @@ const CreateAutomation = () => {
       </div>
     </div>
 
-      <input type="file" className="upload-csv" />
+      {/* <input type="file" className="upload-csv" /> */}
 
       <div className="keywords">
         <label>Keywords</label>
@@ -217,7 +217,7 @@ const CreateAutomation = () => {
         </div>
       )}
 
-      <div style={{ padding: "0px", border: 0, boxShadow: "0 0px 0px", alignContent: "center", justifyItems: "center" }}>
+      <div style={{ padding: "0px", border: 0, boxShadow: "0 0px 0px", alignContent: "center", justifyItems: "center", marginBottom:"200px" }}>
       <button
           style={{ color: "white", minHeight: 30, background: "linear-gradient(135deg, #D76D77, #49267e)" }}
           onClick={handleSubmit}

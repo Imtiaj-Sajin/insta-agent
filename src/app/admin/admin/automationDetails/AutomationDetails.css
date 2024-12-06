@@ -1,86 +1,117 @@
-/* Container for the entire page */
-.automation-details-container {
-  position: relative;
-  height: 100vh;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  background: linear-gradient(135deg, #d4fc79, #96e6a1);
-  padding: 2rem;
-  overflow: hidden;
-}
-
-/* Card-style boxes */
-.detail-card {
-  position: absolute;
-  background: radial-gradient(circle at top left, #ff9a9e, #fad0c4);
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  width: 220px;
-  padding: 1rem;
-  z-index: 1;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-/* Drag handle */
-.drag-handle {
-  background: #444;
-  height: 10px;
-  width: 50px;
-  border-radius: 5px;
-  margin: 0 auto 1rem auto;
-  cursor: grab;
-}
-
-/* Hover effects for draggable cards */
-.detail-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
-}
-
-.detail-card:active .drag-handle {
-  cursor: grabbing;
-}
-
-/* Card content */
-.detail-card h3 {
-  margin: 0 0 1rem;
-  font-size: 1.2rem;
-  color: #fff;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
-}
-
-.detail-card ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.detail-card li {
-  margin-bottom: 0.5rem;
-  padding: 0.5rem;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  color: #fff;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .detail-card {
+  /* Entire Page */
+  .automation-details-container {
     position: relative;
-    width: 100%;
-    cursor: default;
-  }
-}
-.automation-details-container {
-    position: relative; /* Key for proper positioning */
-    height: 100vh;
+    height: 95vh;
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
-    background: linear-gradient(135deg, #d4fc79, #96e6a1);
+    background: #ffffff; /* White background */
     padding: 2rem;
     overflow: hidden;
+    margin-top: 0 !important;
   }
-  
+
+  /* Card-style Boxes */
+  .detail-card {
+    position: absolute;
+    background: radial-gradient(circle at top left, #f2e8ff, #ffffff); /* Less white */
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    width: 220px;
+    padding: 0rem;
+    z-index: 1;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  /* Entry and Exit Points */
+  .entry-point, .exit-point {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #000; /* Black circle */
+    border-radius: 50%; /* Circular shape */
+  }
+
+  .entry-point {
+    top: 20px; /* Slightly outside the boundary */
+    left: -5px;
+  }
+
+  .exit-point {
+    bottom: 20px; /* Slightly outside the boundary */
+    right: -5px;
+  }
+
+  /* Drag Handle (Menu Style with 3 Lines) */
+  .drag-handle {
+    width: 20px; /* Handle Width */
+    height: 10px; /* Total Handle Height */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto 1rem auto; /* Centered horizontally */
+    cursor: grab;
+  }
+
+  .drag-handle div {
+    width: 100%; /* Line Width */
+    height: 2px; /* Line Height */
+    border-radius: 1px; /* Rounded edges */
+    background: #49267e; /* Purple line */
+    transition: all 0.2s ease;
+  }
+
+  .drag-handle:hover div {
+    background: #8058ac; /* Lighter hover color */
+  }
+
+  .drag-handle:active {
+    cursor: grabbing;
+  }
+
+  /* Hover effects for Cards */
+  .detail-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  .detail-card:active .drag-handle {
+    cursor: grabbing;
+  }
+
+  /* Card Content */
+  .detail-card h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.2rem;
+    color: #49267e;
+  }
+
+  .detail-card ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .detail-card li {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    background: rgba(132, 0, 255, 0.1); /* Subtle background */
+    border-radius: 8px;
+    color: #333;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .detail-card {
+      position: relative;
+      width: 100%;
+      cursor: default;
+    }
+  }
+
+
+

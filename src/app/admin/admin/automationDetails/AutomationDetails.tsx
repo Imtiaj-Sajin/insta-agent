@@ -1,6 +1,5 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useRef } from "react";
 import "./AutomationDetails.css";
-
 interface AutomationDetailsProps {
   post_id: string;
   auto_type: number;
@@ -16,9 +15,15 @@ const AutomationDetails: FC<AutomationDetailsProps> = ({
   comment_answers,
   dm_answers,
 }) => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
-    const draggables = document.querySelectorAll(".detail-card");
-    const container = document.querySelector(".automation-details-container") as HTMLElement;
+    const container = containerRef.current;
+    const draggables = container?.querySelectorAll(".detail-card");
+
+    if (!draggables || !container) return;
+
+    const listeners: { handle: HTMLElement; cleanUp: () => void }[] = [];
 
     draggables.forEach((card) => {
       const handle = card.querySelector(".drag-handle") as HTMLElement;
@@ -46,14 +51,14 @@ const AutomationDetails: FC<AutomationDetailsProps> = ({
           0,
           Math.min(
             container.offsetWidth - card.clientWidth,
-            e.clientX - containerRect.left - 150
+            e.clientX - containerRect.left - 20
           )
         );
         const newTop = Math.max(
           0,
           Math.min(
             container.offsetHeight - card.clientHeight,
-            e.clientY - containerRect.top - offsetY
+            e.clientY - containerRect.top - 45
           )
         );
 
@@ -71,65 +76,91 @@ const AutomationDetails: FC<AutomationDetailsProps> = ({
       window.addEventListener("mousemove", onMouseMove);
       window.addEventListener("mouseup", onMouseUp);
 
-      // Cleanup listeners on unmount
-      return () => {
-        handle.removeEventListener("mousedown", onMouseDown);
-        window.removeEventListener("mousemove", onMouseMove);
-        window.removeEventListener("mouseup", onMouseUp);
-      };
+      // Store cleanup functions for later
+      listeners.push({
+        handle,
+        cleanUp: () => {
+          handle.removeEventListener("mousedown", onMouseDown);
+          window.removeEventListener("mousemove", onMouseMove);
+          window.removeEventListener("mouseup", onMouseUp);
+        },
+      });
     });
-  }, []);
+
+    // Cleanup listeners when the component unmounts or updates
+    return () => {
+      listeners.forEach((listener) => listener.cleanUp());
+    };
+  }, [post_id, auto_type, keywords, comment_answers, dm_answers]); // Re-run when props change
 
   return (
-    <div className="automation-details-container">
-      {/* Main Details Card */}
-      <div className="detail-card" style={{ top: "20px", left: "20px" }}>
-        <div className="drag-handle" />
-        <h3>Initial Details</h3>
-        <p><strong>Post ID:</strong> {post_id}</p>
-        <p>
-          <strong>Type:</strong>{" "}
-          {auto_type === 1 ? "Reply to Comment" : auto_type === 2 ? "Send DM" : "DM + Comment"}
-        </p>
-      </div>
+    <div ref={containerRef} className="automation-details-container">
+  {/* Main Details Card */}
+  <div className="detail-card" style={{ top: "40%", left: "20px" }}>
 
-      {/* Keywords Box */}
-      <div className="detail-card" style={{ top: "200px", left: "40px" }}>
-        <div className="drag-handle" />
-        <h3>Keywords</h3>
-        <ul>
-          {keywords.map((keyword, index) => (
-            <li key={index}>{keyword}</li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Conditional Boxes */}
-      {(auto_type === 1 || auto_type === 3) && (
-        <div className="detail-card" style={{ top: "200px", left: "300px" }}>
-          <div className="drag-handle" />
-          <h3>Comment Replies</h3>
-          <ul>
-            {comment_answers.map((answer, index) => (
-              <li key={index}>{answer}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {(auto_type === 2 || auto_type === 3) && (
-        <div className="detail-card" style={{ top: "400px", left: "300px" }}>
-          <div className="drag-handle" />
-          <h3>DM Replies</h3>
-          <ul>
-            {dm_answers.map((answer, index) => (
-              <li key={index}>{answer}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+    {/* <div className="entry-point"></div> */}
+    <span id="exit_1" className="exit-point"></span>
+    <div className="drag-handle">
+     
     </div>
+    <h3>Automation Details</h3>
+    <p><strong>Post ID:</strong> {post_id}</p>
+    <p>
+      <strong>Type:</strong>{" "}
+      {auto_type === 1 ? "Reply to Comment" : auto_type === 2 ? "Send DM" : "DM + Comment"}
+    </p>
+  </div>
+
+  {/* Keywords Box */}
+  <div className="detail-card" style={{ top: "20%", left: "30%" }}>
+    <span id="entry_2" className="entry-point"></span>
+    <span id="exit_2" className="exit-point"></span>
+    <div className="drag-handle">
+      
+    </div>
+    <h3>Keywords</h3>
+    <ul>
+      {keywords.map((keyword, index) => (
+        <li key={index}>{keyword}</li>
+      ))}
+    </ul>
+  </div>
+
+  {/* Conditional Boxes */}
+  {(auto_type === 1 || auto_type === 3) && (
+    <div className="detail-card" style={{ top: "40%", left: "60%" }}>
+      <span id="entry_3" className="entry-point"></span>
+      <span id="exit_3" className="exit-point"></span>
+      <div className="drag-handle">
+      </div>
+      <h3>Comment Replies</h3>
+      <ul>
+        {comment_answers.map((answer, index) => (
+          <li key={index}>{answer}</li>
+        ))}
+      </ul>
+    </div>
+  )}
+
+  {(auto_type === 2 || auto_type === 3) && (
+    <div className="detail-card" style={{ top: "70%", left: "50%" }}>
+      <span id="entry_4"  className="entry-point"></span>
+      <span id="exit_4" className="exit-point"></span>
+      <div className="drag-handle">
+        
+      </div>
+      <h3>DM Replies</h3>
+      <ul>
+        {dm_answers.map((answer, index) => (
+          <li key={index}>{answer}</li>
+        ))}
+      </ul>
+    </div>
+  )}
+</div>
+
   );
 };
+// {let count=0;}
 
 export default AutomationDetails;

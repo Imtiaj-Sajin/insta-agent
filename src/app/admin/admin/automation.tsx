@@ -121,7 +121,7 @@ const Automation: FC = () => {
 
         <div
           className={`right-div ${showRightDiv ? "show" : "hide"}`}
-          style={{ borderRadius: 0, margin: 0, padding: 0, paddingTop: 10 }}
+          style={{ borderRadius: 0, margin: 0, padding: 0, paddingTop: 0 }}
         >
           <div
             id="content-display"
@@ -130,10 +130,10 @@ const Automation: FC = () => {
               padding: 0,
               boxShadow: "0 0px 0px rgba(0, 0, 0, 0)",
               border: 0,
-              marginBottom: 200,
+              marginBottom: 0,
             }}
           >
-            {selectedContent || "Select a button to see content here."}
+            {selectedContent || <div style={{display:'center'}}> Select any Automation or Create a new automation.</div> }
           </div>
         </div>
       </div>

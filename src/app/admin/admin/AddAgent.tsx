@@ -60,8 +60,8 @@ const AddAgent: React.FC = () => {
       onSubmit={handleSubmit}
       style={{
         backgroundColor: '#ffffff',
-        padding: '0rem',
-        margin: '0 auto',
+        padding: '2rem',
+        // margin: '30',
         borderRadius: '0.5rem',
       }}
     >

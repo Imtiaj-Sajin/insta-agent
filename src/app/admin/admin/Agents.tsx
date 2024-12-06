@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import AddAgent from "./AddAgent";
+import ProfileCard from "./ProfileCard";
 import "../../../styles/index.css";
 import "../../../styles/globals.css";
 
 const Agent = () => {
   const [agents, setAgents] = useState([]); // Store agents from the database
-  const [selectedContent, setSelectedContent] = useState("");
+  const [selectedContent, setSelectedContent] = useState(null); // Render ProfileCard component
   const [showRightDiv, setShowRightDiv] = useState(false);
 
   useEffect(() => {
@@ -27,33 +28,8 @@ const Agent = () => {
     fetchAgents();
   }, []);
 
-  const showContent = (content) => {
-    setSelectedContent(content);
-
-    // Only toggle to right div on mobile view
-    if (window.innerWidth < 768) {
-      setShowRightDiv(true);
-    } else {
-      setShowRightDiv(true); // Ensure right-div shows in desktop mode without hiding left-div
-    }
-  };
-
   const toggleDivs = () => {
     setShowRightDiv(!showRightDiv);
-  };
-
-  const displayAgentDetails = (agent) => {
-    // Format and display agent details in the right div
-    const agentDetails = (
-      <div>
-        <h2>{agent.name}</h2>
-        <p><strong>Username:</strong> {agent.username}</p>
-        <p><strong>Email:</strong> {agent.email}</p>
-        <p><strong>Phone:</strong> {agent.phone || "N/A"}</p>
-        <p><strong>Title:</strong> {agent.title || "N/A"}</p>
-      </div>
-    );
-    showContent(agentDetails);
   };
 
   return (
@@ -75,6 +51,7 @@ const Agent = () => {
         className="contentt"
         style={{
           padding: "0",
+          marginLeft:0,
           margin: "1rem",
           border: "0",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0)",
@@ -83,7 +60,7 @@ const Agent = () => {
         {/* Left Div with Buttons */}
         <div
           className={`left-div ${showRightDiv ? "hide" : "show"}`}
-          style={{ overflow: "auto", borderRadius: "0" ,paddingRight:20}}
+          style={{ overflow: "auto", borderRadius: "0", paddingRight: 20 }}
         >
           <div style={{ display: "flex", flexDirection: "column" }}>
             <label>Create new moderator account </label>
@@ -98,7 +75,7 @@ const Agent = () => {
                 display: "block",
                 margin: "0",
               }}
-              onClick={() => showContent(<AddAgent />)}
+              onClick={() => setSelectedContent(<AddAgent />)}
             >
               New +
             </button>
@@ -119,7 +96,18 @@ const Agent = () => {
                 backgroundColor: "#f9f9f9",
                 cursor: "pointer",
               }}
-              onClick={() => displayAgentDetails(agent)}
+              onClick={() =>
+                setSelectedContent(
+                  <ProfileCard
+                    name={agent.name}
+                    username={agent.username}
+                    email={agent.email}
+                    phone={agent.phone}
+                    title={agent.title}
+                    image="https://img.freepik.com/free-vector/smiling-young-man-illustration_1308-174669.jpg"
+                  />
+                )
+              }
             >
               <img
                 src="https://img.freepik.com/free-vector/smiling-young-man-illustration_1308-174669.jpg"
@@ -136,11 +124,11 @@ const Agent = () => {
         {/* Right Div for Displaying Content */}
         <div
           className={`right-div ${showRightDiv ? "show" : "hide"}`}
-          style={{ borderRadius: 0 }}
+          style={{ borderRadius: 0 , padding:0}}
         >
-          <div id="content-display" style={{ marginBottom: 100 }}>
+          
             {selectedContent || "Select a button to see content here."}
-          </div>
+          
         </div>
       </div>
     </div>
