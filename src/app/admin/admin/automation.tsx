@@ -33,6 +33,7 @@ const Automation: FC = () => {
   const showContent = (automation: AutomationData): void => {
     setSelectedContent(
       <AutomationDetails
+        auto_id={automation.auto_id}
         post_id={automation.post_id}
         auto_type={automation.auto_type}
         keywords={automation.keywords}
@@ -73,7 +74,7 @@ const Automation: FC = () => {
       >
         <div
           className={`left-div ${showRightDiv ? "hide" : "show"}`}
-          style={{ overflow: "auto", borderRadius: "0" }}
+          style={{ overflow: "auto", borderRadius: "0", paddingBottom:"100px" }}
         >
           <div style={{ display: "flex", flexDirection: "column" }}>
             <label htmlFor="">Create new automation</label>

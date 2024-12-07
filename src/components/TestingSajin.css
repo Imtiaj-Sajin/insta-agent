@@ -1,0 +1,13 @@
+/* Container for Cytoscape */
+.cy-container {
+    width: 100%;
+    height: 100vh;
+    border: 1px solid #ccc;
+    background: linear-gradient(135deg, #f0f0f0, #8058ac);
+  }
+  
+  /* Customize node hover state */
+  .cy-container .node:hover {
+    background-color: #49267e !important;
+  }
+  

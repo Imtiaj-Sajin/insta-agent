@@ -43,6 +43,11 @@ export default function Navbar({ onSelect }: NavbarProps) {
         <FaCog />
         <span>Settings</span>
       </button>
+
+      <button onClick={() => onSelect("testing")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>
+        <ImStatsBars2 />
+        <span>TestSajin</span>
+      </button>
     </nav>
   );
 }

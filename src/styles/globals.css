@@ -44,8 +44,9 @@
   }
 
   .content {
+    /* background-color: red !important; */
     flex: 1;
-    padding: 1rem;
+    /* padding: 1rem; */
     overflow: hidden;
   }
 
@@ -117,10 +118,10 @@ button:active {
   .content div {
     padding: 1rem;
     background-color: white;
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
     border-radius: 8px;
     margin: 1rem 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.178);
   }
 
 

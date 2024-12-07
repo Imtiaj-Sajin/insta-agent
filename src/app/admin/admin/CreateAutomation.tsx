@@ -132,9 +132,10 @@ const CreateAutomation = () => {
 
       {/* <input type="file" className="upload-csv" /> */}
 
-      <div className="keywords">
+    {/* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.178); */}
+      <div className="keywords" style={{boxShadow:"0 0 0 1px rgba(0,0,0,0.1)"}}>
         <label>Keywords</label>
-        <div className="keyword-input">
+        <div className="keyword-input" style={{boxShadow:"0 0 0 1px rgba(0,0,0,0.1)"}}>
           <input
             type="text"
             placeholder="Add keyword"

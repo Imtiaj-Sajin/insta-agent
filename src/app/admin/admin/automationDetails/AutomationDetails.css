@@ -15,7 +15,7 @@
   .detail-card {
     position: absolute;
     background: radial-gradient(circle at top left, #f2e8ff, #ffffff); /* Less white */
-    border-radius: 15px; /* Rounded corners */
+    border-radius: 15px !important; /* Rounded corners */
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     width: 220px;
     padding: 0rem;
@@ -54,7 +54,7 @@
     justify-content: space-between;
     align-items: center;
     margin: 0 auto 1rem auto; /* Centered horizontally */
-    cursor: grab;
+    cursor:move ;
   }
 
   .drag-handle div {

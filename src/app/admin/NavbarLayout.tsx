@@ -11,6 +11,7 @@ import Agent from "./admin/Agents";
 import Updates from "./admin/Updates";
 
 import Insights from "@/components/Insights/Insights";
+import TestingSajin from "@/components/TestingSajin"
 
 
 export default function NavbarLayout({
@@ -36,6 +37,8 @@ export default function NavbarLayout({
         return <Agent/>;
       case "insights":
         return <Insights/>;
+      case "testing":
+          return <TestingSajin/>
       default:
         return <Messages/>;
     }
