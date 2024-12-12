@@ -70,13 +70,8 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
       { source: "exit_2", target: "entry_4" },
     ];
   
-    // Delay the connection update until after the layout stabilizes
-    const updateConnections = () => {
-      drawConnections({ container, svg, connections });
-    };
-  
-    // Allow layout updates to complete before drawing connections
-    const timeoutId = setTimeout(updateConnections, 0);
+    // Use the drawConnections utility
+    const updateConnections = drawConnections({ container, svg, connections });
   
     // Attach drag behavior
     const draggables = container.querySelectorAll(".detail-card");
@@ -86,9 +81,10 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
       let offsetX = 25;
       let offsetY = 55;
   
-      const onMouseDown = () => {
+      const onMouseDown = (e: MouseEvent) => {
+
         isDragging = true;
-        document.body.style.cursor = "grabbing";
+      document.body.style.cursor = "grabbing";
       };
   
       const onMouseMove = (e: MouseEvent) => {
@@ -96,6 +92,7 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
   
         const containerRect = container.getBoundingClientRect();
   
+        // Calculate new positions relative to the container and offsets
         const newLeft = Math.max(
           0,
           Math.min(
@@ -114,7 +111,7 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
         (card as HTMLElement).style.left = `${newLeft}px`;
         (card as HTMLElement).style.top = `${newTop}px`;
   
-        updateConnections(); // Update connections on drag
+        if (updateConnections) updateConnections(); // Update connections on drag
       };
   
       const onMouseUp = () => {
@@ -122,17 +119,17 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
         document.body.style.cursor = "default";
       };
   
+      // Attach event listeners to the drag handle
       handle.addEventListener("mousedown", onMouseDown);
       window.addEventListener("mousemove", onMouseMove);
       window.addEventListener("mouseup", onMouseUp);
     });
   
-    // Cleanup listeners and timeout
+    // Cleanup listeners and destroy connections
     return () => {
-      clearTimeout(timeoutId);
       svg.selectAll("*").remove();
     };
-  }, [post_id, auto_type, keywords, comment_answers, dm_answers]);
+  }, [post_id, auto_type, keywords, comment_answers, dm_answers]); // Re-run when props change
   
   const addNewItem = (
     type: "keywords" | "comments" | "dms",
@@ -194,7 +191,7 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
         />
 
         {/* Main Details Card */}
-        <div className="detail-card" style={{ top: "20%", left: "20px"}}>
+        <div className="detail-card" style={{ top: "20%", left: "20px" }}>
           <span id="exit_1" className="exit-point"></span>
           <div className="drag-handle"></div>
           <h3>Automation Details</h3>
@@ -206,7 +203,7 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
         </div>
 
         {/* Keywords Box */}
-        <div className="detail-card" style={{ top: "5%", left: "30%" ,maxHeight:"500px" }}>
+        <div className="detail-card" style={{ top: "5%", left: "30%" }}>
           <span id="entry_2" className="entry-point"></span>
           <span id="exit_2" className="exit-point"></span>
           <div className="drag-handle"></div>
@@ -215,15 +212,24 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
           {/* Toggle View/Edit Mode */}
           <ul>
           {editedKeywords.map((keyword, index) => (
-            <li key={index} style={{position:"relative"}}>
+            <li key={index}>
               {keyword}
               {isEditMode && ( // Show delete button only in edit mode
               <button
-                className="cross-button"
                 onClick={() =>
                   setEditedKeywords((prev) => prev.filter((_, i) => i !== index))
                 }
-               
+                style={{
+                  right: "10px",
+                  position:"absolute",
+                  background: "rgba(255, 0, 0, 0.8)",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: "20px",
+                  height: "20px",
+                  cursor: "pointer",
+                }}
               >
                 x
               </button>
@@ -233,7 +239,6 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
         </ul>
         {isEditMode && isAddingKeywords && (
           <input
-            className="edit-automation-input"
             type="text"
             value={newKeyword}
             onChange={(e) => setNewKeyword(e.target.value)}
@@ -268,132 +273,47 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
 
 
         {/* Conditional Boxes */}
-        {/* Comment Boxes */}
+        {/* comment Boxes */}
         {(auto_type === 1 || auto_type === 3) && (
-          <div
-            className="detail-card"
-            style={{
-              top: "1%",
-              left: "70%",
-              maxHeight: "500px",
-            }}
-          >
+          <div className="detail-card" style={{ top: "1%", left: "70%" }}>
             <span id="entry_3" className="entry-point"></span>
             <span id="exit_3" className="exit-point"></span>
             <div className="drag-handle"></div>
             <h3>Comment Replies</h3>
             <ul>
-              {editedComments.map((comment, index) => (
-                <li
-                  key={index}
+            {editedComments.map((comment, index) => (
+              <li key={index}>
+                {comment}
+                {isEditMode && ( 
+                <button
+                  onClick={() =>
+                    setEditedComments((prev) =>
+                      prev.filter((_, i) => i !== index)
+                    )
+                  }
                   style={{
-                    position: "relative", // Ensure button is contained within the li
-                    marginBottom: "0.5rem",
-                    // padding: "0.5rem",
-                    background: "rgba(132, 0, 255, 0.1)",
-                    borderRadius: "8px",
-                    color: "#333",
+                    right: "10px",
+                    position:"absolute",
+                    background: "rgba(255, 0, 0, 0.8)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "50%",
+                    width: "20px",
+                    height: "20px",
+                    cursor: "pointer",
                   }}
                 >
-                  {comment}
-                  {isEditMode && (
-                    <button
-                      className="cross-button"
-                      onClick={() =>
-                        setEditedComments((prev) =>
-                          prev.filter((_, i) => i !== index)
-                        )
-                      }
-                      
-                    >
-                      x
-                    </button>
-                  )}
-                </li>
-              ))}
-            </ul>
-            {isAddingComments && isEditMode && (
-              <input
-                type="text"
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                style={{
-                  padding: "8px",
-                  borderRadius: "4px",
-                  border: "1px solid #ccc",
-                  // marginBottom: "10px",
-                  width: "100%",
-                }}
-                placeholder="Enter your comment"
-              />
-            )}
-            {isEditMode && (
-              <button
-                onClick={() =>
-                  isAddingComments
-                    ? addNewItem("comments", newComment)
-                    : setIsAddingComments(true)
-                }
-                style={{
-                  background: "#49267e",
-                  color: "white",
-                  padding: "5px 10px",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                  // marginTop: "10px",
-                }}
-              >
-                {isAddingComments ? "Add" : "+ Add Comment"}
-              </button>
-            )}
-          </div>
-        )}
-
-
-
-        {/* DMs Boxes */}
-        {(auto_type === 2 || auto_type === 3) && (
-          <div className="detail-card" style={{ top: "30%", left: "50%",maxHeight:"600px" }}>
-            <span id="entry_4" className="entry-point"></span>
-            <span id="exit_4" className="exit-point"></span>
-            <div className="drag-handle"></div>
-            <h3>DM Replies</h3>
-            <ul>
-              {editedDMs.map((dms, index) => (
-                <li
-                  key={index}
-                  style={{
-                    position: "relative", // Ensure button is scoped to the list item
-                    marginBottom: "0.5rem",
-                    padding: "0.5rem",
-                    background: "rgba(132, 0, 255, 0.1)",
-                    borderRadius: "8px",
-                    color: "#333",
-                  }}
-                >
-                  {dms}
-                  {isEditMode && (
-                    <button
-                      className="cross-button"
-                      onClick={() =>
-                        setEditedDMs((prev) =>
-                          prev.filter((_, i) => i !== index)
-                        )
-                      }
-                     
-                    >
-                      x
-                    </button>
-                  )}
-                </li>
-              ))}
-            </ul>
-
-        {isAddingDMs && isEditMode && (
+                  x
+                </button>
+                )}
+              </li>
+            ))}
+        </ul>
+        {isAddingComments && isEditMode && (
           <input
             type="text"
-            value={newDM}
-            onChange={(e) => setNewDM(e.target.value)}
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
             style={{
               padding: "4px",
               borderRadius: "4px",
@@ -405,9 +325,9 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
         {isEditMode && (
         <button
           onClick={() =>
-            isAddingDMs
-              ? addNewItem("dms", newDM)
-              : setIsAddingDMs(true)
+            isAddingComments
+              ? addNewItem("comments", newComment)
+              : setIsAddingComments(true)
           }
           style={{
             background: "#49267e",
@@ -417,12 +337,37 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
             cursor: "pointer",
           }}
         >
-          {isAddingDMs ? "Add" : "+ Add DM"}
+          {isAddingComments ? "Add" : "+ Add Comment"}
         </button>
         )}
       </div>
         )}
-        
+
+
+        {/* DMs Boxes */}
+        {(auto_type === 2 || auto_type === 3) && (
+          <div className="detail-card" style={{ top: "30%", left: "50%" }}>
+            <span id="entry_4" className="entry-point"></span>
+            <span id="exit_4" className="exit-point"></span>
+            <div className="drag-handle"></div>
+            <h3>DM Replies</h3>
+            <ul>
+              {dm_answers.map((answer, index) => (
+                <span key={index} style={{flexDirection: 'column'}}> <li key={index}>{answer} <button
+                onClick={() => removeAttachment(index)}
+                style={{
+                  background: 'rgba(255, 0, 0, 0.8)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: 20,
+                  height: 20,
+                  cursor: 'pointer',
+                }} >x</button> </li></span>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     );
   };

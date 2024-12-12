@@ -82,7 +82,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
       return data.messages.data as Message1[];
     }
     return [];
-  };s
+  };
 
   // Hardcoded for testing purposes, replace with actual selectedConversation.id
   const selectedConversationId = selectedConversation?.id ;//|| 'aWdfZAG06MTpJR01lc3NhZA2VUaHJlYWQ6MTc4NDE0NzAyOTI1MzQ5MzY6MzQwMjgyMzY2ODQxNzEwMzAxMjQ0Mjc2MjAyNTk0OTcxNTQwODA5';
