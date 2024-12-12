@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { FiPaperclip, FiSend } from 'react-icons/fi';
-import './conversations.css';
+// import './conversations.css';
 import io from 'socket.io-client';
+import ProfileCard from '../ProfileCard';
 
 const socket = io('https://nkf448kn-3001.asse.devtunnels.ms/'); // Replace with your Socket.IO server URL
 
@@ -15,14 +16,26 @@ interface Message1 {
   attachments?: { data: { type?: string; image_data?: { url: string }; video_data?:{width: number, height: number, url:string, preview_url:string} }[] };
 }
 
+interface ParticipantDetails {
+  id: string;
+  name: string;
+  username: string;
+  profile_pic: string;
+  is_verified_user: boolean;
+  follower_count: number;
+  is_user_follow_business: boolean;
+  is_business_follow_user: boolean;
+}
+
 interface Conversation {
   id: string;
   name: string;
   updated_time: string;
   last_message: string;
-  avatar: string;
-  status: string;
+  participant_details: ParticipantDetails | null; 
+  status: string; 
 }
+
 
 interface InboxProps {
   pageAccessToken: string | null;
@@ -36,41 +49,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
 
   const pageId=process.env.NEXT_PUBLIC_FACEBOOK_PAGE_ID;
   const queryClient = useQueryClient();
-  //useEffect(() => {
-    // const fetchMessages = async (pageAccessToken:string, selectedConversation:string): Promise<Message1[]> => {
-    //   if (selectedConversation) {
-    //     //try {
-    //       const response = await fetch(
-    //         `/api/fetch-messagess?accessToken=${pageAccessToken}&conversationId=${selectedConversation}`,{method: "GET"}
-    //       );
-    //       if (!response.ok) {
-    //         throw new Error('Failed to fetch conversation list');
-    //       }
-      
-    //       return response.json();
 
-        //   const data = await response.json();
-        //   if (response.ok && data) {
-        //     setMessages(data.messages.data);
-        //   } else {
-        //     console.error('Failed to fetch messages', data);
-        //   }
-        // } catch (error) {
-        //   console.error('Error fetching messages:', error);
-        // }
-    //   }
-    // };
-
-   // fetchMessages();
- // }, [selectedConversation]);
-  //   const a='aWdfZAG06MTpJR01lc3NhZA2VUaHJlYWQ6MTc4NDE0NzAyOTI1MzQ5MzY6MzQwMjgyMzY2ODQxNzEwMzAxMjQ0Mjc2MjAyNTk0OTcxNTQwODA5'
-  // const { data: messages = [], isLoading } = useQuery({
-  //   queryKey: ['messages', pageAccessToken, a],
-  //   queryFn: () => fetchMessages(pageAccessToken as string, a as string),
-  //   enabled: !!selectedConversation, // Ensure query runs only when selectedConversation is available
-  //   staleTime: 1000 * 60 * 5,  // Cache the data for 5 minutes
-  //   }
-  // );
   const fetchMessages = async (pageAccessToken: string, selectedConversationId: string): Promise<Message1[]> => {
     if (selectedConversationId) {
       const response = await fetch(`/api/fetch-messagess?accessToken=${pageAccessToken}&conversationId=${selectedConversationId}`, { method: 'GET' });
@@ -82,7 +61,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
       return data.messages.data as Message1[];
     }
     return [];
-  };s
+  };
 
   // Hardcoded for testing purposes, replace with actual selectedConversation.id
   const selectedConversationId = selectedConversation?.id ;//|| 'aWdfZAG06MTpJR01lc3NhZA2VUaHJlYWQ6MTc4NDE0NzAyOTI1MzQ5MzY6MzQwMjgyMzY2ODQxNzEwMzAxMjQ0Mjc2MjAyNTk0OTcxNTQwODA5';
@@ -502,7 +481,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
   };
 
   return selectedConversation ? (
-    <div className="inbox-container" style={{ padding: 0 }}>
+    <div className="inbox-container" style={{ padding: 0}}>
       <h2 className="inbox-header" style={{ margin: 0 }}>{selectedConversation.name}</h2>
       <div className="inbox-messages" style={{ flexDirection: "column-reverse" ,marginBottom: 0, border: 0, boxShadow: '0 0px 0px rgba(0,0,0,0)', backgroundColor: "unset"}}>
         {messages.map((message) => (
@@ -598,6 +577,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
         </button>
         </div>
       </div>
+      
     </div>
   ) : (
     <p className="inbox-placeholder">Select a message to view the conversation.</p>

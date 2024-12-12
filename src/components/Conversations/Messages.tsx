@@ -2,13 +2,25 @@ import React, { useState, useEffect } from 'react';
 import Inbox from './Inbox';
 import './conversations.css';
 import { useQuery } from '@tanstack/react-query';
+import ProfileCard from '../ProfileCard';
+
+interface ParticipantDetails {
+  id: string;
+  name: string;
+  username: string;
+  profile_pic: string;
+  is_verified_user: boolean;
+  follower_count: number;
+  is_user_follow_business: boolean;
+  is_business_follow_user: boolean;
+}
 
 interface Conversation {
   id: string;
   name: string;
   updated_time: string;
   last_message: string;
-  avatar: string;
+  participant_details: ParticipantDetails | null;
   status: string;
 }
 
@@ -58,7 +70,6 @@ const Messages = () => {
     }
   };
 
-  // Handle URL parameter (authorization code)
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
@@ -69,14 +80,12 @@ const Messages = () => {
     }
   }, []);
 
-  // Handle mobile resizing
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Filter conversations based on selected filter
   const filteredConversations = conversations.filter((conversation) => {
     if (selectedFilter === "All") return true;
     if (selectedFilter === "Unanswered" && conversation.status === "unassigned") return true;
@@ -87,7 +96,6 @@ const Messages = () => {
 
   const handleSelectConversation = (conversation: Conversation) => {
     setSelectedConversation(conversation);
-    console.log(conversation)
     if (isMobile) {
       setShowRightDiv(true);
     }
@@ -147,10 +155,16 @@ const Messages = () => {
                 className="message-item flex items-center justify-between p-2 cursor-pointer"
                 id='chat'
                 onClick={() => handleSelectConversation(conversation)}
-                style={{ backgroundColor: selectedConversation?.id === conversation.id ? "rgb(240,240,240)" : "white", boxShadow: "0 4px 8px rgba(0, 0, 0, 0)", border:0, marginTop:0, marginBottom:0}}
+                style={{
+                  backgroundColor: selectedConversation?.id === conversation.id ? "rgb(240,240,240)" : "white",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0)",
+                  border: 0,
+                  marginTop: 0,
+                  marginBottom: 0
+                }}
               >
-                <img src={conversation.avatar} alt={conversation.id} className="avatar w-8 h-8 rounded-full mr-2" />
-                <div className="text" style={{margin:0, padding:0, border:0, boxShadow:"0 4px 8px rgba(0, 0, 0, 0)", backgroundColor:"rgba(255,255,255,0)"}}>
+                <img src={conversation.participant_details?.profile_pic} alt={conversation.id} className="avatar w-8 h-8 rounded-full mr-2" />
+                <div className="text" style={{margin: 0, padding: 0, border: 0, boxShadow:"0 4px 8px rgba(0, 0, 0, 0)", backgroundColor:"rgba(255,255,255,0)"}}>
                   <h2 className="font-semibold flex items-center">
                     {conversation.name}
                   </h2>
@@ -166,8 +180,17 @@ const Messages = () => {
           )}
         </div>
 
-        <div className={`right-div ${showRightDiv ? 'show' : 'hide'}`} style={{ borderRadius: 0, overflow: 'hidden' }}>
-          <Inbox pageAccessToken={pageAccessToken} selectedConversation={selectedConversation} />
+        <div className={`right-div ${showRightDiv ? 'show' : 'hide'}`} style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+          <div className="inbox-container" style={{ flex: 1 }}>
+            <Inbox pageAccessToken={pageAccessToken} selectedConversation={selectedConversation} />
+          </div>
+          <div className="profile-card-container" style={{ flex: '0 0 300px', padding: '1rem' }}>
+            {!selectedConversation?.participant_details ? (
+              <div style={{ background: 'rgb(0,3,4)' }}></div>
+            ) : (
+              <ProfileCard profileData={selectedConversation.participant_details} />
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -175,3 +198,4 @@ const Messages = () => {
 };
 
 export default Messages;
+ 
