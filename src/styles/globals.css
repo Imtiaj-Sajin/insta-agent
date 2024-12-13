@@ -96,7 +96,7 @@ button:focus {
   background: var(--navbar-active-bg);
   color: whitesmoke;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transform: translateX(5px); /* Slide-in effect */
+  /* transform: translateX(5px);  */
 }
 
 button:focus {
@@ -121,7 +121,7 @@ button:active {
     /* border: 1px solid #ddd; */
     border-radius: 8px;
     margin: 1rem 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.178);
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.178); */
   }
 
 

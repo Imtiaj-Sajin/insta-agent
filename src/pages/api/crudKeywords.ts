@@ -55,7 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const updateQuery = "UPDATE automation SET keywords = $1 WHERE auto_id = $2";
                 await client.query(updateQuery, [updatedKeywords, auto_id]);
 
-                res.status(200).json({ message: "Operation successful.", keywords: updatedKeywords });
+                res.status(200).json({ message: "Operation successful." });
             } catch (error) {
                 console.error("Error during CRUD operation:", error);
                 res.status(500).json({ error: "Failed to perform the operation." });
