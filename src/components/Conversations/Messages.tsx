@@ -28,10 +28,11 @@ const Messages = () => {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [showRightDiv, setShowRightDiv] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [pageAccessToken, setPageAccessToken] = useState<string | null>(null);
-
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [currentView, setCurrentView] = useState("conversation"); // "conversation", "inbox", or "profile"
   const username = process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME;
+  const toggleView = (view) => setCurrentView(view);
 
   // Function to fetch conversation list using React Query
   const fetchConversationList = async (accessToken: string): Promise<Conversation[]> => {
@@ -81,10 +82,14 @@ const Messages = () => {
   }, []);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      if (!isMobile) setCurrentView("conversation"); // Reset view on desktop
+    };
+
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [isMobile]);
 
   const filteredConversations = conversations.filter((conversation) => {
     if (selectedFilter === "All") return true;
@@ -94,108 +99,133 @@ const Messages = () => {
     return false;
   });
 
-  const handleSelectConversation = (conversation: Conversation) => {
+  const handleSelectConversation = (conversation) => {
     setSelectedConversation(conversation);
-    if (isMobile) {
-      setShowRightDiv(true);
-    }
+    toggleView("inbox");
   };
 
-  const toggleDivs = () => {
-    setShowRightDiv(!showRightDiv);
-  };
 
   return (
-    <div style={{ margin: "-1rem" }}>
-      {isMobile && showRightDiv && (
-        <div 
-          className="back-arrow" 
-          onClick={toggleDivs} 
+<div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", height: "100vh" }}>
+      {(!isMobile || currentView === "conversation") && (
+        <div
           style={{
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0)",
-            backgroundColor: "white",
-            border: "0px solid #ffffff",
-            margin: "-1rem"
+            flex: isMobile ? "1" : "2",
+            display: isMobile && currentView !== "conversation" ? "none" : "block",
+            overflowY: "auto",
+            borderRight: isMobile ? "none" : "1px solid #ddd",
           }}
         >
-          ← {selectedConversation?.name || "Message"}
+          <h1>Conversationsh</h1>
+          {filteredConversations.map((conv) => (
+            <div
+              key={conv.id}
+              onClick={() => handleSelectConversation(conv)}
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                padding: "10px",
+                borderBottom: "1px solid #ddd",
+              }}
+            >
+              <img src={conv.participant_details?.profile_pic} alt={conv.name} style={{ borderRadius: "50%", marginRight: "10px" }} />
+              <div>
+                <h2 style={{ margin: 0 }}>{conv.name}</h2>
+                <p style={{ margin: 0, fontSize: "0.9rem", color: "gray" }}>{conv.last_message}</p>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
-      <div className="contentt" style={{ padding: "0", margin: '0rem', marginTop: "1rem", paddingBottom: '5%', border: "0", boxShadow: "0 4px 8px rgba(0, 0, 0, 0)" }}>
-        <div className={`left-div ${showRightDiv && isMobile ? 'hide' : 'show'}`} style={{ overflow: "auto", borderRadius: '0' }}>
-          <div className="header flex items-center justify-between mb-4" style={{ display: showRightDiv && isMobile ? 'none' : 'flex' }}>
-            <h1 className="text-xl font-bold">Inbox</h1>
-            <select
-              value={selectedFilter}
-              onChange={(e) => setSelectedFilter(e.target.value)}
-              className="filter-dropdown"
-              style={{
-                color:'white',
-                marginLeft: 'auto',
-                backgroundColor:'#3A1C71',
-                padding: '4px 8px',
-                borderRadius: '4px',
-                fontSize: '0.9rem',
-              }}
-            >
-              <option>All</option>
-              <option>Unanswered</option>
-              <option>Agent1</option>
-              <option>Agent2</option>
-            </select>
-          </div>
 
-          {isLoading ? (
-            <div>Loading...</div>
+
+{/* Inbox */}
+{(!isMobile || currentView === "inbox") && (
+  <span
+    style={{
+      flex: isMobile ? "1" : "4",
+      display: isMobile && currentView !== "inbox" ? "none" : "block",
+      position: "relative",
+      overflowY: isMobile ? "auto" : "visible", // Allow scrolling in mobile view
+      maxHeight: isMobile ? "calc(100vh - 50px)" : "none", // Adjust the height for mobile to fit within the screen
+    }}
+  >
+    {/* mobile row */}
+      <span
+        style={{
+          display: "flex",
+          justifyContent: "space-between", // Align buttons to the left and right
+          alignItems: "center", // Vertically align buttons
+          padding: "10px",
+          position: "relative",
+          backgroundColor: "rgba(240, 240, 240, 1)", // Optional: background for clarity
+        }}
+      >
+        <button
+          onClick={() => toggleView("conversation")}
+          style={{
+            background: "red",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            width: "50px",
+            height: "30px",
+            cursor: "pointer",
+          }}
+        >
+          Back
+        </button>
+        <button
+          onClick={() => toggleView("profile")}
+          style={{
+            background: "rgba(255, 0, 0, 0.8)",
+            color: "white",
+            border: "none",
+            borderRadius: "10px",
+            width: "200px",
+            height: "30px",
+            cursor: "pointer",
+          }}
+        >
+          {selectedConversation?.name}
+        </button>
+      </span>
+    
+    {selectedConversation ? (
+      <Inbox pageAccessToken={pageAccessToken} selectedConversation={selectedConversation} />
+    ) : (
+      <p>Please select a conversation to view messages.</p>
+    )}
+  </span>
+)}
+
+
+
+      {/* Profile Card */}
+      {(!isMobile || currentView === "profile") && (
+        <div
+          style={{
+            flex: isMobile ? "1" : "2",
+            display: isMobile && currentView !== "profile" ? "none" : "block",
+            position: "relative",
+          }}
+        >
+          {isMobile && (
+            <button onClick={() => toggleView("inbox")} style={{ position: "absolute", top: "10px", left: "10px" }}>
+              Back
+            </button>
+          )}
+          {selectedConversation ? (
+            <ProfileCard profileData={selectedConversation.participant_details}/>
           ) : (
-            filteredConversations.map((conversation) => (
-              <div
-                key={conversation.id}
-                className="message-item flex items-center justify-between p-2 cursor-pointer"
-                id='chat'
-                onClick={() => handleSelectConversation(conversation)}
-                style={{
-                  backgroundColor: selectedConversation?.id === conversation.id ? "rgb(240,240,240)" : "white",
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0)",
-                  border: 0,
-                  marginTop: 0,
-                  marginBottom: 0
-                }}
-              >
-                <img src={conversation.participant_details?.profile_pic} alt={conversation.id} className="avatar w-8 h-8 rounded-full mr-2" />
-                <div className="text" style={{margin: 0, padding: 0, border: 0, boxShadow:"0 4px 8px rgba(0, 0, 0, 0)", backgroundColor:"rgba(255,255,255,0)"}}>
-                  <h2 className="font-semibold flex items-center">
-                    {conversation.name}
-                  </h2>
-                  <p className="text-sm text-gray-500 truncate">{conversation.last_message}</p>
-                </div>
-                <span style={{marginRight:'1px'}}
-                  className={`tag ml-2 ${conversation.status === 'unassigned' ? 'tag-unassigned' : conversation.status === 'answered-agent1' ? 'tag-agent1' : 'tag-agent2'}`}
-                >
-                  {conversation.status === 'unassigned' ? 'Unassigned' : conversation.status === 'answered-agent1' ? 'Agent1' : 'Agent2'}
-                </span>
-              </div>
-            ))
+            <p>No profile selected.</p>
           )}
         </div>
-
-        <div className={`right-div ${showRightDiv ? 'show' : 'hide'}`} style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
-          <div className="inbox-container" style={{ flex: 1 }}>
-            <Inbox pageAccessToken={pageAccessToken} selectedConversation={selectedConversation} />
-          </div>
-          <div className="profile-card-container" style={{ flex: '0 0 300px', padding: '1rem' }}>
-            {!selectedConversation?.participant_details ? (
-              <div style={{ background: 'rgb(0,3,4)' }}></div>
-            ) : (
-              <ProfileCard profileData={selectedConversation.participant_details} />
-            )}
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 };
 
 export default Messages;
- 
