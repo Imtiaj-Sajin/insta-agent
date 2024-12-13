@@ -3,6 +3,8 @@ import Inbox from './Inbox';
 import './conversations.css';
 import { useQuery } from '@tanstack/react-query';
 import ProfileCard from '../ProfileCard';
+import { GoKebabHorizontal } from 'react-icons/go';
+import {IoIosArrowBack} from 'react-icons/io'
 
 interface ParticipantDetails {
   id: string;
@@ -219,6 +221,7 @@ const Messages = () => {
     }}
   >
     {/* mobile row */}
+    {selectedConversation ? (
       <span
         style={{
           display: "flex",
@@ -228,41 +231,67 @@ const Messages = () => {
           position: "relative",
           backgroundColor: "rgba(240, 240, 240, 1)", // Optional: background for clarity
         }}
-      >
+      ><span style={{ display: "flex", justifyContent: "space-between"}}>
         <button
           onClick={() => toggleView("conversation")}
           style={{
-            background: "red",
-            color: "white",
+            color: "black",
             border: "none",
             borderRadius: "5px",
-            width: "50px",
-            height: "30px",
+            width: "30px",
+            padding:"0px",
             cursor: "pointer",
           }}
         >
-          Back
-        </button>
-        <button
-          onClick={() => toggleView("profile")}
-          style={{
-            background: "rgba(255, 0, 0, 0.8)",
-            color: "white",
-            border: "none",
-            borderRadius: "10px",
-            width: "200px",
+          <IoIosArrowBack />
+        </button>      
+        <span>
+          <img
+            src={selectedConversation? selectedConversation.participant_details?.profile_pic : "https://imtiaj-sajin.github.io/images/image1.JPG"}
+            alt="Profile"
+            style={{
+              width: "30px",
+              height: "30px",
+              borderRadius: "50%",
+              cursor: "pointer",
+              margin: "8px",
+            }}
+          />
+        </span> 
+        <span style={{ display: "flex", flexDirection:"column", justifyContent: "space-between"}}><span>{selectedConversation?.name}</span> <span style={{color:"rgb(200,200,200)", fontSize: "14px"}}>{selectedConversation?.active_status? "Active Now":"Active 1h ago"}</span> </span> 
+        
+      </span> 
+          
+        <div onClick={() => toggleView("profile")}
+        style={{
+            position: "relative",
+            marginRight: "20px",
+            borderRadius: "50%",
+            border: "1px solid rgba(0, 0, 0, 0.2)",
+            backgroundColor: "rgba(250, 250, 250, 0.05)",
+            width: "30px",
             height: "30px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             cursor: "pointer",
-          }}
+        }}
         >
-          {selectedConversation?.name}
-        </button>
-      </span>
+        <span
+            style={{
+            fontSize: "20px",
+            color: "rgba(0,0,0,1)",
+            }}
+        >
+        <GoKebabHorizontal />        
+        </span>
+        </div>
+      </span>):(<p style={{margin: "100px"}}>Please select a conversation to view messages.</p>)}
     
     {selectedConversation ? (
       <Inbox pageAccessToken={pageAccessToken} selectedConversation={selectedConversation} />
     ) : (
-      <p>Please select a conversation to view messages.</p>
+      <></>
     )}
   </span>
 )}
@@ -278,40 +307,40 @@ const Messages = () => {
             position: "relative",
           }}
         >
+        
+        {selectedConversation?(
           <span
-        style={{
-          display: "flex",
-          justifyContent: "space-between", // Align buttons to the left and right
-          alignItems: "center", // Vertically align buttons
-          padding: "10px",
-          position: "relative",
-          backgroundColor: "rgba(240, 240, 240, 1)", // Optional: background for clarity
-        }}
-      >
-          {isMobile && (
-            
-
-            <button
-            onClick={() => toggleView("inbox")}
             style={{
-              background: "red",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              width: "50px",
-              height: "30px",
-              cursor: "pointer",
+              display: "flex",
+              justifyContent: "space-between", // Align buttons to the left and right
+              alignItems: "center", // Vertically align buttons
+              padding: "10px",
+              position: "relative",
+              backgroundColor: "rgba(240, 240, 240, 1)", // Optional: background for clarity
             }}
-            >
-            Back
-            </button>
-            
-          )}
-          </span>
+          >
+            {isMobile && (
+              
+
+              <button
+              onClick={() => toggleView("inbox")}
+              style={{
+                background: "red",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+                width: "50px",
+                height: "30px",
+                cursor: "pointer",
+              }}
+              > <IoIosArrowBack /></button>
+            )}
+          </span>):(<></>)}
+          
           {selectedConversation ? (
             <ProfileCard profileData={selectedConversation.participant_details}/>
           ) : (
-            <p>No profile selected.</p>
+            <></>
           )}
         </span>
       )}

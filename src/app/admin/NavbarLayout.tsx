@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Messages from "../../components/Conversations/Messages";
 import Settings from "../../components/Settings";
@@ -12,6 +12,7 @@ import Updates from "./admin/Updates";
 
 import Insights from "@/components/Insights/Insights";
 import TestingSajin from "@/components/TestingSajin"
+import HeaderUI from "@/utils/header";
 
 
 export default function NavbarLayout({
@@ -20,6 +21,7 @@ export default function NavbarLayout({
   children: React.ReactNode;
 }) {
   const [selectedContent, setSelectedContent] = useState("home");
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const renderContent = () => {
     switch (selectedContent) {
@@ -44,10 +46,21 @@ export default function NavbarLayout({
     }
   };
 
+  
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [isMobile]);
+  
   return (
     <div className="app">
       <Navbar onSelect={setSelectedContent} />
       <main className="content" >
+        {!isMobile?<HeaderUI/>:<></>}
         {renderContent()}
         {children}
       </main>

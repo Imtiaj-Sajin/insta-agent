@@ -4,6 +4,8 @@ import { FiPaperclip, FiSend } from 'react-icons/fi';
 // import './conversations.css';
 import io from 'socket.io-client';
 import ProfileCard from '../ProfileCard';
+import ImagePreview from '@/utils/imagePreview';
+import ImageModal from '@/utils/imagePreview';
 
 const socket = io('https://nkf448kn-3001.asse.devtunnels.ms/'); // Replace with your Socket.IO server URL
 
@@ -482,7 +484,6 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
 
   return selectedConversation ? (
     <div className="inbox-container" style={{ padding: 0}}>
-      <h2 className="inbox-header" style={{ margin: 0 }}>{selectedConversation.name}</h2>
       <div className="inbox-messages" style={{ flexDirection: "column-reverse" ,marginBottom: 0, border: 0, boxShadow: '0 0px 0px rgba(0,0,0,0)', backgroundColor: "unset"}}>
         {messages.map((message) => (
           <div
@@ -499,7 +500,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
                 ) : attachment.video_data? (
                   <video controls src={attachment.video_data?.url} className="inbox-attachment-media" />
                 ) : (
-                  <img src={attachment.image_data?.url} alt="attachment" className="inbox-attachment-media" />
+                  <ImageModal imageUrl={attachment.image_data?.url} alt="attachment" className="inbox-attachment-media" />
                   
                 )}
               </div>
