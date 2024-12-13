@@ -45,6 +45,7 @@
     /* max-height: 500px; */
     padding-bottom: 8px !important;
     padding-right: 12px !important;
+    padding: 1rem;
   }
 
   /* Entry and Exit Points */
@@ -68,14 +69,16 @@
 
   /* Drag Handle (Menu Style with 3 Lines) */
   .drag-handle {
-    width: 20px; /* Handle Width */
-    height: 10px; /* Total Handle Height */
+     width: 30px !important; 
+    height: 30px !important;  
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     margin: 0 auto 1rem auto; /* Centered horizontally */
     cursor:move ;
+    /* padding: 1rem !important; */
+    margin: 1rem 0;
   }
 
   .drag-handle div {
