@@ -129,11 +129,11 @@ button span {
 
   /* Content sections */
   .content div {
-    padding: 1rem;
-    background-color: white;
+    /* padding: 1rem; */
+    background-color: var(--background-color);
     /* border: 1px solid #ddd; */
     border-radius: 8px;
-    margin: 1rem 0;
+    /* margin: 1rem 0; */
     /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.178); */
   }
 
