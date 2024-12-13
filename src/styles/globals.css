@@ -14,9 +14,9 @@
     --background-color: #f7f7f7;
     --text-color: #333;
     --primary-color: #0070f3;
-    --navbar-background: #8058ac;
-    --navbar-text-color: #f0f0f0;
-    --navbar-active-bg: #36086b;
+    --navbar-background: #ffffff;
+    --navbar-text-color: #3b444b;
+    --navbar-active-bg: #ed4b00;
 
     /* --navbar-background: #fff; */
     /* --navbar-text-color: #0070f3; */
@@ -53,18 +53,19 @@
   /* Navbar styles */
  /* Navbar Container */
 nav {
-  background: linear-gradient(135deg, #8058ac, #49267e); 
+  background: var(--navbar-background); 
   /* background: radial-gradient(circle at 10% 90%, #1a1a1d, #7f03e6a2, #31003d); */
 
   color: var(--navbar-text-color);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 2rem 1.5rem;
+  padding: 1.5rem;
   /* border-radius: 12px; */
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  /* border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px; */
+  border-right: 1px solid #e7eaf4;
+  /* box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); */
   width: 220px;
   max-height: 100vh;
   overflow-y: auto;
@@ -74,10 +75,11 @@ nav {
 button {
   display: flex;
   align-items: center;
-  justify-content:center ;
+  height: 2.5rem;
+  justify-content: flex-start; /* Align text and icon to the left */
   gap: 0.75rem;
   font-family: inherit;
-  font-size: 1.1rem;
+  font-size: 1rem; /* Slightly reduce font size */
   font-weight: 500;
   color: var(--navbar-text-color);
   background: transparent;
@@ -88,27 +90,38 @@ button {
   transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
   width: 100%; /* Full width for buttons */
   position: relative;
+  padding-left: 1rem !important;
 }
 
 /* Hover and Focus Styles */
 button:hover,
 button:focus {
-  background: var(--navbar-active-bg);
-  color: whitesmoke;
+  background: var(--navbar-active-bg); /* Active orange background */
+  color: whitesmoke; /* Text turns white */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transform: translateX(5px); /* Slide-in effect */
 }
 
 button:focus {
   outline: none;
 }
 
-/* Active Pressed Effect */
-button:active {
-  transform: scale(0.98);
-  box-shadow: none;
+/* Active State */
+button.active {
+  background: var(--navbar-active-bg); /* Active background matches hover */
+  color: whitesmoke;
+  font-weight: bold; /* Make active text bolder */
 }
 
+/* Icon and Text Styling */
+button svg {
+  width: 1.5rem; /* Ensure icon size matches the reference */
+  color: inherit; /* Match icon color to button text */
+}
+
+button span {
+  display: inline-block; /* Keep the text inline */
+  margin-left: 0.5rem; /* Adjust spacing between icon and text */
+}
 
 
 
@@ -121,7 +134,7 @@ button:active {
     /* border: 1px solid #ddd; */
     border-radius: 8px;
     margin: 1rem 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.178);
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.178); */
   }
 
 

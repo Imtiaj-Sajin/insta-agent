@@ -124,12 +124,12 @@
     height: 20px;
     cursor: pointer;
   }
-  .edit-automation-input{
+  /* .edit-automation-input{
     padding: 4px;
     border-radius: 4px;
     border: "1px solid #ccc" !important;
     margin-bottom: "10px";
-  }
+  } */
   
   .detail-card ul {
     list-style: none;

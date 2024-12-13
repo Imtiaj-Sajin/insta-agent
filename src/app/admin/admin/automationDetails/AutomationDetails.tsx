@@ -35,15 +35,21 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
     const [editedKeywords, setEditedKeywords] = useState([...keywords]);
     const [editedComments, setEditedComments] = useState([...comment_answers]);
     const [editedDMs, setEditedDMs] = useState([...dm_answers]);
-  
+
+    const [newKeywords, setNewKeywords] = useState<string[]>([]);
+    const [newComments, setNewComments] = useState<string[]>([]);
+    const [newDms, setNewDms] = useState<string[]>([]);
+
     const containerRef = useRef<HTMLDivElement | null>(null);
     const svgRef = useRef<SVGSVGElement | null>(null);
 
 
-    const removeAttachment = (index: number) => {
-      const updatedDMAnswers = [...dm_answers];
-      updatedDMAnswers.splice(index, 1);
-    };
+    const [delArray, setDelArray] = useState<string[]>([]); // State to store deleted keywords
+    const [delComments, setDelComments] = useState<string[]>([]); // State to store deleted keywords
+    const [delDms, setDelDms] = useState<string[]>([]); // State to store deleted keywords
+
+ 
+    
 
   useEffect(() => {
     setEditedKeywords([...keywords]);
@@ -56,7 +62,133 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
     setIsAddingKeywords(false);
     setIsAddingComments(false);
     setIsAddingDMs(false);
+    // setDelArray([])
+    // setNewKeywords([])
   };
+
+const dbKeywords = async (action: string) => {
+  const apiUrl = "/api/crudKeywords"; 
+
+
+
+  const keywordsToProcess = action === "add" ? newKeywords : delArray;
+
+  const promises = keywordsToProcess.map(async (keyword) => {
+      try {
+          const body = {
+              auto_id: auto_id, 
+              keyword: keyword,
+              action: action,
+              
+          };
+
+          // Log action and keyword for debugging
+          console.log(`Processing action '${action}' for keyword '${keyword}'`);
+
+          const response = await fetch(apiUrl, {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify(body),
+          });
+
+          const result = await response.json();
+          console.log(`Response for keyword '${keyword}' with action '${action}':`, result);
+      } catch (error) {
+          console.error(`Error processing keyword '${keyword}' with action '${action}':`, error);
+      }
+  });
+
+  // Wait for all API calls to complete
+  await Promise.all(promises);
+    alert(`All ${action} actions completed.`);
+};
+
+//comments for database with bug
+const dbComments = async (action: string) => {
+  const apiUrl = "/api/crudAutoComments"; 
+
+
+
+  const CommentsToProcess = action === "add" ? newComments : delComments;
+
+  const promises = CommentsToProcess.map(async (comment) => {
+      try {
+          const body = {
+              auto_id: auto_id, 
+              answer: comment,
+              action: action,
+              
+          };
+
+          // Log action and keyword for debugging
+          console.log(`Processing action '${action}' for Comments '${comment}'`);
+
+          const response = await fetch(apiUrl, {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify(body),
+          });
+
+          const result = await response.json();
+          console.log(`Response for comment '${comment}' with action '${action}':`, result);
+      } catch (error) {
+          console.error(`Error processing comment '${comment}' with action '${action}':`, error);
+      }
+  });
+
+  // Wait for all API calls to complete
+  await Promise.all(promises);
+    alert(`All ${action} actions completed.`);
+};
+
+
+
+//database calling for editing dms with some lil bug
+const dbDMs = async (action: string) => {
+  const apiUrl = "/api/crudAutoDMs"; 
+
+
+
+  const DMsToProcess = action === "add" ? newDms : delDms;
+
+  const promises = DMsToProcess.map(async (dm) => {
+      try {
+          const body = {
+              auto_id: auto_id, 
+              answer: dm,
+              action: action,
+              
+          };
+
+          // Log action and keyword for debugging
+          console.log(`Processing action '${action}' for Comments '${dm}'`);
+
+          const response = await fetch(apiUrl, {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify(body),
+          });
+
+          const result = await response.json();
+          console.log(`Response for DM '${dm}' with action '${action}':`, result);
+      } catch (error) {
+          console.error(`Error processing dm '${dm}' with action '${action}':`, error);
+      }
+  });
+
+  // Wait for all API calls to complete
+  await Promise.all(promises);
+    alert(`All ${action} actions completed.`);
+};
+
+
+
 
   useEffect(() => {
     const container = containerRef.current;
@@ -139,14 +271,59 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
     value: string
   ) => {
     if (value.trim() === "") return;
-    if (type === "keywords") setEditedKeywords([...editedKeywords, value]);
-    if (type === "comments") setEditedComments([...editedComments, value]);
-    if (type === "dms") setEditedDMs([...editedDMs, value]);
+    if (type === "keywords"){ setEditedKeywords([...editedKeywords, value]); setNewKeywords([...newKeywords, value])}
+    if (type === "comments") {setEditedComments([...editedComments, value]); setNewComments([...newComments, value])}
+    if (type === "dms") {setEditedDMs([...editedDMs, value]); setNewDms([...newDms, value])}
 
     if (type === "keywords") setNewKeyword("");
     if (type === "comments") setNewComment("");
     if (type === "dms") setNewDM("");
   };
+  const removeKeyword = (index: number) => {
+    setEditedKeywords((prev) => {
+      const keywordToDelete = prev[index];
+  
+      setDelArray((delPrev) => {
+        if (!delPrev.includes(keywordToDelete)) {
+          return [...delPrev, keywordToDelete];
+        }
+        return delPrev; // Return unchanged array if already included
+      });
+  
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
+  const removeDms = (index: number) => {
+    setEditedDMs((prev) => {
+      const dmToDelete = prev[index];
+  
+      setDelDms((delPrev) => {
+        if (!delPrev.includes(dmToDelete)) {
+          return [...delPrev, dmToDelete];
+        }
+        return delPrev; 
+      });
+  
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+  
+  const removeComments = (index: number) => {
+    setEditedComments((prev) => {
+      const commentToDelete = prev[index];
+  
+      setDelComments((delPrev) => {
+        if (!delPrev.includes(commentToDelete)) {
+          return [...delPrev, commentToDelete];
+        }
+        return delPrev; 
+      });
+  
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+    
 
     return (
       <div ref={containerRef} className="automation-details-container">
@@ -170,8 +347,76 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
         {isEditMode ? "✔" : "🖍"}
       </button>
 
+{/* save button */}
       <button
-        // onClick={pauseFunction} 
+        onClick={()=>{
+
+          if (delArray.length > 0 && newKeywords.length > 0) {
+            (async () => {
+              await dbKeywords("add");
+              await dbKeywords("delete");
+            })();
+          } else if (delArray.length > 0) {
+              console.log(delArray);
+               dbKeywords("delete");
+          } else if (newKeywords.length > 0) {
+              dbKeywords("add");
+          } else {
+            alert("Nothing to change in keywords.");
+          }
+          
+          //comments calling db
+          if (delComments.length > 0 && newComments.length > 0) {
+            (async () => {
+              await dbComments("add");
+              await dbComments("delete");
+            })();
+          } else if (delComments.length > 0) {
+              console.log(delComments);
+               dbComments("delete");
+          } else if (newComments.length > 0) {
+              dbComments("add");
+          } else {
+            alert("Nothing to change in Comments.");
+          }
+
+          //callindg db for dms
+          if (delDms.length > 0 && newDms.length > 0) {
+            (async () => {
+              await dbDMs("add");
+              await dbDMs("delete");
+            })();
+          } else if (delDms.length > 0) {
+              console.log(delDms);
+               dbDMs("delete");
+          } else if (newDms.length > 0) {
+              dbDMs("add");
+          } else {
+            alert("Nothing to change in DMs.");
+          }
+
+            
+          setDelArray([]); 
+          setNewKeywords([]); 
+          setNewComments([]);
+          setDelComments([]);
+          setNewDms([]);
+          setDelComments([]);
+          
+                
+
+          // console.log('newKeyword:',newKeyword)
+          console.log('editedKeywords:',editedKeywords)
+          console.log('delArray:',delArray)
+          console.log('newKeywords:',newKeywords)
+          console.log('deldms:',delDms)
+          console.log('newdms:',newDms)
+          console.log('delComments:',delComments)
+          console.log('newComments:',newComments)
+
+
+          // console.log('newDms:',setNewKeyword)
+        }} 
         style={{
           top: 160,  
                     right: 30,
@@ -221,8 +466,9 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
               <button
                 className="cross-button"
                 onClick={() =>
-                  setEditedKeywords((prev) => prev.filter((_, i) => i !== index))
-                }
+                  // setEditedKeywords((prev) => prev.filter((_, i) => i !== index))
+                  removeKeyword(index)}
+                
                
               >
                 x
@@ -243,6 +489,7 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
               border: "1px solid #ccc",
               marginBottom: "10px",
             }}
+            placeholder="Enter your Keyword"
           />
         )}
         {isEditMode && (
@@ -299,10 +546,10 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
                   {isEditMode && (
                     <button
                       className="cross-button"
-                      onClick={() =>
-                        setEditedComments((prev) =>
-                          prev.filter((_, i) => i !== index)
-                        )
+                      onClick={() =>removeComments(index)
+                        // setEditedComments((prev) =>
+                        //   prev.filter((_, i) => i !== index)
+                        // )
                       }
                       
                     >
@@ -375,10 +622,10 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
                   {isEditMode && (
                     <button
                       className="cross-button"
-                      onClick={() =>
-                        setEditedDMs((prev) =>
-                          prev.filter((_, i) => i !== index)
-                        )
+                      onClick={() =>removeDms(index)
+                        // setEditedDMs((prev) =>
+                        //   prev.filter((_, i) => i !== index)
+                        // )
                       }
                      
                     >
@@ -400,6 +647,7 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
               border: "1px solid #ccc",
               marginBottom: "10px",
             }}
+            placeholder="Enter your DM"
           />
         )}  
         {isEditMode && (
