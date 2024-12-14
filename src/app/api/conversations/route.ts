@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
     const ACCESS_TOKEN = req.cookies.get('pageAccessToken')?.value
+    // const ACCESS_TOKEN = req.nextUrl.searchParams.get("accessToken")
 
   try {
     const response = await fetch(

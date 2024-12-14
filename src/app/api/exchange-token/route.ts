@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
         console.log('Page access token:', pageAccessToken);
         // Return both the long-lived user access token and the page access token
 
-        const res = NextResponse.json({ success: true });
+        const res = NextResponse.json({ success: true, pageAccessToken: pageAccessToken });
         
         res.cookies.set('longLivedToken', longLivedTokenData.access_token, {
             httpOnly: true,
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
         });
 
         return res;
-        //return NextResponse.json({ access_token: longLivedTokenData.access_token, page_access_token: pageAccessToken });
+        //return NextResponse.json({ longLivedToken: longLivedTokenData.access_token, pageAccessToken: pageAccessToken });
 
     } catch (error) {
         console.error('Token exchange error:', error);

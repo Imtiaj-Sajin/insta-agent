@@ -57,27 +57,55 @@ const Messages = () => {
     staleTime: 1000 * 60 * 5,  // Cache the data for 5 minutes
   });
 
-  // Function to exchange code for access token
-  const exchangeToken = async (code: string) => {
-    try {
-      const tokenResponse = await fetch('/api/get-tokens');
+// Function to check cookies and exchange token if needed
+const exchangeToken = async (code: string) => {
+  try {
+    // Step 1: Check if pageAccessToken exists in cookies
+    const cookieResponse = await fetch('/api/get-tokens'); // Fetch endpoint for reading cookies
+    const cookieData = await cookieResponse.json();
+
+    console.log("lulu: ", cookieData);
+
+    if (cookieResponse.ok && cookieData.pageAccessToken) {
+      console.log('Page access token retrieved from cookies:', cookieData.pageAccessToken);
+      setPageAccessToken(cookieData.pageAccessToken);
+    } else {
+      console.log('Page access token not found in cookies. Attempting to exchange token.');
+
+      // Step 2: Call exchange-token API to fetch new tokens
+      const tokenResponse = await fetch('/api/exchange-token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code }), // Pass the code in the request body
+      });
+
       const tokenData = await tokenResponse.json();
+
       if (tokenResponse.ok) {
-        const { pageAccessToken } = tokenData;
+        const pageAccessToken = tokenData.pageAccessToken;
+        console.log('Page access token retrieved via exchange-token API:', pageAccessToken);
+
+        // Set the retrieved pageAccessToken in state
         setPageAccessToken(pageAccessToken);
       } else {
-        console.error('Failed to exchange token');
+        console.error('Failed to exchange token:', tokenData.error);
       }
-    } catch (err) {
-      console.error('Error fetching access token', err);
     }
-  };
+  } catch (err) {
+    console.error('Error handling token exchange process:', err);
+  }
+};
+
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     if (code) {
-      exchangeToken(code);
+      if(!pageAccessToken){
+          exchangeToken(code);
+      }
     } else {
       console.error('Authorization code not found');
     }
