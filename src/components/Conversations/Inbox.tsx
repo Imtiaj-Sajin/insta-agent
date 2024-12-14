@@ -67,10 +67,11 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
 
   // Hardcoded for testing purposes, replace with actual selectedConversation.id
   const selectedConversationId = selectedConversation?.id ;//|| 'aWdfZAG06MTpJR01lc3NhZA2VUaHJlYWQ6MTc4NDE0NzAyOTI1MzQ5MzY6MzQwMjgyMzY2ODQxNzEwMzAxMjQ0Mjc2MjAyNTk0OTcxNTQwODA5';
+  const selectedSenderId = selectedConversation?.participant_details?.id ;//|| 'aWdfZAG06MTpJR01lc3NhZA2VUaHJlYWQ6MTc4NDE0NzAyOTI1MzQ5MzY6MzQwMjgyMzY2ODQxNzEwMzAxMjQ0Mjc2MjAyNTk0OTcxNTQwODA5';
 
   // Query to fetch messages
   const { data: messages = [], isLoading, error } = useQuery({
-    queryKey: ['messages', pageAccessToken, selectedConversationId],
+    queryKey: ['messages', pageAccessToken, selectedSenderId],
     queryFn: () => fetchMessages(pageAccessToken as string, selectedConversationId),
     enabled: !!selectedConversation, // Ensure query runs only when selectedConversation is available
     staleTime: 1000 * 60 * 5, // Cache the data for 5 minutes
@@ -80,18 +81,21 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
     socket.on("receiveMessage", (data) => {
       console.log("Received data:", data);
       const incomingMessage = parseWebhookPayload(JSON.parse(data));
-      
-      if (!incomingMessage.is_echo) {
-        queryClient.setQueryData(['messages', pageAccessToken, selectedConversationId], (oldMessages?: Message1[]) => {
+  
+      if (!incomingMessage.is_echo) {//&& incomingMessage.type!=="message_read") {      
+        const senderId  = incomingMessage.from.id; // Use senderId as the cache key
+
+        // Cache the message under the senderId
+        queryClient.setQueryData(['messages', pageAccessToken, senderId], (oldMessages?: Message1[]) => {
           return oldMessages ? [incomingMessage, ...oldMessages] : [incomingMessage];
         });
-      }
+     }
     });
-
+  
     return () => {
       socket.off("receiveMessage");
     };
-  }, [queryClient, pageAccessToken, selectedConversationId]);
+  }, [queryClient, pageAccessToken]);
 
 
   const uploadImage = async (imageUrl: string) => {
@@ -284,7 +288,6 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
           if (event.message) {
             console.log("hello payload entry messaging event")
   
-            // Check for message type
             if (event.message.attachments && event.message.attachments.length > 0) {
               console.log("Processing event with attachments");
             

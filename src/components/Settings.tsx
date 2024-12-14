@@ -2,6 +2,21 @@ import React, { useState } from "react";
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("profile");
+  const handleLogin = () => {
+    const appId = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID;
+    const redirectUri = process.env.NEXT_PUBLIC_FACEBOOK_REDIRECT_URI;
+    const permissions = [
+        'instagram_basic',
+        'instagram_manage_messages',
+        'pages_manage_metadata',
+        'pages_show_list',
+        'business_management'
+    ].join(',');
+
+    const loginUrl = `https://www.facebook.com/v21.0/dialog/oauth?client_id=${appId}&redirect_uri=${redirectUri}&scope=${permissions}&response_type=code`;
+
+    window.location.href = loginUrl;
+};
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -86,7 +101,7 @@ const Settings = () => {
               <p style={{ fontWeight: "bold" }}>@current_username</p>
               <button style={styles.disconnectButton}>Disconnect Account</button>
             </span>
-            <button style={styles.saveButton}>Re-authenticate</button>
+            <button onClick={handleLogin} style={styles.saveButton}>Re-authenticate</button>
           </span>
         );
       default:
