@@ -47,7 +47,7 @@ export const drawConnections = ({ container, svg, connections }: DrawConnections
         return `M ${sourceX},${sourceY} 
                 C ${sourceX + 50},${sourceY} ${targetX - 50},${targetY} ${targetX},${targetY}`;
       })
-      .attr("stroke", "#8058ac")
+      .attr("stroke", "#333465")
       .attr("stroke-width", 2)
       .attr("fill", "none");
 

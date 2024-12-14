@@ -215,8 +215,8 @@ const dbDMs = async (action: string) => {
     draggables.forEach((card) => {
       const handle = card.querySelector(".drag-handle") as HTMLElement;
       let isDragging = false;
-      let offsetX = 25;
-      let offsetY = 55;
+      let offsetX = 60;
+      let offsetY = 20;
   
       const onMouseDown = () => {
         isDragging = true;
@@ -416,11 +416,11 @@ const dbDMs = async (action: string) => {
 
 
           // console.log('newDms:',setNewKeyword)
-        }} 
+        }}  
         style={{
           top: 160,  
                     right: 30,
-          background: '#49267e',
+          background: 'var(--secondary-color)',
           color: 'white',
           border: 'none',
           borderRadius: '50%',
@@ -446,19 +446,23 @@ const dbDMs = async (action: string) => {
             </svg> */}
               <h3>Automation Details</h3>
           </div>
-          <p><strong>Post ID:</strong> {post_id}  ({auto_id})</p>
-          <p>
-            <strong>Type:</strong>{" "}
-            {auto_type === 1 ? "Reply to Comment" : auto_type === 2 ? "Send DM" : "DM + Comment"}
-          </p>
+          <div style={{background:"#fff",padding:"8px",color:"var(--navbar-text-color)",borderRadius:"8px"}}>
+                <p><strong>Post ID:</strong> {post_id}  ({auto_id})</p>
+                <p>
+                  <strong>Type:</strong>{" "}
+                  {auto_type === 1 ? "Reply to Comment" : auto_type === 2 ? "Send DM" : "DM + Comment"}
+                </p>
+          </div>
+         
         </div>
 
         {/* Keywords Box */}
-        <div className="detail-card" style={{ top: "5%", left: "30%" ,maxHeight:"500px" }}>
+        
+        <div className="detail-card" style={{ top: "5%", left: "30%" ,maxHeight:"500px"}}>
           <span id="entry_2" className="entry-point"></span>
           <span id="exit_2" className="exit-point"></span>
-          <div className="drag-handle"></div>
-            <h3>Keywords</h3>
+          <div className="drag-handle" style={{}}><h3>Keywords</h3></div>
+            
 
           {/* Toggle View/Edit Mode */}
           <ul>
@@ -486,12 +490,7 @@ const dbDMs = async (action: string) => {
             type="text"
             value={newKeyword}
             onChange={(e) => setNewKeyword(e.target.value)}
-            style={{
-              padding: "4px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-              marginBottom: "10px",
-            }}
+            
             placeholder="Enter your Keyword"
           />
         )}
@@ -503,7 +502,7 @@ const dbDMs = async (action: string) => {
               : setIsAddingKeywords(true)
           }
           style={{
-            background: "#49267e",
+            background: 'var(--light-secondary-color)',
             color: "white",
             padding: "5px 10px",
             borderRadius: "5px",
@@ -530,19 +529,20 @@ const dbDMs = async (action: string) => {
           >
             <span id="entry_3" className="entry-point"></span>
             <span id="exit_3" className="exit-point"></span>
-            <div className="drag-handle"></div>
-            <h3>Comment Replies</h3>
+            <div className="drag-handle">
+                  <h3>Comment Replies</h3> 
+            </div>
             <ul>
               {editedComments.map((comment, index) => (
                 <li
                   key={index}
                   style={{
                     position: "relative", // Ensure button is contained within the li
-                    marginBottom: "0.5rem",
+                    // marginBottom: "0.5rem",
                     // padding: "0.5rem",
-                    background: "rgba(132, 0, 255, 0.1)",
-                    borderRadius: "8px",
-                    color: "#333",
+                    // background: "rgba(132, 0, 255, 0.1)",
+                    // borderRadius: "8px",
+                    // color: "#333",
                   }}
                 >
                   {comment}
@@ -564,16 +564,11 @@ const dbDMs = async (action: string) => {
             </ul>
             {isAddingComments && isEditMode && (
               <input
+                className="edit-automation-input"
                 type="text"
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                style={{
-                  padding: "8px",
-                  borderRadius: "4px",
-                  border: "1px solid #ccc",
-                  // marginBottom: "10px",
-                  width: "100%",
-                }}
+               
                 placeholder="Enter your comment"
               />
             )}
@@ -585,7 +580,7 @@ const dbDMs = async (action: string) => {
                     : setIsAddingComments(true)
                 }
                 style={{
-                  background: "#49267e",
+                  background: 'var(--light-secondary-color)',
                   color: "white",
                   padding: "5px 10px",
                   borderRadius: "5px",
@@ -601,24 +596,25 @@ const dbDMs = async (action: string) => {
 
 
 
+
         {/* DMs Boxes */}
         {(auto_type === 2 || auto_type === 3) && (
           <div className="detail-card" style={{ top: "30%", left: "50%",maxHeight:"600px" }}>
             <span id="entry_4" className="entry-point"></span>
             <span id="exit_4" className="exit-point"></span>
-            <div className="drag-handle"></div>
-            <h3>DM Replies</h3>
+            
+            <div className="drag-handle"><h3>DM Replies</h3> </div>
             <ul>
               {editedDMs.map((dms, index) => (
                 <li
                   key={index}
                   style={{
                     position: "relative", // Ensure button is scoped to the list item
-                    marginBottom: "0.5rem",
-                    padding: "0.5rem",
-                    background: "rgba(132, 0, 255, 0.1)",
-                    borderRadius: "8px",
-                    color: "#333",
+                    // marginBottom: "0.5rem",
+                    // padding: "0.5rem",
+                    // background: "rgba(132, 0, 255, 0.1)",
+                    // borderRadius: "8px",
+                    // color: "#333",
                   }}
                 >
                   {dms}
@@ -642,14 +638,9 @@ const dbDMs = async (action: string) => {
         {isAddingDMs && isEditMode && (
           <input
             type="text"
+            className="edit-automation-input"
             value={newDM}
             onChange={(e) => setNewDM(e.target.value)}
-            style={{
-              padding: "4px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-              marginBottom: "10px",
-            }}
             placeholder="Enter your DM"
           />
         )}  
@@ -661,7 +652,7 @@ const dbDMs = async (action: string) => {
               : setIsAddingDMs(true)
           }
           style={{
-            background: "#49267e",
+            background: 'var(--light-secondary-color)',
             color: "white",
             padding: "5px 10px",
             borderRadius: "5px",

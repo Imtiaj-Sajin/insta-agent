@@ -29,9 +29,9 @@
   /* Card-style Boxes */
   .detail-card {
     position: absolute;
-    background: radial-gradient(circle at top left, #f2e8ff, #ffffff); /* Less white */
+    /* background: radial-gradient(circle at top left, #f2e8ff, #ffffff);  */
     
-    border-radius: 15px !important; /* Rounded corners */
+    border-radius: 8px !important; /* Rounded corners */
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     width: 200px;
     padding: 0rem;
@@ -39,64 +39,77 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    /* gap: 0.5rem; */
     /* max-height: 500px; */
-    padding-bottom: 8px !important;
-    padding-right: 12px !important;
-    padding: 1rem;
-  }
+    /* padding-bottom: 8px !important; */
+    /* padding-right: 12px !important; */
+    /* padding: 1rem; */
+    color: var(--navbar-background);
 
+  }
+  
+  
   /* Entry and Exit Points */
-  .entry-point, .exit-point {
+  .entry-point {
+    position: absolute;
+    width: 0; /* No width, as the shape is defined by borders */
+    height: 0; /* No height, as the shape is defined by borders */
+    top: 20px; /* Adjust positioning */
+    left: -5px; /* Slightly outside the boundary */
+    border-style: solid;
+    border-width: 5px 0 5px 10px; /* Create a left-pointing arrow */
+    border-color: transparent transparent transparent var(--secondary-color); /* Only left border is colored */
+  }
+  
+  .exit-point {
     position: absolute;
     width: 10px;
     height: 10px;
-    background: #000; /* Black circle */
-    border-radius: 50%; /* Circular shape */
-  }
-
-  .entry-point {
-    top: 20px; /* Slightly outside the boundary */
-    left: -5px;
-  }
-
-  .exit-point {
-    bottom: 20px; /* Slightly outside the boundary */
+    background: var(--secondary-color);
+    border-radius: 50%; /* Keep the exit point as a circle */
+    bottom: 20px;
     right: -5px;
   }
-
+  
   /* Drag Handle (Menu Style with 3 Lines) */
   .drag-handle {
      /* width: 30px !important;  */
-    height: 30px !important;  
+    height: 40px !important;  
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    margin: 0 auto 1rem auto; /* Centered horizontally */
+    /* margin: 0 auto 1rem auto;  */
     cursor:move ;
     /* padding: 1rem !important; */
-    margin: 1rem 0;
+    /* margin: 0 1rem 0 0!important;   */
+    /* margin-bottom: 1rem; */
+    /* background: var(--secondary-color) !important; */
+    background: var(--light-orange) !important;
+    border-top-left-radius: 8px ;
+    border-top-right-radius: 8px ;
   }
 
-  .drag-handle div {
-    width: 100%; /* Line Width */
-    height: 2px; /* Line Height */
-    border-radius: 1px; /* Rounded edges */
-    background: #49267e !important; /* Purple line */
+  /* .drag-handle div {
+    width: 100%; 
+    height: 2px; 
+    border-radius: 1px; 
+    background: #49267e !important; 
     transition: all 0.2s ease;
   }
 
   .drag-handle:hover div {
-    background: #8058ac !important;  /* Lighter hover color */
-  }
+    background: #8058ac !important;  
+  } */
 
   .drag-handle:active {
     cursor: grabbing;
+    user-select: none; /* Disable text selection */
+    pointer-events: none;
   }
 
   /* Hover effects for Cards */
-  .detail-card:hover {
+  .drag-handle:hover {
     transform: scale(1.05);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
   }
@@ -106,10 +119,18 @@
   }
 
   /* Card Content */
-  .detail-card h3 {
-    margin: 0 0 0.5rem;
+  .drag-handle h3 {
+    margin: 0.5rem 0.5rem 0.5rem;
     font-size: 1.2rem;
-    color: #49267e;
+    color: var(--background-color);
+
+    /* font-family: Poppins; */
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 26px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
   }
 
   .cross-button {
@@ -117,7 +138,7 @@
     top: 50%;
     right: 10px;
     transform: translateY(-50%);
-    background: rgba(255, 0, 0, 0.8);
+    background: rgba(233, 54, 0, 0.918);
     color: white;
     border: none;
     border-radius: 50%;
@@ -125,12 +146,26 @@
     height: 20px;
     cursor: pointer;
   }
-  /* .edit-automation-input{
-    padding: 4px;
-    border-radius: 4px;
-    border: "1px solid #ccc" !important;
-    margin-bottom: "10px";
-  } */
+  .edit-automation-input {
+    font-family: "Arial", sans-serif; /* Use a clean, modern font */
+    font-size: 14px; /* Standard text size for input fields */
+    color: #000; /* Black font color */
+    background-color: #fff; /* White background for contrast */
+    padding: 4px 8px; /* Add some padding for better spacing */
+    border-radius: 4px; /* Rounded corners */
+    border: 1px solid #ccc; /* Light gray border for a subtle look */
+    margin-bottom: 10px; /* Space below the input */
+    width: 100%; /* Full width for responsive layouts */
+    box-sizing: border-box; /* Include padding in width calculation */
+    outline: none; /* Remove default blue outline on focus */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for focus effect */
+  }
+  
+  .edit-automation-input:focus {
+    border-color: #3f2b96; /* Highlight border on focus (deep purple) */
+    box-shadow: 0 0 4px rgba(63, 43, 150, 0.5); /* Subtle glow effect */
+  }
+  
   
   .detail-card ul {
     list-style: none;
@@ -139,8 +174,9 @@
     overflow-y: auto;
     scrollbar-width: thin !important; 
     scroll-behavior: smooth;         
-    scrollbar-color: #b84dff93 #f1f1f100;
-    padding-right: 1px; 
+    scrollbar-color: #333465 #f1f1f100;
+    /* padding-right: 1px;  */
+    padding: 8px;
   }
  
   
@@ -149,7 +185,7 @@
   }
   
   ul::-webkit-scrollbar-thumb {
-    background: #b84dff93; 
+    background: #333465; 
     border-radius: 6px !important;   
   }
   
@@ -161,16 +197,16 @@
   .detail-card li {
     margin-bottom: 0.5rem;
     padding: 0.5rem;
-    background: rgba(132, 0, 255, 0.1); 
+    background: var(--secondary-color); 
     border-radius: 8px;
-    color: #333;
+    color: var(--background-color);
   }
 
   /* Responsive Design */
   @media (max-width: 768px) {
     .detail-card {
       position: relative;
-      width: 100%;
+      /* width: 100%; */
       cursor: default;
     }
   }
