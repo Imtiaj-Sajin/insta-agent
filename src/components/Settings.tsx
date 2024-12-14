@@ -169,7 +169,7 @@ const styles = {
     background: "transparent", // Default background
   },
   activeTab: {
-    color: "#6a4898",
+    color: "var(--navbar-active-bg)",
     fontWeight: "bold",
     textDecoration: "underline",
     // background: "#e8e8e8", // Background for active tab
@@ -198,8 +198,9 @@ const styles = {
     fontSize: "1rem",
   },
   saveButton: {
+
     padding: "10px 20px",
-    background: "#49267e",
+    background: "var(--navbar-active-bg)",
     color: "white",
     border: "none",
     borderRadius: "5px",
