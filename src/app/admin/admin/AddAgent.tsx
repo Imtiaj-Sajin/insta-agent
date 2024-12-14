@@ -178,10 +178,10 @@ const AddAgent: React.FC = () => {
       <button
         type="submit"
         style={{
-          width: '100%',
+          width: '20%',
           marginTop: '1.5rem',
           padding: '0.5rem',
-          backgroundColor: 'var(--create-button-color)',
+          backgroundColor: 'var(--navbar-active-bg)',
           color: '#fff',
           fontWeight: '600',
           borderRadius: '0.375rem',

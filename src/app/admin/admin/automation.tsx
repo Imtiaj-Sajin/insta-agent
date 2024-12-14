@@ -17,6 +17,8 @@ const Automation: FC = () => {
   const [selectedContent, setSelectedContent] = useState<React.ReactNode>("");
   const [showRightDiv, setShowRightDiv] = useState<boolean>(false);
 
+  const [showModal, setShowModal] = useState<boolean>(false);
+
   useEffect(() => {
     const fetchAutomations = async (): Promise<void> => {
       try {
@@ -49,38 +51,54 @@ const Automation: FC = () => {
   };
 
   return (
-    <div style={{ margin: "-1rem" }}>
-      <div
-        className="back-arrow"
-        onClick={toggleDivs}
-        style={{
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0)",
-          backgroundColor: "white",
-          border: "0px solid #ffffff",
-          margin: "-1rem ",
-        }}
-      >
-        ← Automation
-      </div>
+    <div style={{  padding:'0rem'}}>
+      
 
       <div
         className="contentt"
         style={{
-          padding: "0",
-          margin: "1 rem",
-          border: "0",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0)",
+          // background:'red',
+          // padding: "1rem",
+          // margin: "1 rem",
+          // border: "10",
+          // boxShadow: "0 4px 8px rgba(0, 0, 0, 0)",
         }}
       >
-        <div
-          className={`left-div ${showRightDiv ? "hide" : "show"}`}
-          style={{ overflow: "auto", borderRadius: "0", paddingBottom:"100px" }}
-        >
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <label htmlFor="">Create new automation</label>
+        {showModal && (
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+          >
             <button
               style={{
-                backgroundColor: "var(--create-button-color)",
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                // background: "red",
+                color: "var(--navbar-active-bg)",
+                border: "none",
+                borderRadius: "50%",
+                padding: "0.5rem",
+                cursor: "pointer",
+              }}
+              onClick={() => setShowModal(false)}
+            >
+              ✖
+            </button>
+            <CreateAutomation />
+          </div>
+        </div>
+      )}  
+        <div
+          className={`left-div ${showRightDiv ? "hide" : "show"}`}
+          style={{}}
+        >
+          <div className="sticky-button-holder" style={{ display: "flex", flexDirection: "column", width:'100%',padding:4 }}>
+            <label htmlFor="">Create new automation</label>
+            <button className=""
+              style={{
+                backgroundColor: "var(--navbar-active-bg)",
                 color: "#fff",
                 width: "30%",
                 marginTop: 4,
@@ -89,41 +107,66 @@ const Automation: FC = () => {
                 display: "block",
                 margin: "0",
               }}
-              onClick={() => setSelectedContent(<CreateAutomation />)}
+              onClick={() =>  setShowModal(true)}
             >
               New
             </button>
           </div>
-
-          {automations.map((automation) => (
-            <button
-              key={automation.auto_id}
-              onClick={() => showContent(automation)}
-              style={{
-                alignContent: "left",
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "0.5rem",
-                padding: "0.5rem",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                backgroundColor: "#f9f9f9",
-                cursor: "pointer",
-              }}
-            >
-              {automation.auto_type === 1
-                ? `Comment: ${automation.post_id}`
-                : automation.auto_type === 2
-                ? `DM: ${automation.post_id}`
-                : `DM+Comment: ${automation.post_id}`}
-            </button>
-          ))}
+          <div style={{overflow:"auto",width:"100%",height:'100%', 
+                scrollbarWidth: "none",msOverflowStyle: "none",
+                paddingBottom:'200px',
+                background:"var(--navbar-background)"}}>
+              {automations.map((automation) => (
+                <button
+                  key={automation.auto_id}
+                  onClick={() => showContent(automation)}
+                  style={{
+                    alignContent: "left",
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "0.5rem",
+                    padding: "0.5rem",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
+                    backgroundColor: "#f9f9f9",
+                    cursor: "pointer",
+                  }}
+                >
+                  {automation.auto_type === 1
+                    ? `Comment: ${automation.post_id}`
+                    : automation.auto_type === 2
+                    ? `DM: ${automation.post_id}`
+                    : `DM+Comment: ${automation.post_id}`}
+                </button>
+              ))}
+          </div>
+          
         </div>
 
         <div
           className={`right-div ${showRightDiv ? "show" : "hide"}`}
           style={{ borderRadius: 0, margin: 0, padding: 0, paddingTop: 0 }}
         >
+          <div
+            className="back-arrow"
+            onClick={toggleDivs}
+            style={{
+              position: "fixed",  
+              top: "1rem",  
+              left: "1rem",  
+              zIndex: 1000, 
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", 
+              backgroundColor: "white",
+              padding: "0.5rem", 
+              border: "1px solid #ddd", 
+              borderRadius: "8px", 
+              display: "none", 
+              cursor: "pointer", 
+            }}
+          >
+            ← Automation
+          </div>
+
           <div
             id="content-display"
             style={{

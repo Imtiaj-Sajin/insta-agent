@@ -6,33 +6,31 @@
   transition: transform 0.2s ease; /* Smooth scaling */
 }
 /* Entire Page */
-  .automation-details-container {
-    position: relative;
-    height: 200vh;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    background: #ffffff; /* White background */
-    padding: 2rem;
-    /* overflow:scroll; */
-    margin-top: 0 !important;
-    
+.automation-details-container {
+  position: relative;
+  height: 200vh;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  background: #ffffff; /* White background */
+  padding: 2rem;
+  margin-top: 0 !important;
 
-    /* background-color: #ffffff; */
-    overflow:hidden;
-    position: relative;
-    display: block; /* Ensure it displays correctly */
-    background-image: 
-        linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
-    background-size: 30px 30px; /* Adjust grid cell size */
+  /* Dotted Grid */
+  background-image: radial-gradient(rgba(0, 0, 0, 0.1) 10%, transparent 10%);
+  background-size: 30px 30px; /* Adjust dot spacing */
+  background-position: 0 0;
+  overflow: hidden;
+  position: relative;
+  display: block; /* Ensure it displays correctly */
+}
 
-  }
 
   /* Card-style Boxes */
   .detail-card {
     position: absolute;
     background: radial-gradient(circle at top left, #f2e8ff, #ffffff); /* Less white */
+    
     border-radius: 15px !important; /* Rounded corners */
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     width: 200px;
@@ -69,7 +67,7 @@
 
   /* Drag Handle (Menu Style with 3 Lines) */
   .drag-handle {
-     width: 30px !important; 
+     /* width: 30px !important;  */
     height: 30px !important;  
     display: flex;
     flex-direction: column;
@@ -85,12 +83,12 @@
     width: 100%; /* Line Width */
     height: 2px; /* Line Height */
     border-radius: 1px; /* Rounded edges */
-    background: #49267e; /* Purple line */
+    background: #49267e !important; /* Purple line */
     transition: all 0.2s ease;
   }
 
   .drag-handle:hover div {
-    background: #8058ac; /* Lighter hover color */
+    background: #8058ac !important;  /* Lighter hover color */
   }
 
   .drag-handle:active {
