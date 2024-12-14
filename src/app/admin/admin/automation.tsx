@@ -118,20 +118,15 @@ const Automation: FC = () => {
                 background:"var(--navbar-background)"}}>
               {automations.map((automation) => (
                 <button
+                  className="right-show-btn"
                   key={automation.auto_id}
                   onClick={() => showContent(automation)}
                   style={{
-                    alignContent: "left",
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "0.5rem",
-                    padding: "0.5rem",
-                    border: "1px solid #ccc",
-                    borderRadius: "4px",
-                    backgroundColor: "#f9f9f9",
-                    cursor: "pointer",
+                    
                   }}
+                  
                 >
+                  
                   {automation.auto_type === 1
                     ? `Comment: ${automation.post_id}`
                     : automation.auto_type === 2

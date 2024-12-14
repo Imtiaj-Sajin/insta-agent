@@ -97,17 +97,13 @@ const Agent: FC = () => {
           >
             {agents.map((agent) => (
               <button
+              className="right-show-btn"
               key={agent.agent_id}
               style={{
                 alignContent: "left",
                 display: "flex",
                 alignItems: "center",
-                marginBottom: "0.5rem",
-                padding: "0.5rem",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                backgroundColor: "#f9f9f9",
-                cursor: "pointer",
+                
               }}
               onClick={() => {
                 setSelectedContent(

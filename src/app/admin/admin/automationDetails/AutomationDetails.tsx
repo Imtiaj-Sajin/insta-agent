@@ -447,7 +447,7 @@ const dbDMs = async (action: string) => {
               <h3>Automation Details</h3>
           </div>
           <div style={{background:"#fff",padding:"8px",color:"var(--navbar-text-color)",borderRadius:"8px"}}>
-                <p><strong>Post ID:</strong> {post_id}  ({auto_id})</p>
+                <p style={{borderBottom: ".5px solid #ddd"}}><strong>Post ID:</strong> {post_id}  ({auto_id})</p>
                 <p>
                   <strong>Type:</strong>{" "}
                   {auto_type === 1 ? "Reply to Comment" : auto_type === 2 ? "Send DM" : "DM + Comment"}
