@@ -482,34 +482,56 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
     setAttachments((prev) => prev.filter((_, i) => i !== index));
   };
 
+
+
+
   return selectedConversation ? (
-    <div className="inbox-container" style={{ padding: 0}}>
-      <div className="inbox-messages" style={{ flexDirection: "column-reverse" ,marginBottom: 0, border: 0, boxShadow: '0 0px 0px rgba(0,0,0,0)', backgroundColor: "unset"}}>
-        {messages.map((message) => (
-          <div
-          style={{boxShadow: '0 0px 0px rgba(0,0,0,0)', margin: "unset"}}
-            key={message.id}
-            className={`inbox-message ${message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? 'inbox-message-agent' : 'inbox-message-user'}`}
-          >
-            <p className="inbox-timestamp">{new Date(message.created_time).toLocaleString()}</p>
-            <p className="inbox-text">{isLink(message.message)?<a href={message.message} target="_blank" rel="noopener noreferrer" className="inbox-attachment"> > Open link</a>:message.message}</p>
-            {message.attachments?.data?.map((attachment, idx) => (
-              <div key={idx} className="inbox-attachment-container" style={{ margin: 0, padding: 0, border: 0 }}>
-                {attachment.type === 'link' ? (
-                  <a href={attachment.image_data?.url} target="_blank" rel="noopener noreferrer" className="inbox-attachment">📄 File</a>
-                ) : attachment.video_data? (
-                  <video controls src={attachment.video_data?.url} className="inbox-attachment-media" />
-                ) : (
-                  <ImageModal imageUrl={attachment.image_data?.url} alt="attachment" className="inbox-attachment-media" />
-                  
-                )}
-              </div>
-            ))}
+    <span className="inbox-container" style={{ padding: 0}}>
+<div className="inbox-messages" style={{ display: "flex", flexDirection: "column-reverse", padding: "10px", gap: "10px"}}>
+  {messages.map((message) => (
+    <div
+      key={message.id}
+      style={{
+        display: "flex",
+        flexDirection: message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? "row-reverse" : "row",
+        alignItems: "flex-start",
+        gap: "10px",
+        background: "rgba(0,0,0,0)",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "70%",
+          backgroundColor: message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? "#FCE9E0" : "#FFFFFF",
+          color: "#333",
+          padding: "10px 15px",
+          border:  message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? "1px solid #F7CCB6":"1px solid #DBDEEB",
+          borderRadius: message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? "12px 12px 0 12px" : "12px 12px 12px 0",
+        }}
+      > <span style={{ display: "flex" , flexDirection:"row", gap: "30px",  justifyContent: "space-between" }}>
+        <p style={{ fontSize: "0.9rem", color: "#000" }}>{message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? "You" : selectedConversation.name}</p>
+        <p style={{ fontSize: "0.9rem", margin: 0, color: "#999" }}>
+          {new Date(message.created_time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+        </p></span>
+        <p style={{ margin: "5px 0", fontSize: "1rem" }}>{isLink(message.message) ? <a href={message.message} target="_blank" rel="noopener noreferrer" style={{ color: "#007BFF" }}>  Open link</a> : message.message}</p>
+        {message.attachments?.data?.map((attachment, idx) => (
+          <div key={idx} style={{ marginTop: "10px" }}>
+            {attachment.type === "link" ? (
+              <a href={attachment.image_data?.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", color: "#007BFF" }}>📄 File</a>
+            ) : attachment.video_data ? (
+              <video controls src={attachment.video_data?.url} style={{ width: "100%", borderRadius: "8px" }} />
+            ) : (
+              <ImageModal imageUrl={attachment.image_data?.url} alt="attachment" style={{ width: "100%", borderRadius: "8px" }} />
+            )}
           </div>
         ))}
       </div>
+    </div>
+  ))}
+</div>
 
-      <div className="inbox-message-input" style={{ borderRadius: 40, padding: 0, flexDirection: 'column', backgroundColor:'rgba(0,0,0,0)', border: "unset", boxShadow:"unset"}}>
+
+      <span className="inbox-message-input" style={{ borderRadius: 10, padding: "0px", flexDirection: 'column', backgroundColor:'rgba(255,255,255,1)', border: "1px solid #DBDEEB", boxShadow:"unset", marginBottom:"150px" }}>
       {attachments.length > 0 && (
         <div
           className="attachment-preview-section"
@@ -554,32 +576,32 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
         </div>
       )}
 
-        <div className='inbox-textarea' style={{display: 'flex',alignItems: 'center',width: '100%',gap: '10px', margin: "unset"}}>
-        <label htmlFor="file-input" className="inbox-attach-icon">
-          <FiPaperclip />
-          <input
-            id="file-input"
-            type="file"
-            multiple
-            onChange={handleAttachmentChange}
-            className="inbox-file-input"
+        <div className='inbox-textarea' style={{borderRadius: "10px",display: 'flex',alignItems: 'center',width: '100%',gap: '10px', margin: "0", background: "rgba(0,0,0,0)"}}>
+          <label htmlFor="file-input" className="inbox-attach-icon">
+            <FiPaperclip />
+            <input
+              id="file-input"
+              type="file"
+              multiple
+              onChange={handleAttachmentChange}
+              className="inbox-file-input"
+            />
+          </label>
+          <textarea
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="Type a message..."
+            className="inbox-textarea"
+            rows={1}
+            style={{ height: `${Math.min(120, 24 + newMessage.split('\n').length * 20)}px` }}
           />
-        </label>
-        <textarea
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type a message..."
-          className="inbox-textarea"
-          rows={1}
-          style={{ height: `${Math.min(120, 24 + newMessage.split('\n').length * 20)}px` }}
-        />
-        <button onClick={handleSendMessage} className="inbox-send-button">
-          <FiSend />
-        </button>
+          <button onClick={handleSendMessage} className="inbox-send-button">
+            <FiSend />
+          </button>
         </div>
-      </div>
+      </span>
       
-    </div>
+    </span>
   ) : (
     <p className="inbox-placeholder">Select a message to view the conversation.</p>
   );

@@ -216,7 +216,7 @@ const Messages = () => {
       flex: isMobile ? "1" : "4",
       display: isMobile && currentView !== "inbox" ? "none" : "block",
       position: "relative",
-      overflowY: isMobile ? "auto" : "visible", // Allow scrolling in mobile view
+      //overflowY: isMobile ? "auto" : "visible", // Allow scrolling in mobile view
       maxHeight: isMobile ? "calc(100vh - 50px)" : "none", // Adjust the height for mobile to fit within the screen
     }}
   >
@@ -229,7 +229,7 @@ const Messages = () => {
           alignItems: "center", // Vertically align buttons
           padding: "10px",
           position: "relative",
-          backgroundColor: "rgba(240, 240, 240, 1)", // Optional: background for clarity
+          backgroundColor: "rgba(255, 255, 255, 1)", // Optional: background for clarity
         }}
       ><span style={{ display: "flex", justifyContent: "space-between"}}>
         <button
@@ -305,6 +305,7 @@ const Messages = () => {
             flex: isMobile ? "1" : "2",
             display: isMobile && currentView !== "profile" ? "none" : "block",
             position: "relative",
+            background: "rgba(255,255,255,1)"
           }}
         >
         
@@ -316,7 +317,7 @@ const Messages = () => {
               alignItems: "center", // Vertically align buttons
               padding: "10px",
               position: "relative",
-              backgroundColor: "rgba(240, 240, 240, 1)", // Optional: background for clarity
+              background: "rgba(255, 255, 255, 1)", // Optional: background for clarity
             }}
           >
             {isMobile && (

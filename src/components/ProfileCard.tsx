@@ -1,28 +1,159 @@
 import React from 'react';
 
-const ProfileCard = ({ profileData }: { profileData: string }) => {
-
+const ProfileCard = ({ profileData }: { profileData: any }) => {
   return (
-    <div className="profile-card">
-      Profile Picture
-      <div className="profile-pic">
-        <img src={profileData.profile_pic} alt={`${profileData.name}'s Profile`} />
+    <span
+      className="profile-card"
+      style={{
+        background: '#fff',
+        boxShadow: '0px 0px 0px 0px rgba(255,255,255,0)',
+        color: '#000',
+        textAlign: 'center',
+        padding: '30px',
+        width: '350px',
+        maxWidth: '100%',
+        margin: 'auto',
+      }}
+    >
+      {/* Profile Picture */}
+      <div
+        className="profile-pic"
+        style={{
+          border: '1px solid #ED4B00',
+          borderRadius: '50%',
+          padding: '7px',
+          display: 'inline-block',
+        }}
+      >
+        <img
+          src={profileData.profile_pic}
+          alt={`${profileData.name}'s Profile`}
+          style={{
+            borderRadius: '50%',
+            width: '100px',
+            height: '100px',
+            objectFit: 'cover',
+          }}
+        />
       </div>
 
       {/* Name and Username */}
-      <div className="profile-info">
-        <h2>{profileData.name}</h2>
-        <p>@{profileData.username}</p>
-        {profileData.is_verified_user && <span className="verified">✔ Verified</span>}
+      <h3 style={{ margin: '5px 0' }}>{profileData.name}</h3>
+      <h6 style={{ margin: '5px 0', textTransform: 'uppercase' }}>
+        @{profileData.username}
+      </h6>
+      {profileData.is_verified_user && (
+        <span
+          className="verified"
+          style={{
+            color: '#231E39',
+            backgroundColor: '#FEBB0B',
+            borderRadius: '3px',
+            fontSize: '14px',
+            fontWeight: 'bold',
+            padding: '3px 7px',
+            position: 'relative',
+            marginTop: '10px',
+            display: 'inline-block',
+          }}
+        >
+          ✔ Verified
+        </span>
+      )}
+
+      {/* Follower Information */}
+      <p style={{ fontSize: '14px', lineHeight: '21px' }}>
+        Followed by {profileData.follower_count} user(s)
+      </p>
+
+      {/* Buttons */}
+      <div
+        className="buttons"
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '10px',
+          marginTop: '20px',
+        }}
+      >
+        <button
+          className="primary"
+          style={{
+            backgroundColor:"#ED4B00",
+            border: '1px solid #fff',
+            borderRadius: '10px',
+            color: '#fff',
+            fontFamily: 'Montserrat, sans-serif',
+            fontWeight: '500',
+            padding: '10px 25px',
+          }}
+        >
+          View
+        </button>
+        <button
+          className="primary ghost"
+          style={{
+            backgroundColor: 'transparent',
+            color: '#ED4B00',
+            border: '1px solid #ED4B00',
+            borderRadius: '10px',
+            fontFamily: 'Montserrat, sans-serif',
+            fontWeight: '500',
+            padding: '10px 25px',
+          }}
+        >
+          {profileData.is_business_follow_user? 'Following' : 'Follow'}
+        </button>
       </div>
 
-      {/* Other Information */}
-      <div className="profile-stats">
-        <p>Followers: {profileData.follower_count}</p>
-        <p>User Follows Business: {profileData.is_user_follow_business ? 'Yes' : 'No'}</p>
-        <p>Business Follows User: {profileData.is_business_follow_user ? 'Yes' : 'No'}</p>
+      {/* Media Section */}
+
+        <div
+        className="media"
+        style={{
+          backgroundColor: '#fff',
+          textAlign: 'left',
+          padding: '10px',
+          marginTop: '30px',
+          borderRadius: '3px',
+        }}
+      >
+        <h6 style={{ margin: '5px 0',textAlign: 'left'}}>
+          Media
+        </h6>
+        <ul
+          style={{
+            listStyleType: 'none',
+            margin: '0',
+            padding: '0',
+            display: 'flex',
+            gap: '15px',
+            flexWrap: 'wrap',
+            justifyContent: 'flex-start',
+          }}
+        >
+          {[...Array(6)].map((_, index) => (
+            <li
+              key={index}
+              style={{
+                display: 'inline-block',
+              }}
+            >
+              <img
+                src={`https://via.placeholder.com/80?text=Media+${index + 1}`}
+                alt={`Media ${index + 1}`}
+                style={{
+                  width: '50px',
+                  height: '50px',
+                  borderRadius: '3px',
+                  objectFit: 'cover',
+                }}
+              />
+            </li>
+          ))}
+        </ul>
       </div>
-    </div>
+    </span>
   );
 };
 
