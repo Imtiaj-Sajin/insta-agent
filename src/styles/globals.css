@@ -17,6 +17,9 @@
     --navbar-background: #ffffff;
     --navbar-text-color: #3b444b;
     --navbar-active-bg: #ed4b00;
+    --secondary-color: #333465;
+    --light-secondary-color: #33346581;
+    --light-orange: #ec4b00de;
 
     /* --navbar-background: #fff; */
     /* --navbar-text-color: #0070f3; */
@@ -72,7 +75,7 @@ nav {
 }
 
 /* Navbar Button Style */
-button {
+nav button {
   display: flex;
   align-items: center;
   height: 2.5rem;
@@ -85,7 +88,7 @@ button {
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 0.75rem 1rem;
+  /* padding: 0.75rem 1rem; */
   border-radius: 8px;
   transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
   width: 100%; /* Full width for buttons */
@@ -94,31 +97,31 @@ button {
 }
 
 /* Hover and Focus Styles */
-button:hover,
-button:focus {
+nav button:hover,
+nav button:focus {
   background: var(--navbar-active-bg); /* Active orange background */
   color: whitesmoke; /* Text turns white */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
 }
 
-button:focus {
+nav button:focus {
   outline: none;
 }
 
 /* Active State */
-button.active {
+nav button.active {
   background: var(--navbar-active-bg); /* Active background matches hover */
   color: whitesmoke;
   font-weight: bold; /* Make active text bolder */
 }
 
 /* Icon and Text Styling */
-button svg {
+nav button svg {
   width: 1.5rem; /* Ensure icon size matches the reference */
-  color: inherit; /* Match icon color to button text */
+  color: inherit; /* Match icon color to nav button text */
 }
 
-button span {
+nav button span {
   display: inline-block; /* Keep the text inline */
   margin-left: 0.5rem; /* Adjust spacing between icon and text */
 }
@@ -132,7 +135,7 @@ button span {
     /* padding: 1rem; */
     background-color: var(--background-color);
     /* border: 1px solid #ddd; */
-    border-radius: 8px;
+    /* border-radius: 8px; */
     /* margin: 1rem 0; */
     /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.178); */
   }
@@ -232,9 +235,13 @@ button span {
     right: 0;
     z-index: 100;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.15);
+    /* box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.15); */
     width: 100%; /* Full-width for mobile */
     border-radius: 0; /* Remove rounding */
+  }
+
+  .logo-img{
+    display: none;
   }
 
     /* CSS class to hide nav */
@@ -243,7 +250,7 @@ button span {
   }
 
 
-  button {
+  nav button {
     font-size: 3rem; /* Increase icon size for visibility */
     gap: 0;
     padding: 0px;
@@ -260,14 +267,18 @@ button span {
     justify-content: center !important; /* Center-align icons */
     width: 50% !important; /* Full width for buttons */
     /* border-radius: 0; Remove rounding from buttons */
+    padding-left: 0rem !important;
+
     
   } 
 
-  button span {
+  nav button span {
     display: none; /* Hide text in mobile view */
   }
-  button:focus {
-    background: linear-gradient(235deg,#c0392b,#8128a5) !important;
+  nav button:focus {
+    /* background: linear-gradient(235deg,#c0392b,#8128a5) !important; */
+    color: var(--navbar-active-bg);
+    background-color: var(--navbar-background);
     }
     
 

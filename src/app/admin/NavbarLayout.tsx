@@ -39,8 +39,8 @@ export default function NavbarLayout({
         return <Agent/>;
       case "insights":
         return <Insights/>;
-      case "testing":
-          return <TestingSajin/>
+      // case "testing":
+      //     return <TestingSajin/>
       default:
         return <Messages/>;
     }
