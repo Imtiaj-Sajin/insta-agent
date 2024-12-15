@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto, { randomInt } from 'crypto';
 import { cookies } from 'next/headers';
+import { sendSSEData } from '../sse/route';
 
 const VERIFY_TOKEN = 'v_token'; 
 const APP_SECRET = process.env.NEXT_PUBLIC_FACEBOOK_APP_SECRET || ''; 
@@ -69,7 +70,6 @@ export async function POST(req: NextRequest) {
       }
       console.log("webhook body: ",body)
       const payload = JSON.parse(body);
-
   
       const parsedData = parseWebhookPayload(payload);
       console.log("Parsed webhook payload:", parsedData);
