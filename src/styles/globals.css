@@ -16,10 +16,15 @@
     --primary-color: #0070f3;
     --navbar-background: #ffffff;
     --navbar-text-color: #3b444b;
-    --navbar-active-bg: #ed4b00;
+    /* --navbar-active-bg: #ED4B00; */
+    --navbar-active-bg: #E4405F;
     --secondary-color: #333465;
     --light-secondary-color: #33346581;
-    --light-orange: #ec4b00de;
+    /* --light-orange: #ec4b00de; */
+    --light-orange: #ff6883b0;
+    --button-soft-color: #fdeee7; /* Slightly darker gray background */
+    --button-soft-border-color: #f7c5b2; /* Light peach border */
+
 
     /* --navbar-background: #fff; */
     /* --navbar-text-color: #0070f3; */
@@ -133,7 +138,7 @@ nav button span {
   /* Content sections */
   .content div {
     /* padding: 1rem; */
-    background-color: var(--background-color);
+    /* background-color: var(--background-color); */
     /* border: 1px solid #ddd; */
     /* border-radius: 8px; */
     /* margin: 1rem 0; */

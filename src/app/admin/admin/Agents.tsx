@@ -104,6 +104,7 @@ const Agent: FC = () => {
                 display: "flex",
                 alignItems: "center",
                 
+                
               }}
               onClick={() => {
                 setSelectedContent(

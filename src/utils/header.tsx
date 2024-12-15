@@ -1,7 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaBell } from "react-icons/fa";
 
 const HeaderUI: React.FC = () => {
+  const [paletteIndex, setPaletteIndex] = useState(0);
+
+  const togglePalette = () => {
+    // Define the two palettes
+    const palettes = [
+      {
+        "--navbar-active-bg": "#ED4B00",
+        "--light-orange": "#ec4b00de",
+        "--button-soft-color": "#fdeee7",
+        "--button-soft-border-color": "#f7c5b2",
+      },
+      {
+        "--navbar-active-bg": "#E4405F",
+        "--light-orange": "#ff6883b0",
+        "--button-soft-color": "#e8f5e9",
+        "--button-soft-border-color": "#c8e6c9",
+      },
+    ];
+
+    // Toggle the index
+    const newIndex = (paletteIndex + 1) % palettes.length;
+    setPaletteIndex(newIndex);
+
+    // Update the CSS variables
+    const root = document.documentElement;
+    const selectedPalette = palettes[newIndex];
+    Object.keys(selectedPalette).forEach((key) => {
+      root.style.setProperty(key, selectedPalette[key]);
+    });
+  };
+
   return (
     <span
       style={{
@@ -15,17 +46,18 @@ const HeaderUI: React.FC = () => {
     >
       {/* Language Selector */}
       <div
+        onClick={togglePalette} // Toggle color palette on click
         style={{
           display: "flex",
           alignItems: "center",
           marginRight: "20px",
-          padding:"0px 8px",
+          padding: "0px 8px",
           borderRadius: "20px",
-          height:"30px",
-            border: "1px solid rgba(0, 0, 0, 0.2)",
-            backgroundColor: "rgba(250, 250, 250, 0.05)",
-            justifyContent: "center",
-            cursor: "pointer",
+          height: "30px",
+          border: "1px solid rgba(0, 0, 0, 0.2)",
+          backgroundColor: "rgba(250, 250, 250, 0.05)",
+          justifyContent: "center",
+          cursor: "pointer",
         }}
       >
         <img
@@ -35,39 +67,38 @@ const HeaderUI: React.FC = () => {
             width: "20px",
             height: "12px",
             marginRight: "5px",
-
           }}
         />
         <span style={{ fontSize: "14px", color: "#555" }}>English</span>
       </div>
 
-        {/* Notifications Icon */}
-        <div
+      {/* Notifications Icon */}
+      <div
         style={{
-            position: "relative",
-            marginRight: "20px",
-            borderRadius: "50%",
-            border: "1px solid rgba(0, 0, 0, 0.2)",
-            backgroundColor: "rgba(250, 250, 250, 0.05)",
-            width: "30px",
-            height: "30px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
+          position: "relative",
+          marginRight: "20px",
+          borderRadius: "50%",
+          border: "1px solid rgba(0, 0, 0, 0.2)",
+          backgroundColor: "rgba(250, 250, 250, 0.05)",
+          width: "30px",
+          height: "30px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
         }}
-        >
+      >
         <span
-            style={{
+          style={{
             fontSize: "20px",
             color: "rgba(0,0,0,1)",
-            }}
+          }}
         >
-            <FaBell />
+          <FaBell />
         </span>
         {/* Notification Badge */}
         <span
-            style={{
+          style={{
             position: "absolute",
             top: "5px",
             right: "5px",
@@ -80,10 +111,9 @@ const HeaderUI: React.FC = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            }}
+          }}
         ></span>
-        </div>
-
+      </div>
 
       {/* Profile Icon */}
       <div>
@@ -103,4 +133,3 @@ const HeaderUI: React.FC = () => {
 };
 
 export default HeaderUI;
-

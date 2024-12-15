@@ -8,7 +8,8 @@ import Automation from "./admin/automation";
 import Chats from "../../components/Chats";
 import "../../styles/globals.css"
 import Agent from "./admin/Agents";
-import Updates from "./admin/Updates";
+// import Updates from "./admin/Updates";
+import Notification from "./admin/Notification";
 
 import Insights from "@/components/Insights/Insights";
 import TestingSajin from "@/components/TestingSajin"
@@ -25,8 +26,6 @@ export default function NavbarLayout({
 
   const renderContent = () => {
     switch (selectedContent) {
-      case "updates":
-        return <Updates/>;
       case "messages":
         return <Messages/>;
       case "settings":
@@ -39,6 +38,8 @@ export default function NavbarLayout({
         return <Agent/>;
       case "insights":
         return <Insights/>;
+      case "notification":
+        return <Notification/>;
       // case "testing":
       //     return <TestingSajin/>
       default:
