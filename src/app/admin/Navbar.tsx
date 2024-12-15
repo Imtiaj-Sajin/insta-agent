@@ -22,9 +22,10 @@ export default function Navbar({ onSelect }: NavbarProps) {
         <FaRobot />
         <span>Automation</span>
       </button>
-      <button onClick={() => onSelect("updates")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>
+      
+      <button onClick={() => onSelect("notification")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>
         <FaBell />
-        <span>Updates</span>
+        <span>Notifications</span>
       </button>
       <button onClick={() => onSelect("agents")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>
         <FaUser />

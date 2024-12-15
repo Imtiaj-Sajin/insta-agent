@@ -26,6 +26,8 @@
     flex-direction: column;
     gap: 10px;
     align-items: flex-start;
+    border-right: .5px solid #e7eaf4;
+
 }
 
 .right-div {
@@ -108,21 +110,21 @@
   
   /* Hover effect */
   button.right-show-btn:hover {
-    background-color: #fdeee7 !important; /* Slightly darker gray */
-    border-color: #f7c5b2 !important; /* Change border color */
+    background-color: var(--button-soft-color) !important; /* Slightly darker gray */
+    border-color: var(--button-soft-border-color) !important; /* Change border color */
     color: #333;
   }
   
   /* Active/Selected Button Style */
   button.right-show-btn:active {
-    background-color: #fdeee7; /* Light peach background */
-    border-color: #f7c5b2 !important; /* Matching border color */
+    background-color: var(--button-soft-color); /* Light peach background */
+    border-color: var(--button-soft-border-color) !important; 
     color: #333; /* Ensure text stays dark */
     font-weight: bold; /* Bold text for active state */
   }
   button.right-show-btn:focus {
-    background-color: #fdeee7; /* Light peach background */
-    border-color: #f7c5b2 !important; /* Matching border color */
+    background-color: var(--button-soft-color); /* Light peach background */
+    border-color: var(--button-soft-border-color) !important; 
     color: #333; /* Ensure text stays dark */
     font-weight: bold; /* Bold text for active state */
   }

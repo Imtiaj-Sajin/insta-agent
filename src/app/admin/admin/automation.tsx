@@ -140,7 +140,7 @@ const Automation: FC = () => {
 
         <div
           className={`right-div ${showRightDiv ? "show" : "hide"}`}
-          style={{ borderRadius: 0, margin: 0, padding: 0, paddingTop: 0 }}
+          style={{ borderRadius: 0, margin: 0, padding: 0, paddingTop: 0, background:"var(--background-color)"}}
         >
           <div
             className="back-arrow"
@@ -165,6 +165,7 @@ const Automation: FC = () => {
           <div
             id="content-display"
             style={{
+              // background:"var(--background-color)",
               margin: 0,
               padding: 0,
               boxShadow: "0 0px 0px rgba(0, 0, 0, 0)",

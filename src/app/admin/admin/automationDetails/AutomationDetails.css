@@ -12,7 +12,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
-  background: #ffffff; /* White background */
+  background: var(--background-color); /* White background */
   padding: 2rem;
   margin-top: 0 !important;
 
@@ -32,7 +32,9 @@
     /* background: radial-gradient(circle at top left, #f2e8ff, #ffffff);  */
     
     border-radius: 8px !important; /* Rounded corners */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+
     width: 200px;
     padding: 0rem;
     z-index: 1;
@@ -44,7 +46,7 @@
     /* padding-bottom: 8px !important; */
     /* padding-right: 12px !important; */
     /* padding: 1rem; */
-    color: var(--navbar-background);
+    background: var(--navbar-background);
 
   }
   
@@ -177,6 +179,9 @@
     scrollbar-color: #333465 #f1f1f100;
     /* padding-right: 1px;  */
     padding: 8px;
+    background: var(--navbar-background);
+    border-radius: 8px;
+
   }
  
   
