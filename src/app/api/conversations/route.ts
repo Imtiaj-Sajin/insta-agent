@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
     const conversations = await Promise.all(
       data.data.map(async (conversation: any) => {
         const participant = conversation.participants?.data?.find(
-          (p: any) => p.id !== process.env.NEXT_PUBLIC_INSTAGRAM_USERID
+          (p: any) => p.id !== process.env.w    
         );
 
         let participantDetails = null;
