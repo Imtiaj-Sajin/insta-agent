@@ -2,7 +2,7 @@ import { Pool } from "pg";
 
 const pool = new Pool({
   user: "postgres", // Replace with your PostgreSQL username
-  host: "localhost", // Replace with your database host
+  host: "192.168.0.173", // Replace with your database host
   database: "instaAgent", // Replace with your database name
   password: "1234", // Replace with your PostgreSQL password
   port: 5432, // Replace with your PostgreSQL port (default is 5432)
