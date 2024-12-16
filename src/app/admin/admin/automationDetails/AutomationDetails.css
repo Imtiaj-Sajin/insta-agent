@@ -214,6 +214,49 @@
       /* width: 100%; */
       cursor: default;
     }
+    
+    
+    #dc_main{
+      top: 2% !important;
+      left: 5% !important;
+    }
+    #dc_keywords{
+      top: 5% !important;
+      left: 15% !important;
+    }
+    #dc_dm{
+      top: 12% !important;
+      left: 5% !important;
+    }
+    #dc_comments{
+      top: 8% !important;
+      left: 25% !important;
+    }
+
+    .automation-details-container {
+      height: 280vh;
+    
+    }
+    .detail-card {
+      width: 250px;
+
+    }
+    .exit-point {
+      /* position: absolute; */
+      /* width: 15px;
+      height: 15px; */
+      /* background: var(--secondary-color); */
+      /* border-radius: 50%; 20,-15*/
+      bottom: -5px;
+      right: 50%;
+    }
+    .entry-point {
+      top: 0px; 
+      left: -5px; 
+      border-radius: 50%; 
+
+    }
+    
   }
 
 
