@@ -1,0 +1,126 @@
+.settings-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 15%;
+  background: #ffffff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tab {
+  color: #393939;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: left;
+  border: none;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.settings-icon {
+  font-size: 1.2rem;
+  display: none;
+}
+
+.button-text {
+  display: inline;
+}
+
+.active-tab {
+  color: var(--navbar-active-bg);
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.good-content {
+  flex: 1;
+  padding: 50px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.form-group {
+  /* margin-bottom: 15px; */
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.save-button {
+  padding: 10px 20px;
+  background: var(--navbar-active-bg);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.disconnect-button {
+  padding: 10px 20px;
+  background: #d76d77;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.connected-account {
+  font-weight: bold;
+}
+
+
+
+
+
+@media (max-width: 768px) {
+  .sidebar{
+    padding: 1px;
+  }
+  .tab {
+    justify-content: center;
+    padding: 0%;
+    margin: 1rem;
+  }
+
+  .button-text {
+    display: none; /* Hide text on smaller screens */
+  }
+
+  .settings-icon {
+    font-size: 1.8rem; /* Increase the icon size on mobile */
+    display: block;
+  }
+
+  button.tab {
+    font-size: 1.5rem; /* Slightly increase button size for touch interaction */
+  }
+
+  
+}
