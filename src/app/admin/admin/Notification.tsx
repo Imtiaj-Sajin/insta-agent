@@ -131,21 +131,25 @@ const Notification: FC = () => {
                         color: "var(--navbar-active-bg)",
                       }}
                     />
-                    <span style={{ fontWeight: "bold", fontSize: "0.9rem" }}>
-                      {notification.sender_username || "Unknown user"}&nbsp; {` `}
-                    </span>
-                    <span>
+                    <span style={{  fontSize: "0.9rem" }}>
+                      <strong> {notification.sender_username || "Unknown user"} </strong> {` `}
                       {notification.notification_type==="comment"
                         ? "commented on your post"
                         :"sent you a message"
                       }
                     </span>
+                    {/* <span>
+                      
+                    </span> */}
                   </div>
                   <span
                     style={{
+                      position:"relative",
+                      top: "0rem",
                       fontSize: "0.8rem",
-                      color: "#555",
+                      color: "#55555590",
                       whiteSpace: "nowrap",
+                      marginLeft:"8px",
                     }}
                   >
                     {timeSince(notification.created_at)}
