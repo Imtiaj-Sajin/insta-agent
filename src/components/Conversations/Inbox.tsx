@@ -49,7 +49,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
   const [newMessage, setNewMessage] = useState('');
   const [attachments, setAttachments] = useState<{ file: File; previewUrl: string }[]>([]);
 
-  const pageId=process.env.NEXT_PUBLIC_FACEBOOK_PAGE_ID;
+  const pageId=process.env.NEXT_PUBLIC_INSTAGRAM_USERID;
   const queryClient = useQueryClient();
 
   const fetchMessages = async (pageAccessToken: string, selectedConversationId: string): Promise<Message1[]> => {
@@ -251,6 +251,32 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
     }
   };
 
+  async function getAttachmentsDetails(messageId: string): Promise<any> {
+    const url = `https://graph.facebook.com/v21.0/${messageId}/attachments?access_token=${pageAccessToken}`;
+  
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          `Error fetching attachments: ${errorData.error?.message || 'Unknown error'}`
+        );
+      }
+  
+      const data = await response.json();
+      return data; // Return the attachment details
+    } catch (error) {
+      console.error('Failed to fetch message attachments:', error.message);
+      return { error: error.message }; // Return error details
+    }
+  }
+
   function determineFileType(file: File | undefined): string {
     if (!file) {
       console.warn("File is undefined or null.");
@@ -387,7 +413,12 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
         attachments: [],
       };
   
-      setMessages((prevMessages) => [newMessageToAdd, ...prevMessages]); 
+      //setMessages((prevMessages) => [newMessageToAdd, ...prevMessages]); 
+
+      queryClient.setQueryData(['messages', pageAccessToken, recipientId], (oldMessages?: Message1[]) => {
+        return oldMessages ? [newMessageToAdd, ...oldMessages] : [newMessageToAdd];
+      });
+      // console.log("messgeeesss: ", messages );
   
       if (fileType === "video") {
         console.log("Video type detected");
@@ -405,11 +436,13 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
               file: attachment, // Pass the File object directly
             });
             console.log('Response:', response);
+            //const video_url=getAttachmentsDetails(response.)
             const updatedMessages = [...messages];
-          const tempMessageIndex = updatedMessages.findIndex(
-            (msg) => msg.id === newMessageToAdd.id
-          );
+            const tempMessageIndex = updatedMessages.findIndex(
+              (msg) => msg.id === newMessageToAdd.id
+            );
           if (tempMessageIndex > -1) {
+            console.log("am i ever coming here???  ")
             updatedMessages[tempMessageIndex] = {
               ...updatedMessages[tempMessageIndex],
               message: 'Video sent successfully', // Or update as needed
@@ -420,7 +453,10 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
                 },
               ],
             };
-            setMessages(updatedMessages);
+            //setMessages(updatedMessages);
+            queryClient.setQueryData(['messages', pageAccessToken, recipientId], (oldMessages?: Message1[]) => {
+              return oldMessages ? [updatedMessages, ...oldMessages] : [updatedMessages];
+            });
           }
            
           } catch (error) {
