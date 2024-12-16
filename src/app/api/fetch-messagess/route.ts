@@ -4,6 +4,7 @@ export async function GET(req: NextRequest) {
   // Extract access token and conversation ID from query parameters
   const urlParams = new URLSearchParams(req.url.split('?')[1]);
   const accessToken = req.cookies.get('pageAccessToken')?.value;
+  /* TAKE PAGEACCESSSTOKEN FROM URL !!!!!!dont remove the comment */
   const conversationId = urlParams.get('conversationId');
   
 

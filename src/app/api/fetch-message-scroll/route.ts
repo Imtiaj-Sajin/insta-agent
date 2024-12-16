@@ -7,10 +7,13 @@ export async function GET(req: NextRequest) {
     // Extract access token and conversation ID from query parameters and cookies
     const urlParams = new URL(req.url).searchParams;
     const nextUrl = urlParams.get('nextUrl'); // Handle pagination if provided
-    const conversationId=  "aWdfZAG06MTpJR01lc3NhZA2VUaHJlYWQ6MTc4NDE0NzAyOTI1MzQ5MzY6MzQwMjgyMzY2ODQxNzEwMzAxMjQ0Mjc2MDIzNzAzMDk3NDMwMDYx";
-    const accessToken= "EAAnZByvmjelsBO6405XbInlm6q1SZBnzZBU4Hz2Y8jtiiVvPvZCxkMEMEREGtwWx4oIbzBoxA5ZCpKU0lte1zCaPoTEJqRRfMBZAmCgvHVUt46klYGMWZC82b951bPtaZA4LjOQhZAdyCffd44pJIAZARaZBC85czhS09UPHdnenDHda1gA5tGHwbhMt6JFcbIEDLsr6IgFkZAbtgz3LjZAyKRpyonMwZD"
+    //const conversationId=  "aWdfZAG06MTpJR01lc3NhZA2VUaHJlYWQ6MTc4NDE0NzAyOTI1MzQ5MzY6MzQwMjgyMzY2ODQxNzEwMzAxMjQ0Mjc2MDIzNzAzMDk3NDMwMDYx";
+    //const accessToken= "EAAnZByvmjelsBO6405XbInlm6q1SZBnzZBU4Hz2Y8jtiiVvPvZCxkMEMEREGtwWx4oIbzBoxA5ZCpKU0lte1zCaPoTEJqRRfMBZAmCgvHVUt46klYGMWZC82b951bPtaZA4LjOQhZAdyCffd44pJIAZARaZBC85czhS09UPHdnenDHda1gA5tGHwbhMt6JFcbIEDLsr6IgFkZAbtgz3LjZAyKRpyonMwZD"
 
-
+    //const urlParams = new URLSearchParams(req.url.split('?')[1]);
+    const accessToken = req.cookies.get('pageAccessToken')?.value;
+    const conversationId = urlParams.get('conversationId');
+    
     // Validate required parameters
     if (!accessToken || !conversationId) {
       return NextResponse.json(
