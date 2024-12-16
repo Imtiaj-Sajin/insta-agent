@@ -5,7 +5,6 @@ import { faComment, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import "../../../styles/index.css";
 import "../../../styles/globals.css";
 import "./Automation.css";
-import { comment } from "postcss";
 
 interface NotificationData {
   noti_id: string;
@@ -18,23 +17,25 @@ interface NotificationData {
 }
 
 const Notification: FC = () => {
-  const [notifications, setNotifications] = useState<NotificationData[]>([]); // Store notifications from the database
-  const [selectedContent, setSelectedContent] = useState<React.ReactNode>(""); // Render NotificationDetails component
+  const [notifications, setNotifications] = useState<NotificationData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // Track loading state
+  const [selectedContent, setSelectedContent] = useState<React.ReactNode>("");
   const [showRightDiv, setShowRightDiv] = useState<boolean>(false);
 
   useEffect(() => {
-    // Fetch notifications from the API
     const fetchNotifications = async (): Promise<void> => {
       try {
         const response = await fetch("/api/getNotifications");
         const result = await response.json();
         if (response.ok) {
-          setNotifications(result); // Set the fetched notifications
+          setNotifications(result); // Set fetched notifications
         } else {
           console.error("Error fetching notifications:", result.error);
         }
       } catch (error) {
         console.error("Error fetching notifications:", error);
+      } finally {
+        setLoading(false); // Stop loading once data is fetched
       }
     };
 
@@ -43,9 +44,9 @@ const Notification: FC = () => {
 
   const toggleDivs = (forceShowRightDiv?: boolean): void => {
     if (typeof forceShowRightDiv === "boolean") {
-      setShowRightDiv(forceShowRightDiv); // Directly set based on parameter
+      setShowRightDiv(forceShowRightDiv);
     } else {
-      setShowRightDiv(!showRightDiv); // Toggle if no parameter provided
+      setShowRightDiv(!showRightDiv);
     }
   };
 
@@ -64,20 +65,19 @@ const Notification: FC = () => {
     <div style={{ padding: "0rem" }}>
       <div className="contentt">
         {/* Left Div */}
-        <div
-          className={`left-div ${showRightDiv ? "hide" : "show"}`}
-          style={{}}
-        >
-             {/* Sticky Button Holder */}
+        <div className={`left-div ${showRightDiv ? "hide" : "show"}`}>
           <div
             className="sticky-button-holder"
-            style={{ display: "flex", flexDirection: "column", width: "100%", padding: 4 }}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+              padding: 4,
+            }}
           >
             <label>Notifications</label>
-            
           </div>
 
-          {/* Notifications Buttons */}
           <div
             style={{
               overflow: "auto",
@@ -89,89 +89,100 @@ const Notification: FC = () => {
               background: "var(--navbar-background)",
             }}
           >
-            {notifications.map((notification) => (
-              <button
-                className="right-show-btn"
-                key={notification.noti_id}
-                style={{
-                  display: "flex",
-                  flexDirection: "column", // Two rows structure
-                  alignItems: "flex-start",
-                }}
-                onClick={() => {
-                  setSelectedContent(
-                    <NotificationDetails notification={notification} />
-                  );
-                  toggleDivs(true); // Force the right-div to show
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
-                    alignItems: "center",
-                  }}
-                >
+            {loading
+              ? Array.from({ length: 5 }).map((_, index) => (
                   <div
+                    key={index}
+                    className="skeleton-loader"
+                    style={{
+                      height: "60px",
+                      marginBottom: "10px",
+                      borderRadius: "8px",
+                      background: "linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 50%, #f2f2f2 75%)",
+                      backgroundSize: "200% 100%",
+                      animation: "loading 1.5s infinite",
+                    }}
+                  ></div>
+                ))
+              : notifications.map((notification) => (
+                  <button
+                    className="right-show-btn"
+                    key={notification.noti_id}
                     style={{
                       display: "flex",
-                      alignItems: "center",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                    }}
+                    onClick={() => {
+                      setSelectedContent(
+                        <NotificationDetails notification={notification} />
+                      );
+                      toggleDivs(true);
                     }}
                   >
-                    <FontAwesomeIcon
-                      icon={
-                        notification.notification_type === "comment"
-                          ? faComment
-                          : faEnvelope
-                      }
+                    <div
                       style={{
-                        marginRight: "0.5rem",
-                        fontSize: "1.2rem",
-                        color: "var(--navbar-active-bg)",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "100%",
+                        alignItems: "center",
                       }}
-                    />
-                    <span style={{  fontSize: "0.9rem" }}>
-                      <strong> {notification.sender_username || "Unknown user"} </strong> {` `}
-                      {notification.notification_type==="comment"
-                        ? "commented on your post"
-                        :"sent you a message"
-                      }
-                    </span>
-                    {/* <span>
-                      
-                    </span> */}
-                  </div>
-                  <span
-                    style={{
-                      position:"relative",
-                      top: "0rem",
-                      fontSize: "0.8rem",
-                      color: "#55555590",
-                      whiteSpace: "nowrap",
-                      marginLeft:"8px",
-                    }}
-                  >
-                    {timeSince(notification.created_at)}
-                  </span>
-                </div>
-                {notification.text && (
-                  <div
-                    style={{
-                      fontSize: "0.8rem",
-                      color: "#777",
-                      marginTop: "5px",
-                      width: "100%",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                    }}
-                  >
-                    {notification.text}
-                  </div>
-                )}
-              </button>
-            ))}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={
+                            notification.notification_type === "comment"
+                              ? faComment
+                              : faEnvelope
+                          }
+                          style={{
+                            marginRight: "0.5rem",
+                            fontSize: "1.2rem",
+                            color: "var(--navbar-active-bg)",
+                          }}
+                        />
+                        <span style={{ fontSize: "0.9rem" }}>
+                          <strong>{notification.sender_username || "Unknown user"}</strong>{" "}
+                          {notification.notification_type === "comment"
+                            ? "commented on your post"
+                            : "sent you a message"}
+                        </span>
+                      </div>
+                      <span
+                        style={{
+                          position: "relative",
+                          top: "0rem",
+                          fontSize: "0.8rem",
+                          color: "#55555590",
+                          whiteSpace: "nowrap",
+                          marginLeft: "8px",
+                        }}
+                      >
+                        {timeSince(notification.created_at)}
+                      </span>
+                    </div>
+                    {notification.text && (
+                      <div
+                        style={{
+                          fontSize: "0.8rem",
+                          color: "#777",
+                          marginTop: "5px",
+                          width: "100%",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {notification.text}
+                      </div>
+                    )}
+                  </button>
+                ))}
           </div>
         </div>
 

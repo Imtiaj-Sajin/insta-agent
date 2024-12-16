@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Messages from "../../components/Conversations/Messages";
-import Settings from "../../components/Settings";
+import Settings from "../../components/Settings/Settings";
 import Automation from "./admin/automation";
 import Chats from "../../components/Chats";
 import "../../styles/globals.css"

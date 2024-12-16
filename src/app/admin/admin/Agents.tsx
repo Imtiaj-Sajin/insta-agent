@@ -17,6 +17,7 @@ interface AgentData {
 
 const Agent: FC = () => {
   const [agents, setAgents] = useState<AgentData[]>([]); // Store agents from the database
+  const [loading, setLoading] = useState<boolean>(true); // Track loading state
   const [selectedContent, setSelectedContent] = useState<React.ReactNode>(""); // Render ProfileCard component
   const [showRightDiv, setShowRightDiv] = useState<boolean>(false);
 
@@ -33,6 +34,8 @@ const Agent: FC = () => {
         }
       } catch (error) {
         console.error("Error fetching agents:", error);
+      } finally {
+        setLoading(false); // Stop loading once data is fetched
       }
     };
 
@@ -95,7 +98,22 @@ const Agent: FC = () => {
               background: "var(--navbar-background)",
             }}
           >
-            {agents.map((agent) => (
+            {loading
+              ? Array.from({ length: 5 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="skeleton-loader"
+                    style={{
+                      height: "60px",
+                      marginBottom: "10px",
+                      borderRadius: "8px",
+                      background: "linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 50%, #f2f2f2 75%)",
+                      backgroundSize: "200% 100%",
+                      animation: "loading 1.5s infinite",
+                    }}
+                  ></div>
+                ))
+              : agents.map((agent) => (
               <button
               className="right-show-btn"
               key={agent.agent_id}

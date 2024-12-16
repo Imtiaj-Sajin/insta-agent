@@ -14,6 +14,7 @@ interface AutomationData {
 
 const Automation: FC = () => {
   const [automations, setAutomations] = useState<AutomationData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // Track loading state
   const [selectedContent, setSelectedContent] = useState<React.ReactNode>("");
   const [showRightDiv, setShowRightDiv] = useState<boolean>(false);
 
@@ -27,6 +28,8 @@ const Automation: FC = () => {
         setAutomations(data);
       } catch (error) {
         console.error("Error fetching automations:", error);
+      } finally{
+        setLoading(false);
       }
     };
     fetchAutomations();
@@ -116,7 +119,23 @@ const Automation: FC = () => {
                 scrollbarWidth: "none",msOverflowStyle: "none",
                 paddingBottom:'200px',
                 background:"var(--navbar-background)"}}>
-              {automations.map((automation) => (
+
+             {loading
+              ? Array.from({ length: 5 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="skeleton-loader"
+                    style={{
+                      height: "60px",
+                      marginBottom: "10px",
+                      borderRadius: "8px",
+                      background: "linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 50%, #f2f2f2 75%)",
+                      backgroundSize: "200% 100%",
+                      animation: "loading 1.5s infinite",
+                    }}
+                  ></div>
+                ))
+              : automations.map((automation) => (
                 <button
                   className="right-show-btn"
                   key={automation.auto_id}
