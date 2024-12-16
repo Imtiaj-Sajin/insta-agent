@@ -25,7 +25,7 @@ export default function NavbarLayout({
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const renderContent = () => {
-    switch (selectedContent) {
+    switch (selectedContent) {    
       case "messages":
         return <Messages/>;
       case "settings":

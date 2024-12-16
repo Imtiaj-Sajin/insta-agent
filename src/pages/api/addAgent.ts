@@ -1,14 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Pool } from "pg";
-
-// Configure PostgreSQL connection
-const pool = new Pool({
-  user: "postgres", // Replace with your PostgreSQL username
-  host: "localhost", // Replace with your database host
-  database: "instaAgent", // Replace with your database name
-  password: "1234", // Replace with your PostgreSQL password
-  port: 5432, // Default PostgreSQL port
-});
+import { pool } from "../../database/db";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
