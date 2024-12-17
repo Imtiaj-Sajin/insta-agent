@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { FiPaperclip, FiSend } from 'react-icons/fi';
 // import './conversations.css';
@@ -7,7 +7,7 @@ import ProfileCard from '../ProfileCard';
 import ImagePreview from '@/utils/imagePreview';
 import ImageModal from '@/utils/imagePreview';
 
-const socket = io('https://nkf448kn-3001.asse.devtunnels.ms/'); // Replace with your Socket.IO server URL
+const socket = io('https://nkf448kn-3001.asse.devtunnels.ms/'); 
 
 interface Message1 {
   from: { username: string; id: string };
@@ -45,37 +45,127 @@ interface InboxProps {
 }
 
 const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) => {
-  //const [messages, setMessages] = useState<Message1[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [attachments, setAttachments] = useState<{ file: File; previewUrl: string }[]>([]);
+  const [nextUrl, setNextUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [messageIds, setMessageIds] = useState<Set<string>>(new Set());
 
   const pageId=process.env.NEXT_PUBLIC_INSTAGRAM_USERID;
   const queryClient = useQueryClient();
 
-  const fetchMessages = async (pageAccessToken: string, selectedConversationId: string): Promise<Message1[]> => {
-    if (selectedConversationId) {
-      const response = await fetch(`/api/fetch-messagess?accessToken=${pageAccessToken}&conversationId=${selectedConversationId}`, { method: 'GET' });
-      if (!response.ok) {
-        throw new Error('Failed to fetch messages');
-      }
+
+
+  const fetchMessages = async (accessToken: string, conversationId: string, url?: string) => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        url || `/api/fetch-message-scroll?conversationId=${conversationId}&accessToken=${accessToken}` // Your API route to fetch messages
+      );
       const data = await response.json();
-      // Ensure the data is returned as Message1[]
-      return data.messages.data as Message1[];
+
+      const newMessages = (data.messages?.data || data.data).filter(
+        (message: Message1) => {
+          if (!messageIds.has(message.id)) {
+            messageIds.add(message.id);  // Add the new message ID to the set
+            return true;
+          }
+          return false; // Skip duplicate messages
+        }
+      )
+      const pagingNext = data.messages?.paging?.next || data.paging?.next;
+
+
+      setNextUrl(pagingNext);
+      return newMessages;
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    } finally {
+      setLoading(false);
     }
-    return [];
   };
 
-  // Hardcoded for testing purposes, replace with actual selectedConversation.id
+
   const selectedConversationId = selectedConversation?.id ;//|| 'aWdfZAG06MTpJR01lc3NhZA2VUaHJlYWQ6MTc4NDE0NzAyOTI1MzQ5MzY6MzQwMjgyMzY2ODQxNzEwMzAxMjQ0Mjc2MjAyNTk0OTcxNTQwODA5';
   const selectedSenderId = selectedConversation?.participant_details?.id ;//|| 'aWdfZAG06MTpJR01lc3NhZA2VUaHJlYWQ6MTc4NDE0NzAyOTI1MzQ5MzY6MzQwMjgyMzY2ODQxNzEwMzAxMjQ0Mjc2MjAyNTk0OTcxNTQwODA5';
 
   // Query to fetch messages
-  const { data: messages = [], isLoading, error } = useQuery({
+  // const { data: messages = [], isLoading, error } = useQuery({
+  //   queryKey: ['messages', pageAccessToken, selectedSenderId],
+  //   queryFn: () => fetchMessages(pageAccessToken as string, selectedConversationId),
+  //   enabled: !!selectedConversation, // Ensure query runs only when selectedConversation is available
+  //   staleTime: 1000 * 60 * 5, // Cache the data for 5 minutes
+  // });
+
+
+  const { data: messages = [], isLoading, refetch } = useQuery({
     queryKey: ['messages', pageAccessToken, selectedSenderId],
     queryFn: () => fetchMessages(pageAccessToken as string, selectedConversationId),
     enabled: !!selectedConversation, // Ensure query runs only when selectedConversation is available
-    staleTime: 1000 * 60 * 5, // Cache the data for 5 minutes
-  });
+    staleTime: 1000 * 60 * 5, 
+    }
+  );
+
+
+    useEffect(() => {
+      const handleScroll = async () => {
+        if (
+          containerRef.current &&((containerRef.current.clientHeight-containerRef.current.scrollHeight+1)  >= containerRef.current.scrollTop) // Trigger when near bottom
+        ){
+            if (nextUrl && !loading) {
+              console.log("scrolling reached top");
+              fetchMessagesX(pageAccessToken, selectedConversationId, nextUrl);
+          
+            }
+        }
+      };
+  
+      const container = containerRef.current;
+      if (container) {
+        container.addEventListener("scroll", handleScroll);
+        return () => container.removeEventListener("scroll", handleScroll);
+      }
+    }, [nextUrl, loading]);
+
+
+
+    const fetchMessagesX = async (accessToken: string, conversationId: string, url?: string) => {
+      setLoading(true); // Start loading state
+      try {
+        const response = await fetch(
+          url || `/api/fetch-message-scroll?conversationId=${conversationId}&accessToken=${accessToken}` // Your API route to fetch messages
+        );
+        const data = await response.json();
+    
+        const newMessages = (data.messages?.data || data.data || []).filter(
+          (message: Message1) => {
+            if (!messageIds.has(message.id)) {
+              messageIds.add(message.id); // Add the new message ID to the set
+              return true;
+            }
+            return false; // Skip duplicate messages
+          }
+        );
+    
+        const pagingNext = data.messages?.paging?.next || data.paging?.next || null;
+        queryClient.setQueryData(
+          ['messages', pageAccessToken, selectedSenderId], // Unique cache key
+          (oldMessages: Message1[] = []) => [...oldMessages, ...newMessages] // Append new messages
+        );
+    
+
+        setNextUrl(pagingNext); 
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      } finally {
+        setLoading(false); 
+      }
+    };
+    
+    
+
+
 
   useEffect(() => {
     socket.on("receiveMessage", (data) => {
@@ -525,8 +615,8 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
 
 
   return selectedConversation ? (
-    <span className="inbox-container" style={{ padding: 0}}>
-<div className="inbox-messages" style={{ display: "flex", flexDirection: "column-reverse", padding: "10px", gap: "10px"}}>
+    <span className="inbox-container"  style={{ padding: 0}}>
+<div ref={containerRef} className="inbox-messages" style={{ display: "flex", flexDirection: "column-reverse", padding: "10px", gap: "10px"}}>
   {messages.map((message) => (
     <div
       key={message.id}
@@ -538,7 +628,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
         background: "rgba(0,0,0,0)",
       }}
     >
-      <div
+      <div 
         style={{
           maxWidth: "70%",
           backgroundColor: message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? "#FCE9E0" : "#FFFFFF",
