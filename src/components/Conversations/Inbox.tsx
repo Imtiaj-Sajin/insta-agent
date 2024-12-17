@@ -47,10 +47,11 @@ interface InboxProps {
 const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) => {
   const [newMessage, setNewMessage] = useState('');
   const [attachments, setAttachments] = useState<{ file: File; previewUrl: string }[]>([]);
-  const [nextUrl, setNextUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [messageIds, setMessageIds] = useState<Set<string>>(new Set());
+  const [nextUrlMap, setNextUrlMap] = useState<Record<string, string | null>>({});
+
 
   const pageId=process.env.NEXT_PUBLIC_INSTAGRAM_USERID;
   const queryClient = useQueryClient();
@@ -68,7 +69,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
       const newMessages = (data.messages?.data || data.data).filter(
         (message: Message1) => {
           if (!messageIds.has(message.id)) {
-            messageIds.add(message.id);  // Add the new message ID to the set
+            messageIds.add(message.id);  
             return true;
           }
           return false; // Skip duplicate messages
@@ -77,7 +78,8 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
       const pagingNext = data.messages?.paging?.next || data.paging?.next;
 
 
-      setNextUrl(pagingNext);
+      setNextUrlMap((prev) => ({ ...prev, [conversationId]: pagingNext })); // Store per conversation
+
       return newMessages;
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -108,25 +110,24 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
   );
 
 
-    useEffect(() => {
-      const handleScroll = async () => {
-        if (
-          containerRef.current &&((containerRef.current.clientHeight-containerRef.current.scrollHeight+1)  >= containerRef.current.scrollTop) // Trigger when near bottom
-        ){
-            if (nextUrl && !loading) {
-              console.log("scrolling reached top");
-              fetchMessagesX(pageAccessToken, selectedConversationId, nextUrl);
+  useEffect(() => {
+    const handleScroll = async () => {
+      if (
+        containerRef.current &&((containerRef.current.clientHeight-containerRef.current.scrollHeight+1)  >= containerRef.current.scrollTop) && nextUrlMap[selectedConversationId] && !loading// Trigger when near bottom
+      ){
+
+        console.log('Fetching more messages for:', selectedConversationId);
+        fetchMessagesX(pageAccessToken, selectedConversationId, nextUrlMap[selectedConversationId]);
           
-            }
-        }
-      };
-  
-      const container = containerRef.current;
-      if (container) {
-        container.addEventListener("scroll", handleScroll);
-        return () => container.removeEventListener("scroll", handleScroll);
       }
-    }, [nextUrl, loading]);
+    };
+
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+      return () => container.removeEventListener("scroll", handleScroll);
+    }
+  }, [selectedConversationId, nextUrlMap, loading]);
 
 
 
@@ -155,7 +156,9 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
         );
     
 
-        setNextUrl(pagingNext); 
+
+        setNextUrlMap((prev) => ({ ...prev, [conversationId]: pagingNext })); // Store per conversation
+
       } catch (error) {
         console.error('Error fetching messages:', error);
       } finally {
