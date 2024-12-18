@@ -6,26 +6,7 @@ import ProfileCard from '../ProfileCard';
 import { GoKebabHorizontal } from 'react-icons/go';
 import {IoIosArrowBack} from 'react-icons/io'
 import { formatLastMessageTime } from '@/utils/functions';
-
-interface ParticipantDetails {
-  id: string;
-  name: string;
-  username: string;
-  profile_pic: string;
-  is_verified_user: boolean;
-  follower_count: number;
-  is_user_follow_business: boolean;
-  is_business_follow_user: boolean;
-}
-
-interface Conversation {
-  id: string;
-  name: string;
-  updated_time: string;
-  last_message: string;
-  participant_details: ParticipantDetails | null;
-  status: string;
-}
+import { Conversation } from '@/types/interfaces';
 
 const Messages = () => {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
@@ -38,9 +19,8 @@ const Messages = () => {
   const [loading, setLoading] = useState<boolean>(true); // Track loading state
   
   
-  const toggleView = (view) => setCurrentView(view);
+  const toggleView = (view: any) => setCurrentView(view);
 
-  // Function to fetch conversation list using React Query
   const fetchConversationList = async (accessToken: string): Promise<Conversation[]> => {
     const response = await fetch(`/api/conversations?accessToken=${accessToken}`, {
       method: 'GET',
@@ -53,12 +33,11 @@ const Messages = () => {
     return response.json();
   };
 
-  // Using React Query to fetch and cache conversation list
   const { data: conversations = [], isLoading } = useQuery({
     queryKey: ['conversationList', pageAccessToken],
     queryFn: () => fetchConversationList(pageAccessToken as string),
-    enabled: !!pageAccessToken, // Run query only when the access token is available
-    staleTime: 1000 * 60 * 5,  // Cache the data for 5 minutes
+    enabled: !!pageAccessToken, 
+    staleTime: 1000 * 60 * 5,  
   });
 
   // useEffect(() => {
@@ -66,11 +45,9 @@ const Messages = () => {
   //     setLoading(false);
   //   }
   // }, [isFetched]);
-// Function to check cookies and exchange token if needed
 const exchangeToken = async (code: string) => {
   try {
-    // Step 1: Check if pageAccessToken exists in cookies
-    const cookieResponse = await fetch('/api/get-tokens'); // Fetch endpoint for reading cookies
+    const cookieResponse = await fetch('/api/get-tokens'); 
     const cookieData = await cookieResponse.json();
 
     if (cookieResponse.ok && cookieData.pageAccessToken) {
@@ -79,13 +56,12 @@ const exchangeToken = async (code: string) => {
     } else {
       console.log('Page access token not found in cookies. Attempting to exchange token.');
 
-      // Step 2: Call exchange-token API to fetch new tokens
       const tokenResponse = await fetch('/api/exchange-token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ code }), // Pass the code in the request body
+        body: JSON.stringify({ code }), 
       });
 
       const tokenData = await tokenResponse.json();
@@ -94,7 +70,6 @@ const exchangeToken = async (code: string) => {
         const pageAccessToken = tokenData.pageAccessToken;
         console.log('Page access token retrieved via exchange-token API:', pageAccessToken);
 
-        // Set the retrieved pageAccessToken in state
         setPageAccessToken(pageAccessToken);
       } else {
         console.error('Failed to exchange token:', tokenData.error);

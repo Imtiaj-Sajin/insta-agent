@@ -193,3 +193,103 @@ export const formatLastMessageTime = (ms) => {
       return `${seconds}s`; // Show seconds if minutes are zero
     }
   };
+
+export const sendText = async ( recipientId: string, pageAccessToken: string, newMessage: string) => {
+    // Send plain text message
+    const endpoint = `https://graph.facebook.com/v21.0/me/messages?access_token=${pageAccessToken}`;
+    const payload = {
+        recipient: { id: recipientId },
+        message: { text: newMessage },
+    };
+
+    try {
+        const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            console.log('Message sent successfully:', data);
+        } else {
+            console.error('Failed to send message:', data);
+        }
+    } catch (error) {
+        console.error('Error sending message:', error);
+    }
+}
+export const sendImage = async ( url: string, recipientId: string, pageAccessToken:string) => {
+    const endpoint = `https://graph.facebook.com/v21.0/113921618461646/messages?access_token=${pageAccessToken}`;
+    const payload = {
+        recipient: {
+        id: recipientId,
+        },
+        message: {
+        attachment: {
+            type: 'image',
+            payload: {
+            url: url,
+            },
+        },
+        },
+    };
+
+    try {
+        const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        if (response.ok) {
+        console.log('Message sent successfully:', data);
+        } else {
+        console.error('Failed to send message:', data);
+        }
+    } catch (error) {
+        console.error('Error sending message:', error);
+    }
+};
+
+
+export const sendVideo = async ({ pageId, recipientId, accessToken, file }) => {
+    try {
+        const endpoint = `https://graph.facebook.com/v21.0/${pageId}/messages`;
+
+        const formData = new FormData();
+        formData.append('recipient', JSON.stringify({ id: recipientId }));
+        formData.append(
+        'message',
+        JSON.stringify({
+            attachment: {
+            type: "video", // 'audio' or 'video'
+            },
+        })
+        );
+        formData.append('filedata', file); // Provide the file path or stream
+        formData.append('access_token', accessToken);
+
+        const response = await fetch(endpoint, {
+        method: 'POST',
+        body: formData,
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+        console.log('Media message sent successfully:', data);
+        return data; // Return the successful response
+        } else {
+        console.error('Failed to send media message:', data);
+        throw new Error(data.error.message);
+        }
+    } catch (error) {
+        console.error('Error while sending media message:', error.message);
+        throw error; // Re-throw for external handling
+    }
+};
