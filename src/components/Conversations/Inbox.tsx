@@ -6,7 +6,7 @@ import io from 'socket.io-client';
 import ProfileCard from '../ProfileCard';
 import ImagePreview from '@/utils/imagePreview';
 import ImageModal from '@/utils/imagePreview';
-import { determineFileType, parseWebhookPayload, isLink} from '@/utils/functions';
+import { determineFileType, parseWebhookPayload, isLink, uploadImage, getImageUrl} from '@/utils/functions';
 
 const socket = io('https://nkf448kn-3001.asse.devtunnels.ms/'); 
 
@@ -54,7 +54,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
   const [nextUrlMap, setNextUrlMap] = useState<Record<string, string | null>>({});
 
 
-  const pageId=process.env.NEXT_PUBLIC_INSTAGRAM_USERID;
+  const pageId=process.env.NEXT_PUBLIC_FACEBOOK_PAGE_ID;
   const queryClient = useQueryClient();
 
 
@@ -157,7 +157,6 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
         );
     
 
-
         setNextUrlMap((prev) => ({ ...prev, [conversationId]: pagingNext })); // Store per conversation
 
       } catch (error) {
@@ -167,9 +166,6 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
       }
     };
     
-    
-
-
 
   useEffect(() => {
     socket.on("receiveMessage", (data) => {
@@ -190,70 +186,11 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
   }, [queryClient, pageAccessToken]);
 
 
-  const uploadImage = async (imageUrl: string) => {
-    const endpoint = `https://graph.facebook.com/v21.0/${pageId}/message_attachments`;
-    const payload = {
-      access_token: pageAccessToken,
-      message: {
-        attachment: {
-          type: 'image',
-          payload: {
-            url: imageUrl,
-            is_reusable: true,
-          },
-        },
-      },
-    };
-  
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        return data.attachment_id;  // Return the attachment ID for use in the next step
-      } else {
-        console.error('Failed to upload image:', data);
-      }
-    } catch (error) {
-      console.error('Error uploading image:', error);
-    }
-  };
 
-  const uploadImageFromFile = async (file: File) => {
-    const formData = new FormData();
-    formData.append('filedata', file);
-    formData.append('message', JSON.stringify({
-      attachment: {
-        type: 'image',
-      },
-    }));
-    formData.append('type', 'image/png'); // Adjust according to your file type
-  
-    const endpoint = `https://graph.facebook.com/v21.0/${pageId}/message_attachments?access_token=${pageAccessToken}`;
-    
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await response.json();
-      if (response.ok) {
-        return data.attachment_id;  // Return the attachment ID
-      } else {
-        console.error('Failed to upload image from file:', data);
-      }
-    } catch (error) {
-      console.error('Error uploading image from file:', error);
-    }
-  };
 
-  const sendMessageWithImage = async (recipientId: string, attachmentId: string, messageText?: string) => {
-    const endpoint = `https://graph.facebook.com/v21.0/${pageId}/messages?access_token=${pageAccessToken}`;
+
+  const sendMessageWithImage = async ( url: string, recipientId: string, messageText?: string) => {
+    const endpoint = `https://graph.facebook.com/v21.0/113921618461646/messages?access_token=${pageAccessToken}`;
     
     const payload = {
       recipient: {
@@ -263,7 +200,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
         attachment: {
           type: 'image',
           payload: {
-            attachment_id: attachmentId,
+            url: url,
           },
         },
       },
@@ -293,18 +230,6 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
     }
   };
   
-  const sendImageMessage = async (recipientId: string, imageUrl: string, messageText: string) => {
-    try {
-      // Step 1: Upload the image
-      const attachmentId = await uploadImage(imageUrl);
-      if (attachmentId) {
-        // Step 2: Send the image with the message
-        await sendMessageWithImage(recipientId, attachmentId, messageText);
-      }
-    } catch (error) {
-      console.error('Error sending image message:', error);
-    }
-  };
 
   const sendVideo = async ({ pageId, recipientId, accessToken, file }) => {
     try {
@@ -440,11 +365,11 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
           }
         })();
       } else if (fileType === "image") {
-        const attachmentId = await uploadImageFromFile(attachment); // Upload image from file
-        if (attachmentId) {
-          await sendMessageWithImage(recipientId, attachmentId, newMessage); // Send message with the uploaded image
-          setNewMessage(''); // Clear the text input
-          setAttachments([]); // Clear the attachments
+        const attachmentUrl = await getImageUrl(attachment); // Upload image from file
+        if (attachmentUrl) {
+          await sendMessageWithImage(attachmentUrl, recipientId, newMessage); // Send message with the uploaded image
+          setNewMessage(''); 
+          setAttachments([]); 
         }
       } else {
         // Send plain text message

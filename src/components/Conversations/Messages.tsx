@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import ProfileCard from '../ProfileCard';
 import { GoKebabHorizontal } from 'react-icons/go';
 import {IoIosArrowBack} from 'react-icons/io'
+import { formatLastMessageTime } from '@/utils/functions';
 
 interface ParticipantDetails {
   id: string;
@@ -53,18 +54,18 @@ const Messages = () => {
   };
 
   // Using React Query to fetch and cache conversation list
-  const { data: conversations = [], isLoading, isFetched } = useQuery({
+  const { data: conversations = [], isLoading } = useQuery({
     queryKey: ['conversationList', pageAccessToken],
     queryFn: () => fetchConversationList(pageAccessToken as string),
     enabled: !!pageAccessToken, // Run query only when the access token is available
     staleTime: 1000 * 60 * 5,  // Cache the data for 5 minutes
   });
 
-  useEffect(() => {
-    if (isFetched) {
-      setLoading(false);
-    }
-  }, [isFetched]);
+  // useEffect(() => {
+  //   if (isFetched) {
+  //     setLoading(false);
+  //   }
+  // }, [isFetched]);
 // Function to check cookies and exchange token if needed
 const exchangeToken = async (code: string) => {
   try {
@@ -140,22 +141,7 @@ const exchangeToken = async (code: string) => {
     toggleView("inbox");
   };
 
-  const formatLastMessageTime = (ms) => {
-    const seconds = Math.floor((ms / 1000) % 60);
-    const minutes = Math.floor((ms / (1000 * 60)) % 60);
-    const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
-    const days = Math.floor(ms / (1000 * 60 * 60 * 24));
-  
-    if (days > 0) {
-      return `${days}d`; // Show days if non-zero
-    } else if (hours > 0) {
-      return `${hours}h`; // Show hours if days are zero
-    } else if (minutes > 0) {
-      return `${minutes}m`; // Show minutes if hours are zero
-    } else {
-      return `${seconds}s`; // Show seconds if minutes are zero
-    }
-  };
+
   return (
 <span style={{ display: "flex", flexDirection: isMobile ? "column" : "row", height: "100vh" }}>
       {(!isMobile || currentView === "conversation") && (
@@ -168,7 +154,7 @@ const exchangeToken = async (code: string) => {
           }}
         >
           <h1>Conversations</h1>
-          {loading?
+          {!filteredConversations?
           Array.from({ length: 5 }).map((_, index) => (
             <div
               key={index}

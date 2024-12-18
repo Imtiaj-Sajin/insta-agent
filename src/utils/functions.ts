@@ -120,3 +120,76 @@ export function parseWebhookPayload(payload: any): any {
       // Default response if no recognizable event is found
       return { type: 'unknown_event', payload };
     }
+
+
+export const uploadImage = async (imageUrl: string, pageAccessToken: string, pageId: string) => {
+    const endpoint = `https://graph.facebook.com/v21.0/${pageId}/message_attachments`;
+    const payload = {
+        access_token: pageAccessToken,
+        message: {
+        attachment: {
+            type: 'image',
+            payload: {
+            url: imageUrl,
+            is_reusable: true,
+            },
+        },
+        },
+    };
+    
+    try {
+        const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        if (response.ok) {
+        return data.attachment_id;  // Return the attachment ID for use in the next step
+        } else {
+        console.error('Failed to upload image:', data);
+        }
+    } catch (error) {
+        console.error('Error uploading image:', error);
+    }
+};
+
+export const getImageUrl = async (imageFile: File) => {
+    try {
+      const formData = new FormData();
+      formData.append('image', imageFile);
+      const imgbbResponse = await fetch(`https://api.imgbb.com/1/upload?key=90d5d6b066dfe2c82c8e22e880eb3a02`, {
+        method: 'POST',
+        body: formData,
+      });
+  
+      if (!imgbbResponse.ok) {
+        throw new Error('Failed to upload image to imgbb');
+      }
+      const imgbbData = await imgbbResponse.json();
+      return imgbbData.data.url; 
+    } catch (error) {
+      console.error('Error sending image message:', error);
+    }
+  };
+
+
+
+export const formatLastMessageTime = (ms) => {
+    const seconds = Math.floor((ms / 1000) % 60);
+    const minutes = Math.floor((ms / (1000 * 60)) % 60);
+    const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
+    const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+  
+    if (days > 0) {
+      return `${days}d`; // Show days if non-zero
+    } else if (hours > 0) {
+      return `${hours}h`; // Show hours if days are zero
+    } else if (minutes > 0) {
+      return `${minutes}m`; // Show minutes if hours are zero
+    } else {
+      return `${seconds}s`; // Show seconds if minutes are zero
+    }
+  };

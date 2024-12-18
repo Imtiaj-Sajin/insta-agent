@@ -105,54 +105,6 @@ const ProfileCard = ({ profileData }: { profileData: any }) => {
           {profileData.is_business_follow_user? 'Following' : 'Follow'}
         </button>
       </div>
-
-      {/* Media Section */}
-
-        <div
-        className="media"
-        style={{
-          backgroundColor: '#fff',
-          textAlign: 'left',
-          padding: '10px',
-          marginTop: '30px',
-          borderRadius: '3px',
-        }}
-      >
-        <h6 style={{ margin: '5px 0',textAlign: 'left'}}>
-          Media
-        </h6>
-        <ul
-          style={{
-            listStyleType: 'none',
-            margin: '0',
-            padding: '0',
-            display: 'flex',
-            gap: '15px',
-            flexWrap: 'wrap',
-            justifyContent: 'flex-start',
-          }}
-        >
-          {[...Array(6)].map((_, index) => (
-            <li
-              key={index}
-              style={{
-                display: 'inline-block',
-              }}
-            >
-              <img
-                src={`https://via.placeholder.com/80?text=Media+${index + 1}`}
-                alt={`Media ${index + 1}`}
-                style={{
-                  width: '50px',
-                  height: '50px',
-                  borderRadius: '3px',
-                  objectFit: 'cover',
-                }}
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
     </span>
   );
 };
