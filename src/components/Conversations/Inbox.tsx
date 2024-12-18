@@ -6,6 +6,7 @@ import io from 'socket.io-client';
 import ProfileCard from '../ProfileCard';
 import ImagePreview from '@/utils/imagePreview';
 import ImageModal from '@/utils/imagePreview';
+import { determineFileType, parseWebhookPayload, isLink} from '@/utils/functions';
 
 const socket = io('https://nkf448kn-3001.asse.devtunnels.ms/'); 
 
@@ -177,8 +178,6 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
   
       if (!incomingMessage.is_echo) {//&& incomingMessage.type!=="message_read") {      
         const senderId  = incomingMessage.from.id; // Use senderId as the cache key
-
-        // Cache the message under the senderId
         queryClient.setQueryData(['messages', pageAccessToken, senderId], (oldMessages?: Message1[]) => {
           return oldMessages ? [incomingMessage, ...oldMessages] : [incomingMessage];
         });
@@ -370,122 +369,8 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
     }
   }
 
-  function determineFileType(file: File | undefined): string {
-    if (!file) {
-      console.warn("File is undefined or null.");
-      return "unknown";
-    }
-  
-    if (file.type) {
-      const mimeType = file.type;
-      if (mimeType.startsWith('image/')) return 'image';
-      if (mimeType.startsWith('audio/')) return 'audio';
-      if (mimeType.startsWith('video/')) return 'video';
-    }
-  
-    if(file.name){
-          const extension = file.name.split('.').pop().toLowerCase();
-    if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(extension)) return 'image';
-    if (['mp3', 'wav', 'ogg', 'aac', 'flac', 'm4a'].includes(extension)) return 'audio';
-    if (['mp4', 'mov', 'avi', 'mkv', 'webm', 'flv'].includes(extension)) return 'video';
-  
-    }
 
-    return 'unknown';
-  }
-  function parseWebhookPayload(payload: any): any {
-    console.log("hello")
-    if (payload.object === 'instagram' && payload.entry) {
-      console.log("hello payload")
-      for (const entry of payload.entry) {
-        console.log("hello payload entry")
-  
-        const messaging = entry.messaging;
-        for (const event of messaging) {
-          console.log("hello payload entry messaging")
-  
-          if (event.message) {
-            console.log("hello payload entry messaging event")
-  
-            if (event.message.attachments && event.message.attachments.length > 0) {
-              console.log("Processing event with attachments");
-            
-              const attachmentType = event.message.attachments[0].type;
-              const attachmentUrl = event.message.attachments[0].payload.url;
-            
-              let attachmentData;
-              if (attachmentType === "image") {
-                attachmentData = {
-                  type: attachmentType,
-                  image_data: {
-                    url: attachmentUrl,
-                  },
-                };
-              } else if (attachmentType === "video") {
-                attachmentData = {
-                  type: attachmentType,
-                  video_data: {
-                    url: attachmentUrl,
-                    preview_url: attachmentUrl,
-                  },
-                };
-              }
-            
-              return {
-                from: { username: "string", id: event.sender.id },
-                to: { data: [{ username: "string", id: event.recipient.id }] },
-                message: event.message.text,
-                created_time: new Date(event.timestamp),
-                id: event.message.mid,
-                is_echo: event.message.is_echo,
-                attachments: { data: [attachmentData] },
-              };
-            }
-             else {
-              console.log("hello payload entry messaging event text")
-              return {
-                type: 'text_message',
-                from: { username: "string", id: event.sender.id },
-                to: { data: { username: "string", id: event.recipient.id } },
-                message: event.message.text,
-                created_time: new Date(event.timestamp),
-                id: event.message.mid,
-                is_echo:  event.message.is_echo,
-              };
-            }
-          } else if (event.read) {
-            // Handle message read event
-            return {
-              type: 'message_read',
-              from: { username: "string", id: event.sender.id },
-              to: { data: { username: "string", id: event.recipient.id } },
-              message: "Seen",
-              created_time: new Date(event.timestamp),
-              id: event.read.mid,
-            };
-          }
-        }
-  
-        const changes = entry.changes || [];
-        for (const change of changes) {
-          if (change.field === 'comments') {
-            // Handle comment events
-            return {
-              type: 'comment',
-              commenterId: change.value.from.id,
-              commenterUsername: change.value.from.username,
-              mediaId: change.value.media.id,
-              text: change.value.text,
-              timestamp: entry.time,
-            };
-          }
-        }
-      }
-    }
-  
-    // Default response if no recognizable event is found
-    return { type: 'unknown_event', payload };
-  }
+
   const handleSendMessage = async () => {
     if (newMessage || attachments.length) {
       const recipientId =
@@ -506,12 +391,10 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
         attachments: [],
       };
   
-      //setMessages((prevMessages) => [newMessageToAdd, ...prevMessages]); 
 
       queryClient.setQueryData(['messages', pageAccessToken, recipientId], (oldMessages?: Message1[]) => {
         return oldMessages ? [newMessageToAdd, ...oldMessages] : [newMessageToAdd];
       });
-      // console.log("messgeeesss: ", messages );
   
       if (fileType === "video") {
         console.log("Video type detected");
@@ -606,10 +489,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
     setAttachments((prev) => [...prev, ...updatedAttachments]);
   };
 
-  function isLink(message) {
-    const urlRegex = /https?:\/\/[^\s]+/; // Regex to detect HTTP/HTTPS URLs
-    return urlRegex.test(message); // Returns true if a link is found
-  }
+
   const removeAttachment = (index: number) => {
     setAttachments((prev) => prev.filter((_, i) => i !== index));
   };

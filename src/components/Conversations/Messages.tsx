@@ -34,6 +34,9 @@ const Messages = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [currentView, setCurrentView] = useState("conversation"); // "conversation", "inbox", or "profile"
   const username = process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME;
+  const [loading, setLoading] = useState<boolean>(true); // Track loading state
+  
+  
   const toggleView = (view) => setCurrentView(view);
 
   // Function to fetch conversation list using React Query
@@ -45,26 +48,29 @@ const Messages = () => {
     if (!response.ok) {
       throw new Error('Failed to fetch conversation list');
     }
-
+    setLoading(false);
     return response.json();
   };
 
   // Using React Query to fetch and cache conversation list
-  const { data: conversations = [], isLoading } = useQuery({
+  const { data: conversations = [], isLoading, isFetched } = useQuery({
     queryKey: ['conversationList', pageAccessToken],
     queryFn: () => fetchConversationList(pageAccessToken as string),
     enabled: !!pageAccessToken, // Run query only when the access token is available
     staleTime: 1000 * 60 * 5,  // Cache the data for 5 minutes
   });
 
+  useEffect(() => {
+    if (isFetched) {
+      setLoading(false);
+    }
+  }, [isFetched]);
 // Function to check cookies and exchange token if needed
 const exchangeToken = async (code: string) => {
   try {
     // Step 1: Check if pageAccessToken exists in cookies
     const cookieResponse = await fetch('/api/get-tokens'); // Fetch endpoint for reading cookies
     const cookieData = await cookieResponse.json();
-
-    console.log("lulu: ", cookieData);
 
     if (cookieResponse.ok && cookieData.pageAccessToken) {
       console.log('Page access token retrieved from cookies:', cookieData.pageAccessToken);
@@ -162,7 +168,22 @@ const exchangeToken = async (code: string) => {
           }}
         >
           <h1>Conversations</h1>
-          {filteredConversations.map((conv) => (
+          {loading?
+          Array.from({ length: 5 }).map((_, index) => (
+            <div
+              key={index}
+              className="skeleton-loader"
+              style={{
+                height: "60px",
+                marginBottom: "10px",
+                borderRadius: "8px",
+                background: "linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 50%, #f2f2f2 75%)",
+                backgroundSize: "200% 100%",
+                animation: "loading 1.5s infinite",
+              }}
+            ></div>
+          )):
+          filteredConversations.map((conv) => (
             <span
                 key={conv.id}
                 onClick={() => handleSelectConversation(conv)}
