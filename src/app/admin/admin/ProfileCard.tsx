@@ -114,7 +114,17 @@ const ProfileCard: FC<{ agent: AgentData }> = ({ agent }) => {
 
   return (
     <div style={styles.container}>
-      <div style={styles.profileCard}>
+      <div style={{
+      width: isMobile ? "80%" : "40%", // Adjust width for mobile
+      borderRadius: "15px",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      // backgroundColor: "#fff",
+      overflow: "hidden",
+      textAlign: "center",
+      fontFamily: "Arial, sans-serif",
+      backgroundColor: "var(--navbar-background) ", 
+
+    }}>
         <div style={styles.profileHeader}>{agent.username}</div>
         <div style={styles.profileContent}>
           <img

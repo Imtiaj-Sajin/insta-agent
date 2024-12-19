@@ -1,4 +1,5 @@
-export function isLink(message: any) {
+import {WebhookPayload, ParsedPayload} from "../types/interfaces"
+export function isLink(message: string) {
     const urlRegex = /https?:\/\/[^\s]+/; // Regex to detect HTTP/HTTPS URLs
     return urlRegex.test(message); // Returns true if a link is found
 }
@@ -27,7 +28,7 @@ export function determineFileType(file: File | undefined): string {
     return 'unknown';
   }
 
-export function parseWebhookPayload(payload: any): any {
+export function parseWebhookPayload(payload: WebhookPayload): ParsedPayload {
       console.log("hello")
       if (payload.object === 'instagram' && payload.entry) {
         console.log("hello payload")
@@ -177,7 +178,7 @@ export const getImageUrl = async (imageFile: File) => {
 
 
 
-export const formatLastMessageTime = (ms) => {
+export const formatLastMessageTime = (ms: number) => {
     const seconds = Math.floor((ms / 1000) % 60);
     const minutes = Math.floor((ms / (1000 * 60)) % 60);
     const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);

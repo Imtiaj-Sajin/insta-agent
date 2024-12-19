@@ -9,13 +9,13 @@ import { formatLastMessageTime } from '@/utils/functions';
 import { Conversation } from '@/types/interfaces';
 
 const Messages = () => {
-  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
+  const [selectedConversation, setSelectedConversation] = useState<Conversation>();
   const [selectedFilter, setSelectedFilter] = useState("All");
-  const [showRightDiv, setShowRightDiv] = useState(false);
-  const [pageAccessToken, setPageAccessToken] = useState<string | null>(null);
+  // const [showRightDiv, setShowRightDiv] = useState(false);
+  const [pageAccessToken, setPageAccessToken] = useState<string>();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [currentView, setCurrentView] = useState("conversation"); // "conversation", "inbox", or "profile"
-  const username = process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME;
+  // const username = process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME;
   const [loading, setLoading] = useState<boolean>(true); // Track loading state
   
   
@@ -40,6 +40,7 @@ const Messages = () => {
     staleTime: 1000 * 60 * 5,  
   });
 
+  console.log(isLoading);
   // useEffect(() => {
   //   if (isFetched) {
   //     setLoading(false);
@@ -299,7 +300,7 @@ const exchangeToken = async (code: string) => {
       </span>):(<p style={{margin: "100px"}}>Please select a conversation to view messages.</p>)}
     
     {selectedConversation ? (
-      <Inbox pageAccessToken={pageAccessToken} selectedConversation={selectedConversation} />
+      <Inbox pageAccessToken={pageAccessToken?pageAccessToken:""} selectedConversation={selectedConversation} />
     ) : (
       <></>
     )}

@@ -1,6 +1,5 @@
 // src/app/layout.tsx
 'use client'; 
-import type { Metadata } from "next";
 import localFont from "next/font/local";
 import '../../styles/globals.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -19,10 +18,6 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-// export const metadata: Metadata = {
-//   title: "Responsive Layout App",
-//   description: "Responsive layout with dynamic navbar",
-// };
 
 export default function RootLayout({
   children,

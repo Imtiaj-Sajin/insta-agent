@@ -3,7 +3,7 @@
 "use client";
 
 import React from "react";
-import { FaEnvelope, FaRobot, FaBell, FaUser, FaComments, FaCog } from "react-icons/fa";
+import { FaBell, FaUser, FaComments } from "react-icons/fa";
 import { ImStatsBars2 } from "react-icons/im";
 
 type NavbarProps = {

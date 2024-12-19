@@ -1,13 +1,10 @@
 //app/api/webhook/route.ts
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import crypto, { randomInt } from 'crypto';
-import { cookies } from 'next/headers';
-import { sendSSEData } from '../sse/route';
 
 const VERIFY_TOKEN = 'v_token'; 
 const APP_SECRET = process.env.NEXT_PUBLIC_FACEBOOK_APP_SECRET || ''; 
 let PAGE_ACCESS_TOKEN:any
-const processedCommentIds = new Set();
 
 const keywords = ["sale", "discount", "offer"];
 const responses = [
@@ -133,7 +130,7 @@ function parseWebhookPayload(payload:any) {
       username: changes?.value?.from?.username,
       senderId: changes?.value?.from?.id,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error parsing webhook payload:", error.message);
     return {};
   }
@@ -165,7 +162,7 @@ async function replyToComment(commentId:any, replyMessage:string) {
     }
 
     return data;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error replying to comment:", error.message);
     throw error;
   }
@@ -200,7 +197,7 @@ async function sendTextMessage(recipientId: string, newMessage: string) {
       console.error('Failed to send message:', data.error || 'Unknown error');
       return { success: false, error: data.error };
     }
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error sending message:', error.message);
     return { success: false, error: error.message };
   }

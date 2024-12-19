@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
     const ACCESS_TOKEN = req.cookies.get('pageAccessToken')?.value

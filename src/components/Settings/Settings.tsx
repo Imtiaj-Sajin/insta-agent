@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { ImAndroid } from "react-icons/im";
 import { DiGitBranch } from "react-icons/di";
 import { BsPersonFillGear } from "react-icons/bs";
 import { MdOutlineEditNotifications } from "react-icons/md";

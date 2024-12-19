@@ -12,7 +12,6 @@ import Agent from "./admin/Agents";
 import Notification from "./admin/Notification";
 
 import Insights from "@/components/Insights/Insights";
-import TestingSajin from "@/components/TestingSajin"
 import HeaderUI from "@/utils/header";
 
 
