@@ -133,17 +133,20 @@ const CreateAutomation = () => {
           </option>
         ))}
       </select>
+      <div style={{border:"",overflowY:"auto", maxHeight:"400px"}}>
 
       {/* Keywords */}
       <label>Keywords</label>
       <div className="input-group">
-        <input
+        <textarea
           className="input"
-          type="text"
+          style={{height:"45px"}}
+          // type="text"
           placeholder="Add keyword"
           onKeyPress={(e) => {
             if (e.key === "Enter") {
-              addKeyword(e.currentTarget.value);
+                  e.preventDefault(); 
+                  addKeyword(e.currentTarget.value);
               e.currentTarget.value = "";
             }
           }}
@@ -162,14 +165,15 @@ const CreateAutomation = () => {
       {/* Comment Answers */}
       {(selectedType === "Reply to Comment" || selectedType === "Comment + DM") && (
         <>
-          <label>Answer List</label>
+          <label>Answer List- Comment</label>
           <div className="input-group">
-            <input
+            <textarea
               className="input"
-              type="text"
-              placeholder="Search or Create New"
+              
+              placeholder="type and then enter"
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
+                  e.preventDefault(); 
                   addAnswer("comment", e.currentTarget.value);
                   e.currentTarget.value = "";
                 }
@@ -192,12 +196,13 @@ const CreateAutomation = () => {
         <>
           <label>Answer List DM</label>
           <div className="input-group">
-            <input
+            <textarea
               className="input"
-              type="text"
-              placeholder="Search or Create New"
+              
+              placeholder="Create new and then enter"
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
+                  e.preventDefault(); 
                   addAnswer("dm", e.currentTarget.value);
                   e.currentTarget.value = "";
                 }
@@ -214,6 +219,7 @@ const CreateAutomation = () => {
           </div>
         </>
       )}
+      </div>
 
       {/* Submit and Cancel */}
       <div className="action-buttons">
