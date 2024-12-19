@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Pool } from "pg";
 import { pool } from "../../database/db";
 
   

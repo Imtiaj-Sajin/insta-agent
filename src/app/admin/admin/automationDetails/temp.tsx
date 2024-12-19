@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
   import * as d3 from "d3";
-  import cytoscape from "cytoscape";
   import { drawConnections } from "./drawConnections";
 
 
@@ -26,11 +25,11 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
     const [isEditMode, setIsEditMode] = useState(false);
     const [isAddingKeywords, setIsAddingKeywords] = useState(false);
     const [isAddingComments, setIsAddingComments] = useState(false);
-    const [isAddingDMs, setIsAddingDMs] = useState(false);
+    // const [isAddingDMs, setIsAddingDMs] = useState(false);
   
     const [newKeyword, setNewKeyword] = useState("");
     const [newComment, setNewComment] = useState("");
-    const [newDM, setNewDM] = useState("");
+    // const [newDM, setNewDM] = useState("");
   
     const [editedKeywords, setEditedKeywords] = useState([...keywords]);
     const [editedComments, setEditedComments] = useState([...comment_answers]);
@@ -55,7 +54,7 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
     setIsEditMode((prev) => !prev); // Toggle edit mode
     setIsAddingKeywords(false);
     setIsAddingComments(false);
-    setIsAddingDMs(false);
+    // setIsAddingDMs(false);
   };
 
   useEffect(() => {
@@ -78,13 +77,14 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
     draggables.forEach((card) => {
       const handle = card.querySelector(".drag-handle") as HTMLElement;
       let isDragging = false;
-      let offsetX = 25;
-      let offsetY = 55;
+      const offsetX = 25;
+      const offsetY = 55;
   
       const onMouseDown = (e: MouseEvent) => {
 
         isDragging = true;
       document.body.style.cursor = "grabbing";
+      console.log(e)
       };
   
       const onMouseMove = (e: MouseEvent) => {
@@ -142,7 +142,7 @@ import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
 
     if (type === "keywords") setNewKeyword("");
     if (type === "comments") setNewComment("");
-    if (type === "dms") setNewDM("");
+    // if (type === "dms") setNewDM("");
   };
 
     return (

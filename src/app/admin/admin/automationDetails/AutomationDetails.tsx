@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
   import * as d3 from "d3";
-  import cytoscape from "cytoscape";
   import { drawConnections } from "./drawConnections";
 
 
@@ -215,8 +214,8 @@ const dbDMs = async (action: string) => {
     draggables.forEach((card) => {
       const handle = card.querySelector(".drag-handle") as HTMLElement;
       let isDragging = false;
-      let offsetX = 60;
-      let offsetY = 20;
+      const offsetX = 60;
+      const offsetY = 20;
   
       const onMouseDown = () => {
         isDragging = true;

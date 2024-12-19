@@ -2,17 +2,15 @@ import React, { useState, useEffect, useRef} from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { FiPaperclip, FiSend } from 'react-icons/fi';
 import io from 'socket.io-client';
-import ProfileCard from '../ProfileCard';
-import ImagePreview from '@/utils/imagePreview';
 import ImageModal from '@/utils/imagePreview';
-import { determineFileType, parseWebhookPayload, isLink, uploadImage, getImageUrl, sendText, sendImage, sendVideo} from '@/utils/functions';
+import { determineFileType, parseWebhookPayload, isLink, getImageUrl, sendText, sendImage, sendVideo} from '@/utils/functions';
 import { Conversation, Message } from '@/types/interfaces';
 
 const socket = io('https://nkf448kn-3001.asse.devtunnels.ms/'); 
 
 interface InboxProps {
-  pageAccessToken: string | null;
-  selectedConversation: Conversation | null;
+  pageAccessToken: string ;
+  selectedConversation: Conversation;
 }
 
 const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) => {
@@ -61,12 +59,14 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
 
   const { data: messages = [], isLoading, refetch } = useQuery({
     queryKey: ['messages', pageAccessToken, selectedSenderId],
-    queryFn: () => fetchMessages(pageAccessToken as string, selectedConversationId),
+    queryFn: () => fetchMessages(pageAccessToken as string, selectedConversationId as string),
     enabled: !!selectedConversation, // Ensure query runs only when selectedConversation is available
     staleTime: 1000 * 60 * 5, 
     }
   );
 
+  console.log(refetch);
+  console.log(isLoading);
 
   useEffect(() => {
     const handleScroll = async () => {
@@ -244,7 +244,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
   return selectedConversation ? (
     <span className="inbox-container"  style={{ padding: 0}}>
       <div ref={containerRef} className="inbox-messages" style={{ display: "flex", flexDirection: "column-reverse", padding: "10px", gap: "10px"}}>
-        {messages.map((message) => (
+        {messages.map((message: Message) => (
           <div
             key={message.id}
             style={{
