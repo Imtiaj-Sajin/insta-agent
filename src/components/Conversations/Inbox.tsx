@@ -1,43 +1,14 @@
 import React, { useState, useEffect, useRef} from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { FiPaperclip, FiSend } from 'react-icons/fi';
-// import './conversations.css';
 import io from 'socket.io-client';
 import ProfileCard from '../ProfileCard';
 import ImagePreview from '@/utils/imagePreview';
 import ImageModal from '@/utils/imagePreview';
+import { determineFileType, parseWebhookPayload, isLink, uploadImage, getImageUrl, sendText, sendImage, sendVideo} from '@/utils/functions';
+import { Conversation, Message } from '@/types/interfaces';
 
 const socket = io('https://nkf448kn-3001.asse.devtunnels.ms/'); 
-
-interface Message1 {
-  from: { username: string; id: string };
-  to: { data: { username: string; id: string }[] };
-  message: string;
-  created_time: string;
-  id: string;
-  attachments?: { data: { type?: string; image_data?: { url: string }; video_data?:{width: number, height: number, url:string, preview_url:string} }[] };
-}
-
-interface ParticipantDetails {
-  id: string;
-  name: string;
-  username: string;
-  profile_pic: string;
-  is_verified_user: boolean;
-  follower_count: number;
-  is_user_follow_business: boolean;
-  is_business_follow_user: boolean;
-}
-
-interface Conversation {
-  id: string;
-  name: string;
-  updated_time: string;
-  last_message: string;
-  participant_details: ParticipantDetails | null; 
-  status: string; 
-}
-
 
 interface InboxProps {
   pageAccessToken: string | null;
@@ -47,13 +18,15 @@ interface InboxProps {
 const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) => {
   const [newMessage, setNewMessage] = useState('');
   const [attachments, setAttachments] = useState<{ file: File; previewUrl: string }[]>([]);
-  const [nextUrl, setNextUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [messageIds, setMessageIds] = useState<Set<string>>(new Set());
-
-  const pageId=process.env.NEXT_PUBLIC_INSTAGRAM_USERID;
+  const [nextUrlMap, setNextUrlMap] = useState<Record<string, string | null>>({});
   const queryClient = useQueryClient();
+
+  const pageId=process.env.NEXT_PUBLIC_FACEBOOK_PAGE_ID;
+  const selectedConversationId = selectedConversation?.id ;
+  const selectedSenderId = selectedConversation?.participant_details?.id ;
 
 
 
@@ -64,11 +37,10 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
         url || `/api/fetch-message-scroll?conversationId=${conversationId}&accessToken=${accessToken}` // Your API route to fetch messages
       );
       const data = await response.json();
-
       const newMessages = (data.messages?.data || data.data).filter(
-        (message: Message1) => {
+        (message: Message) => {
           if (!messageIds.has(message.id)) {
-            messageIds.add(message.id);  // Add the new message ID to the set
+            messageIds.add(message.id);  
             return true;
           }
           return false; // Skip duplicate messages
@@ -77,7 +49,8 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
       const pagingNext = data.messages?.paging?.next || data.paging?.next;
 
 
-      setNextUrl(pagingNext);
+      setNextUrlMap((prev) => ({ ...prev, [conversationId]: pagingNext })); // Store per conversation
+
       return newMessages;
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -85,19 +58,6 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
       setLoading(false);
     }
   };
-
-
-  const selectedConversationId = selectedConversation?.id ;//|| 'aWdfZAG06MTpJR01lc3NhZA2VUaHJlYWQ6MTc4NDE0NzAyOTI1MzQ5MzY6MzQwMjgyMzY2ODQxNzEwMzAxMjQ0Mjc2MjAyNTk0OTcxNTQwODA5';
-  const selectedSenderId = selectedConversation?.participant_details?.id ;//|| 'aWdfZAG06MTpJR01lc3NhZA2VUaHJlYWQ6MTc4NDE0NzAyOTI1MzQ5MzY6MzQwMjgyMzY2ODQxNzEwMzAxMjQ0Mjc2MjAyNTk0OTcxNTQwODA5';
-
-  // Query to fetch messages
-  // const { data: messages = [], isLoading, error } = useQuery({
-  //   queryKey: ['messages', pageAccessToken, selectedSenderId],
-  //   queryFn: () => fetchMessages(pageAccessToken as string, selectedConversationId),
-  //   enabled: !!selectedConversation, // Ensure query runs only when selectedConversation is available
-  //   staleTime: 1000 * 60 * 5, // Cache the data for 5 minutes
-  // });
-
 
   const { data: messages = [], isLoading, refetch } = useQuery({
     queryKey: ['messages', pageAccessToken, selectedSenderId],
@@ -108,64 +68,60 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
   );
 
 
-    useEffect(() => {
-      const handleScroll = async () => {
-        if (
-          containerRef.current &&((containerRef.current.clientHeight-containerRef.current.scrollHeight+1)  >= containerRef.current.scrollTop) // Trigger when near bottom
-        ){
-            if (nextUrl && !loading) {
-              console.log("scrolling reached top");
-              fetchMessagesX(pageAccessToken, selectedConversationId, nextUrl);
+  useEffect(() => {
+    const handleScroll = async () => {
+      if (
+        containerRef.current &&((containerRef.current.clientHeight-containerRef.current.scrollHeight+1)  >= containerRef.current.scrollTop) && nextUrlMap[selectedConversationId] && !loading// Trigger when near bottom
+      ){
+
+        console.log('Fetching more messages for:', selectedConversationId);
+        fetchMessagesX(pageAccessToken, selectedConversationId, nextUrlMap[selectedConversationId]);
           
-            }
-        }
-      };
-  
-      const container = containerRef.current;
-      if (container) {
-        container.addEventListener("scroll", handleScroll);
-        return () => container.removeEventListener("scroll", handleScroll);
-      }
-    }, [nextUrl, loading]);
-
-
-
-    const fetchMessagesX = async (accessToken: string, conversationId: string, url?: string) => {
-      setLoading(true); // Start loading state
-      try {
-        const response = await fetch(
-          url || `/api/fetch-message-scroll?conversationId=${conversationId}&accessToken=${accessToken}` // Your API route to fetch messages
-        );
-        const data = await response.json();
-    
-        const newMessages = (data.messages?.data || data.data || []).filter(
-          (message: Message1) => {
-            if (!messageIds.has(message.id)) {
-              messageIds.add(message.id); // Add the new message ID to the set
-              return true;
-            }
-            return false; // Skip duplicate messages
-          }
-        );
-    
-        const pagingNext = data.messages?.paging?.next || data.paging?.next || null;
-        queryClient.setQueryData(
-          ['messages', pageAccessToken, selectedSenderId], // Unique cache key
-          (oldMessages: Message1[] = []) => [...oldMessages, ...newMessages] // Append new messages
-        );
-    
-
-        setNextUrl(pagingNext); 
-      } catch (error) {
-        console.error('Error fetching messages:', error);
-      } finally {
-        setLoading(false); 
       }
     };
-    
-    
+
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+      return () => container.removeEventListener("scroll", handleScroll);
+    }
+  }, [selectedConversationId, nextUrlMap, loading]);
 
 
+
+  const fetchMessagesX = async (accessToken: string, conversationId: string, url?: string) => {
+    setLoading(true); // Start loading state
+    try {
+      const response = await fetch(
+        url || `/api/fetch-message-scroll?conversationId=${conversationId}&accessToken=${accessToken}` // Your API route to fetch messages
+      );
+      const data = await response.json();
+  
+      const newMessages = (data.messages?.data || data.data || []).filter(
+        (message: Message) => {
+          if (!messageIds.has(message.id)) {
+            messageIds.add(message.id); // Add the new message ID to the set
+            return true;
+          }
+          return false; // Skip duplicate messages
+        }
+      );
+  
+      const pagingNext = data.messages?.paging?.next || data.paging?.next || null;
+      queryClient.setQueryData(
+        ['messages', pageAccessToken, selectedSenderId], // Unique cache key
+        (oldMessages: Message[] = []) => [...oldMessages, ...newMessages] // Append new messages
+      );
+  
+      setNextUrlMap((prev) => ({ ...prev, [conversationId]: pagingNext })); // Store per conversation
+
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    } finally {
+      setLoading(false); 
+    }
+  };
+    
 
   useEffect(() => {
     socket.on("receiveMessage", (data) => {
@@ -174,9 +130,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
   
       if (!incomingMessage.is_echo) {//&& incomingMessage.type!=="message_read") {      
         const senderId  = incomingMessage.from.id; // Use senderId as the cache key
-
-        // Cache the message under the senderId
-        queryClient.setQueryData(['messages', pageAccessToken, senderId], (oldMessages?: Message1[]) => {
+        queryClient.setQueryData(['messages', pageAccessToken, senderId], (oldMessages?: Message[]) => {
           return oldMessages ? [incomingMessage, ...oldMessages] : [incomingMessage];
         });
      }
@@ -188,301 +142,6 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
   }, [queryClient, pageAccessToken]);
 
 
-  const uploadImage = async (imageUrl: string) => {
-    const endpoint = `https://graph.facebook.com/v21.0/${pageId}/message_attachments`;
-    const payload = {
-      access_token: pageAccessToken,
-      message: {
-        attachment: {
-          type: 'image',
-          payload: {
-            url: imageUrl,
-            is_reusable: true,
-          },
-        },
-      },
-    };
-  
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        return data.attachment_id;  // Return the attachment ID for use in the next step
-      } else {
-        console.error('Failed to upload image:', data);
-      }
-    } catch (error) {
-      console.error('Error uploading image:', error);
-    }
-  };
-
-  const uploadImageFromFile = async (file: File) => {
-    const formData = new FormData();
-    formData.append('filedata', file);
-    formData.append('message', JSON.stringify({
-      attachment: {
-        type: 'image',
-      },
-    }));
-    formData.append('type', 'image/png'); // Adjust according to your file type
-  
-    const endpoint = `https://graph.facebook.com/v21.0/${pageId}/message_attachments?access_token=${pageAccessToken}`;
-    
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await response.json();
-      if (response.ok) {
-        return data.attachment_id;  // Return the attachment ID
-      } else {
-        console.error('Failed to upload image from file:', data);
-      }
-    } catch (error) {
-      console.error('Error uploading image from file:', error);
-    }
-  };
-
-  const sendMessageWithImage = async (recipientId: string, attachmentId: string, messageText?: string) => {
-    const endpoint = `https://graph.facebook.com/v21.0/${pageId}/messages?access_token=${pageAccessToken}`;
-    
-    const payload = {
-      recipient: {
-        id: recipientId,
-      },
-      message: {
-        attachment: {
-          type: 'image',
-          payload: {
-            attachment_id: attachmentId,
-          },
-        },
-      },
-    };
-  
-    // If you want to send a message along with the image, add the text to the payload
-    // if (messageText) {
-    //   payload.message.text = messageText;
-    // }
-  
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        console.log('Message sent successfully:', data);
-      } else {
-        console.error('Failed to send message:', data);
-      }
-    } catch (error) {
-      console.error('Error sending message:', error);
-    }
-  };
-  
-  const sendImageMessage = async (recipientId: string, imageUrl: string, messageText: string) => {
-    try {
-      // Step 1: Upload the image
-      const attachmentId = await uploadImage(imageUrl);
-      if (attachmentId) {
-        // Step 2: Send the image with the message
-        await sendMessageWithImage(recipientId, attachmentId, messageText);
-      }
-    } catch (error) {
-      console.error('Error sending image message:', error);
-    }
-  };
-
-  const sendVideo = async ({ pageId, recipientId, accessToken, file }) => {
-    try {
-      const endpoint = `https://graph.facebook.com/v21.0/${pageId}/messages`;
-  
-      const formData = new FormData();
-      formData.append('recipient', JSON.stringify({ id: recipientId }));
-      formData.append(
-        'message',
-        JSON.stringify({
-          attachment: {
-            type: "video", // 'audio' or 'video'
-          },
-        })
-      );
-      formData.append('filedata', file); // Provide the file path or stream
-      formData.append('access_token', accessToken);
-  
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        body: formData,
-      });
-  
-      const data = await response.json();
-  
-      if (response.ok) {
-        console.log('Media message sent successfully:', data);
-        return data; // Return the successful response
-      } else {
-        console.error('Failed to send media message:', data);
-        throw new Error(data.error.message);
-      }
-    } catch (error) {
-      console.error('Error while sending media message:', error.message);
-      throw error; // Re-throw for external handling
-    }
-  };
-
-  async function getAttachmentsDetails(messageId: string): Promise<any> {
-    const url = `https://graph.facebook.com/v21.0/${messageId}/attachments?access_token=${pageAccessToken}`;
-  
-    try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          `Error fetching attachments: ${errorData.error?.message || 'Unknown error'}`
-        );
-      }
-  
-      const data = await response.json();
-      return data; // Return the attachment details
-    } catch (error) {
-      console.error('Failed to fetch message attachments:', error.message);
-      return { error: error.message }; // Return error details
-    }
-  }
-
-  function determineFileType(file: File | undefined): string {
-    if (!file) {
-      console.warn("File is undefined or null.");
-      return "unknown";
-    }
-  
-    if (file.type) {
-      const mimeType = file.type;
-      if (mimeType.startsWith('image/')) return 'image';
-      if (mimeType.startsWith('audio/')) return 'audio';
-      if (mimeType.startsWith('video/')) return 'video';
-    }
-  
-    if(file.name){
-          const extension = file.name.split('.').pop().toLowerCase();
-    if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(extension)) return 'image';
-    if (['mp3', 'wav', 'ogg', 'aac', 'flac', 'm4a'].includes(extension)) return 'audio';
-    if (['mp4', 'mov', 'avi', 'mkv', 'webm', 'flv'].includes(extension)) return 'video';
-  
-    }
-
-    return 'unknown';
-  }
-  function parseWebhookPayload(payload: any): any {
-    console.log("hello")
-    if (payload.object === 'instagram' && payload.entry) {
-      console.log("hello payload")
-      for (const entry of payload.entry) {
-        console.log("hello payload entry")
-  
-        const messaging = entry.messaging;
-        for (const event of messaging) {
-          console.log("hello payload entry messaging")
-  
-          if (event.message) {
-            console.log("hello payload entry messaging event")
-  
-            if (event.message.attachments && event.message.attachments.length > 0) {
-              console.log("Processing event with attachments");
-            
-              const attachmentType = event.message.attachments[0].type;
-              const attachmentUrl = event.message.attachments[0].payload.url;
-            
-              let attachmentData;
-              if (attachmentType === "image") {
-                attachmentData = {
-                  type: attachmentType,
-                  image_data: {
-                    url: attachmentUrl,
-                  },
-                };
-              } else if (attachmentType === "video") {
-                attachmentData = {
-                  type: attachmentType,
-                  video_data: {
-                    url: attachmentUrl,
-                    preview_url: attachmentUrl,
-                  },
-                };
-              }
-            
-              return {
-                from: { username: "string", id: event.sender.id },
-                to: { data: [{ username: "string", id: event.recipient.id }] },
-                message: event.message.text,
-                created_time: new Date(event.timestamp),
-                id: event.message.mid,
-                is_echo: event.message.is_echo,
-                attachments: { data: [attachmentData] },
-              };
-            }
-             else {
-              console.log("hello payload entry messaging event text")
-              return {
-                type: 'text_message',
-                from: { username: "string", id: event.sender.id },
-                to: { data: { username: "string", id: event.recipient.id } },
-                message: event.message.text,
-                created_time: new Date(event.timestamp),
-                id: event.message.mid,
-                is_echo:  event.message.is_echo,
-              };
-            }
-          } else if (event.read) {
-            // Handle message read event
-            return {
-              type: 'message_read',
-              from: { username: "string", id: event.sender.id },
-              to: { data: { username: "string", id: event.recipient.id } },
-              message: "Seen",
-              created_time: new Date(event.timestamp),
-              id: event.read.mid,
-            };
-          }
-        }
-  
-        const changes = entry.changes || [];
-        for (const change of changes) {
-          if (change.field === 'comments') {
-            // Handle comment events
-            return {
-              type: 'comment',
-              commenterId: change.value.from.id,
-              commenterUsername: change.value.from.username,
-              mediaId: change.value.media.id,
-              text: change.value.text,
-              timestamp: entry.time,
-            };
-          }
-        }
-      }
-    }
-  
-    // Default response if no recognizable event is found
-    return { type: 'unknown_event', payload };
-  }
   const handleSendMessage = async () => {
     if (newMessage || attachments.length) {
       const recipientId =
@@ -497,36 +156,32 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
       const newMessageToAdd = {
         from: { username: process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME, id: pageId }, // Use appropriate user info
         to: { data: [{ id: recipientId }] },
-        message: fileType === 'video' ? 'Sending a video...' : newMessage,
+        message: newMessage,
         created_time: new Date().toISOString(),
         id: Math.random().toString(36).substr(2, 9), // Temporary ID, replaced later if needed
         attachments: [],
       };
   
-      //setMessages((prevMessages) => [newMessageToAdd, ...prevMessages]); 
-
-      queryClient.setQueryData(['messages', pageAccessToken, recipientId], (oldMessages?: Message1[]) => {
+      queryClient.setQueryData(['messages', pageAccessToken, recipientId], (oldMessages?: Message[]) => {
         return oldMessages ? [newMessageToAdd, ...oldMessages] : [newMessageToAdd];
       });
-      // console.log("messgeeesss: ", messages );
   
       if (fileType === "video") {
+        if(newMessage){
+          const message=newMessage;
+          setNewMessage(''); 
+          await sendText(recipientId, pageAccessToken, message);
+        }
         console.log("Video type detected");
         (async () => {
           const pageId = process.env.NEXT_PUBLIC_FACEBOOK_PAGE_ID;
           const accessToken = pageAccessToken;
   
           try {
-            setNewMessage(''); // Clear the text input
-            setAttachments([]); // Clear the attachments
-            const response = await sendVideo({
-              pageId,
-              recipientId,
-              accessToken,
-              file: attachment, // Pass the File object directly
-            });
-            console.log('Response:', response);
-            //const video_url=getAttachmentsDetails(response.)
+            setNewMessage(''); 
+            setAttachments([]); 
+            const response = await sendVideo({pageId, recipientId, accessToken, file: attachment });
+            console.log('Response videop:', response);
             const updatedMessages = [...messages];
             const tempMessageIndex = updatedMessages.findIndex(
               (msg) => msg.id === newMessageToAdd.id
@@ -543,8 +198,8 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
                 },
               ],
             };
-            //setMessages(updatedMessages);
-            queryClient.setQueryData(['messages', pageAccessToken, recipientId], (oldMessages?: Message1[]) => {
+
+            queryClient.setQueryData(['messages', pageAccessToken, recipientId], (oldMessages?: Message[]) => {
               return oldMessages ? [updatedMessages, ...oldMessages] : [updatedMessages];
             });
           }
@@ -554,46 +209,24 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
           }
         })();
       } else if (fileType === "image") {
-        const attachmentId = await uploadImageFromFile(attachment); // Upload image from file
-        if (attachmentId) {
-          await sendMessageWithImage(recipientId, attachmentId, newMessage); // Send message with the uploaded image
-          setNewMessage(''); // Clear the text input
-          setAttachments([]); // Clear the attachments
+        const attachmentUrl = await getImageUrl(attachment); // Upload image from file
+        if (attachmentUrl) {
+          if(newMessage){
+            const message=newMessage;
+            setNewMessage('');
+            await sendText(recipientId, pageAccessToken, message);
+          }
+          await sendImage(attachmentUrl, recipientId, pageAccessToken); // Send message with the uploaded image
+          setAttachments([]); 
         }
       } else {
-        // Send plain text message
-        const endpoint = `https://graph.facebook.com/v21.0/me/messages?access_token=${pageAccessToken}`;
-        const payload = {
-          recipient: { id: recipientId },
-          message: { text: newMessage },
-        };
-  
-        try {
-          const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-          });
-  
-          const data = await response.json();
-          if (response.ok) {
-            console.log('Message sent successfully:', data);
-            setNewMessage(''); // Clear the input field
-          } else {
-            console.error('Failed to send message:', data);
-          }
-        } catch (error) {
-          console.error('Error sending message:', error);
-        }
+        const message=newMessage;
+        setNewMessage(''); 
+        await sendText(recipientId, pageAccessToken, message); 
       }
     }
   };
   
-  
-  
-
   const handleAttachmentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files ? Array.from(event.target.files) : [];
     const updatedAttachments = files.map((file) => ({
@@ -603,61 +236,55 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
     setAttachments((prev) => [...prev, ...updatedAttachments]);
   };
 
-  function isLink(message) {
-    const urlRegex = /https?:\/\/[^\s]+/; // Regex to detect HTTP/HTTPS URLs
-    return urlRegex.test(message); // Returns true if a link is found
-  }
+
   const removeAttachment = (index: number) => {
     setAttachments((prev) => prev.filter((_, i) => i !== index));
   };
 
-
-
-
   return selectedConversation ? (
     <span className="inbox-container"  style={{ padding: 0}}>
-<div ref={containerRef} className="inbox-messages" style={{ display: "flex", flexDirection: "column-reverse", padding: "10px", gap: "10px"}}>
-  {messages.map((message) => (
-    <div
-      key={message.id}
-      style={{
-        display: "flex",
-        flexDirection: message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? "row-reverse" : "row",
-        alignItems: "flex-start",
-        gap: "10px",
-        background: "rgba(0,0,0,0)",
-      }}
-    >
-      <div 
-        style={{
-          maxWidth: "70%",
-          backgroundColor: message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? "#FCE9E0" : "#FFFFFF",
-          color: "#333",
-          padding: "10px 15px",
-          border:  message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? "1px solid #F7CCB6":"1px solid #DBDEEB",
-          borderRadius: message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? "12px 12px 0 12px" : "12px 12px 12px 0",
-        }}
-      > <span style={{ display: "flex" , flexDirection:"row", gap: "30px",  justifyContent: "space-between" }}>
-        <p style={{ fontSize: "0.9rem", color: "#000" }}>{message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? "You" : selectedConversation.name}</p>
-        <p style={{ fontSize: "0.9rem", margin: 0, color: "#999" }}>
-          {new Date(message.created_time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-        </p></span>
-        <p style={{ margin: "5px 0", fontSize: "1rem" }}>{isLink(message.message) ? <a href={message.message} target="_blank" rel="noopener noreferrer" style={{ color: "#007BFF" }}>  Open link</a> : message.message}</p>
-        {message.attachments?.data?.map((attachment, idx) => (
-          <div key={idx} style={{ marginTop: "10px" }}>
-            {attachment.type === "link" ? (
-              <a href={attachment.image_data?.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", color: "#007BFF" }}>📄 File</a>
-            ) : attachment.video_data ? (
-              <video controls src={attachment.video_data?.url} style={{ width: "100%", borderRadius: "8px" }} />
-            ) : (
-              <ImageModal imageUrl={attachment.image_data?.url} alt="attachment" style={{ width: "100%", borderRadius: "8px" }} />
-            )}
+      <div ref={containerRef} className="inbox-messages" style={{ display: "flex", flexDirection: "column-reverse", padding: "10px", gap: "10px"}}>
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            style={{
+              display: "flex",
+              flexDirection: message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? "row-reverse" : "row",
+              alignItems: "flex-start",
+              gap: "10px",
+              background: "rgba(0,0,0,0)",
+            }}
+          >
+            <div 
+              style={{
+                maxWidth: "70%",
+                backgroundColor: message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? "#FCE9E0" : "#FFFFFF",
+                color: "#333",
+                padding: "10px 15px",
+                border:  message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? "1px solid #F7CCB6":"1px solid #DBDEEB",
+                borderRadius: message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? "12px 12px 0 12px" : "12px 12px 12px 0",
+              }}
+            > <span style={{ display: "flex" , flexDirection:"row", gap: "30px",  justifyContent: "space-between" }}>
+              <p style={{ fontSize: "0.9rem", color: "#000" }}>{message.from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME ? "You" : selectedConversation.name}</p>
+              <p style={{ fontSize: "0.9rem", margin: 0, color: "#999" }}>
+                {new Date(message.created_time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              </p></span>
+              <p style={{ margin: "5px 0", fontSize: "1rem" }}>{isLink(message.message) ? <a href={message.message} target="_blank" rel="noopener noreferrer" style={{ color: "#007BFF" }}>  Open link</a> : message.message}</p>
+              {message.attachments?.data?.map((attachment, idx) => (
+                <div key={idx} style={{ marginTop: "10px" }}>
+                  {attachment.type === "link" ? (
+                    <a href={attachment.image_data?.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", color: "#007BFF" }}>📄 File</a>
+                  ) : attachment.video_data ? (
+                    <video controls src={attachment.video_data?.url} style={{ width: "100%", borderRadius: "8px" }} />
+                  ) : (
+                    <ImageModal imageUrl={attachment.image_data?.url} alt="attachment" style={{ width: "100%", borderRadius: "8px" }} />
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>
-    </div>
-  ))}
-</div>
 
 
       <span className="inbox-message-input" style={{ borderRadius: 10, padding: "0px", flexDirection: 'column', backgroundColor:'rgba(255,255,255,1)', border: "1px solid #DBDEEB", boxShadow:"unset", marginBottom:"150px" }}>
@@ -737,5 +364,3 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
 };
 
 export default Inbox;
-
-

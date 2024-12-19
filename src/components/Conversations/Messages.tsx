@@ -5,26 +5,8 @@ import { useQuery } from '@tanstack/react-query';
 import ProfileCard from '../ProfileCard';
 import { GoKebabHorizontal } from 'react-icons/go';
 import {IoIosArrowBack} from 'react-icons/io'
-
-interface ParticipantDetails {
-  id: string;
-  name: string;
-  username: string;
-  profile_pic: string;
-  is_verified_user: boolean;
-  follower_count: number;
-  is_user_follow_business: boolean;
-  is_business_follow_user: boolean;
-}
-
-interface Conversation {
-  id: string;
-  name: string;
-  updated_time: string;
-  last_message: string;
-  participant_details: ParticipantDetails | null;
-  status: string;
-}
+import { formatLastMessageTime } from '@/utils/functions';
+import { Conversation } from '@/types/interfaces';
 
 const Messages = () => {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
@@ -34,9 +16,11 @@ const Messages = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [currentView, setCurrentView] = useState("conversation"); // "conversation", "inbox", or "profile"
   const username = process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME;
-  const toggleView = (view) => setCurrentView(view);
+  const [loading, setLoading] = useState<boolean>(true); // Track loading state
+  
+  
+  const toggleView = (view: any) => setCurrentView(view);
 
-  // Function to fetch conversation list using React Query
   const fetchConversationList = async (accessToken: string): Promise<Conversation[]> => {
     const response = await fetch(`/api/conversations?accessToken=${accessToken}`, {
       method: 'GET',
@@ -45,26 +29,26 @@ const Messages = () => {
     if (!response.ok) {
       throw new Error('Failed to fetch conversation list');
     }
-
+    setLoading(false);
     return response.json();
   };
 
-  // Using React Query to fetch and cache conversation list
   const { data: conversations = [], isLoading } = useQuery({
     queryKey: ['conversationList', pageAccessToken],
     queryFn: () => fetchConversationList(pageAccessToken as string),
-    enabled: !!pageAccessToken, // Run query only when the access token is available
-    staleTime: 1000 * 60 * 5,  // Cache the data for 5 minutes
+    enabled: !!pageAccessToken, 
+    staleTime: 1000 * 60 * 5,  
   });
 
-// Function to check cookies and exchange token if needed
+  // useEffect(() => {
+  //   if (isFetched) {
+  //     setLoading(false);
+  //   }
+  // }, [isFetched]);
 const exchangeToken = async (code: string) => {
   try {
-    // Step 1: Check if pageAccessToken exists in cookies
-    const cookieResponse = await fetch('/api/get-tokens'); // Fetch endpoint for reading cookies
+    const cookieResponse = await fetch('/api/get-tokens'); 
     const cookieData = await cookieResponse.json();
-
-    console.log("lulu: ", cookieData);
 
     if (cookieResponse.ok && cookieData.pageAccessToken) {
       console.log('Page access token retrieved from cookies:', cookieData.pageAccessToken);
@@ -72,13 +56,12 @@ const exchangeToken = async (code: string) => {
     } else {
       console.log('Page access token not found in cookies. Attempting to exchange token.');
 
-      // Step 2: Call exchange-token API to fetch new tokens
       const tokenResponse = await fetch('/api/exchange-token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ code }), // Pass the code in the request body
+        body: JSON.stringify({ code }), 
       });
 
       const tokenData = await tokenResponse.json();
@@ -87,7 +70,6 @@ const exchangeToken = async (code: string) => {
         const pageAccessToken = tokenData.pageAccessToken;
         console.log('Page access token retrieved via exchange-token API:', pageAccessToken);
 
-        // Set the retrieved pageAccessToken in state
         setPageAccessToken(pageAccessToken);
       } else {
         console.error('Failed to exchange token:', tokenData.error);
@@ -134,22 +116,7 @@ const exchangeToken = async (code: string) => {
     toggleView("inbox");
   };
 
-  const formatLastMessageTime = (ms) => {
-    const seconds = Math.floor((ms / 1000) % 60);
-    const minutes = Math.floor((ms / (1000 * 60)) % 60);
-    const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
-    const days = Math.floor(ms / (1000 * 60 * 60 * 24));
-  
-    if (days > 0) {
-      return `${days}d`; // Show days if non-zero
-    } else if (hours > 0) {
-      return `${hours}h`; // Show hours if days are zero
-    } else if (minutes > 0) {
-      return `${minutes}m`; // Show minutes if hours are zero
-    } else {
-      return `${seconds}s`; // Show seconds if minutes are zero
-    }
-  };
+
   return (
 <span style={{ display: "flex", flexDirection: isMobile ? "column" : "row", height: "100vh" }}>
       {(!isMobile || currentView === "conversation") && (
@@ -162,7 +129,22 @@ const exchangeToken = async (code: string) => {
           }}
         >
           <h1>Conversations</h1>
-          {filteredConversations.map((conv) => (
+          {!filteredConversations?
+          Array.from({ length: 5 }).map((_, index) => (
+            <div
+              key={index}
+              className="skeleton-loader"
+              style={{
+                height: "60px",
+                marginBottom: "10px",
+                borderRadius: "8px",
+                background: "linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 50%, #f2f2f2 75%)",
+                backgroundSize: "200% 100%",
+                animation: "loading 1.5s infinite",
+              }}
+            ></div>
+          )):
+          filteredConversations.map((conv) => (
             <span
                 key={conv.id}
                 onClick={() => handleSelectConversation(conv)}
