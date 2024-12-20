@@ -8,9 +8,7 @@ import Automation from "./admin/automation";
 import Chats from "../../components/Chats";
 import "../../styles/globals.css"
 import Agent from "./admin/Agents";
-// import Updates from "./admin/Updates";
 import Notification from "./admin/Notification";
-
 import Insights from "@/components/Insights/Insights";
 import HeaderUI from "@/utils/header";
 
@@ -21,8 +19,19 @@ export default function NavbarLayout({
   children: React.ReactNode;
 }) {
   const [selectedContent, setSelectedContent] = useState("home");
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(false);
+  // const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize(); // Set the initial value
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  
   const renderContent = () => {
     switch (selectedContent) {    
       case "messages":
@@ -39,22 +48,10 @@ export default function NavbarLayout({
         return <Insights/>;
       case "notification":
         return <Notification/>;
-      // case "testing":
-      //     return <TestingSajin/>
       default:
         return <Messages/>;
     }
   };
-
-  
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [isMobile]);
   
   return (
     <div className="app">

@@ -1,6 +1,8 @@
 import { useState } from "react";
-
-const ImageModal = ({ imageUrl }) => {
+interface ImageModalProps {
+  imageUrl: string;
+}
+const ImageModal: React.FC<ImageModalProps>  = ({ imageUrl }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
