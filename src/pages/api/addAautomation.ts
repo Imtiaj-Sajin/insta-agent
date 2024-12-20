@@ -1,6 +1,7 @@
 import { pool } from "../../database/db";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
     const { post_id, auto_type, keywords, commentAnswers, dmAnswers } = req.body;
 

@@ -26,7 +26,7 @@ export const drawConnections = ({ container, svg, connections }: DrawConnections
     paths
       .enter()
       .append("path")
-      .merge(paths as d3.Selection<SVGSVGElement | null, unknown, null, undefined>)
+      .merge(paths as any)
       .attr("d", (d) => {
         const sourceEl = document.getElementById(d.source);
         const targetEl = document.getElementById(d.target);

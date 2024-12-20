@@ -112,7 +112,7 @@ const exchangeToken = async (code: string) => {
     return false;
   });
 
-  const handleSelectConversation = (conversation) => {
+  const handleSelectConversation = (conversation: any) => {
     setSelectedConversation(conversation);
     toggleView("inbox");
   };
@@ -156,7 +156,7 @@ const exchangeToken = async (code: string) => {
                   justifyContent: "space-between",
                   padding: "10px 10px",
                   borderBottom: "1px solid #ddd",
-                  backgroundColor: conv.isUnread ? "#f9f9f9" : "white", // Highlight unread messages
+                  //backgroundColor: conv.isUnread ? "#f9f9f9" : "white", // Highlight unread messages
                 }}
               >
                 {/* Profile Picture */}
@@ -269,7 +269,7 @@ const exchangeToken = async (code: string) => {
             }}
           />
         </span> 
-        <span style={{ display: "flex", flexDirection:"column", justifyContent: "space-between"}}><span>{selectedConversation?.name}</span> <span style={{color:"rgb(200,200,200)", fontSize: "14px"}}>{selectedConversation?.active_status? "Active Now":"Active 1h ago"}</span> </span> 
+        <span style={{ display: "flex", flexDirection:"column", justifyContent: "space-between"}}><span>{selectedConversation?.name}</span> <span style={{color:"rgb(200,200,200)", fontSize: "14px"}}>{"Active 1h ago"}</span> </span> 
         
       </span> 
           
