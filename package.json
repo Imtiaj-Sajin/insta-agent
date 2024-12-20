@@ -35,7 +35,6 @@
     "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
-    "@types/scape": "^3.21.8",
     "@types/d3": "^7.4.3",
     "@types/node": "^20",
     "@types/pg": "^8.11.10",
