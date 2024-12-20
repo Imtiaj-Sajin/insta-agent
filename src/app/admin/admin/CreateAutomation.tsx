@@ -8,7 +8,6 @@ interface InstagramPost {
   caption: string;
 }
 
-
 const CreateAutomation = () => {
   const [selectedType, setSelectedType] = useState<string>("Comment + DM");
   const [keywords, setKeywords] = useState<string[]>([]);
@@ -57,6 +56,64 @@ const CreateAutomation = () => {
       setDmAnswers(dmAnswers.filter((_, i) => i !== index));
     }
   };
+
+  const handleCSVUpload = (file: File) => {
+    // Create a FileReader to read the CSV file
+    const reader = new FileReader();
+  
+    reader.onload = (event) => {
+      // Get the CSV content as text from the reader
+      const csvContent = event.target?.result as string;
+      
+      if (!csvContent) {
+        alert("Error reading the CSV file.");
+        return;
+      }
+  
+      // Split the content into rows by newline
+      const data = csvContent.split('\n').map(row => row.trim()); // Trim each row to remove any extra spaces
+  
+      if (!data.length) {
+        alert("CSV is empty or invalid.");
+        return;
+      }
+  
+      const newKeywords: string[] = [];
+      const newCommentAnswers: string[] = [];
+      const newDmAnswers: string[] = [];
+  
+      data.forEach((row, index) => {
+        // Skip header row (index 0)
+        if (index === 0) return;
+  
+        // Split the row by commas to extract columns
+        const columns = row.split(',');
+  
+        // Push values into the respective arrays, trimming spaces
+        if (columns[0]) newKeywords.push(columns[0].trim()); // First column -> Keywords
+        if (selectedType !== "Send DM" && columns[1]) newCommentAnswers.push(columns[1].trim()); // Second column -> Comments
+        if (selectedType !== "Reply to Comment" && columns[2]) newDmAnswers.push(columns[2].trim()); // Third column -> DMs
+      });
+  
+      // Assuming you have state functions to update the arrays
+      setKeywords((prev) => [...prev, ...newKeywords]);
+      if (selectedType !== "Send DM") setCommentAnswers((prev) => [...prev, ...newCommentAnswers]);
+      if (selectedType !== "Reply to Comment") setDmAnswers((prev) => [...prev, ...newDmAnswers]);
+    };
+  
+
+
+
+
+    
+    reader.onerror = (error) => {
+      console.error("Error reading the file:", error);
+      alert("Error reading the CSV file.");
+    };
+  
+    reader.readAsText(file); // Read the file as text
+  };
+  
 
   const handleSubmit = async () => {
     if (!selectedPost || keywords.length === 0) {
@@ -133,92 +190,73 @@ const CreateAutomation = () => {
           </option>
         ))}
       </select>
-      <div style={{border:"",overflowY:"auto", maxHeight:"400px"}}>
 
-      {/* Keywords */}
-      <label>Keywords</label>
-      <div className="input-group">
-        <textarea
-          className="input"
-          style={{height:"45px"}}
-          // type="text"
-          placeholder="Add keyword"
-          onKeyPress={(e) => {
-            if (e.key === "Enter") {
-                  e.preventDefault(); 
-                  addKeyword(e.currentTarget.value);
-              e.currentTarget.value = "";
-            }
-          }}
-        />
-      </div>
-      <div className="tag-list">
-        {keywords.map((keyword, index) => (
-          <div key={index} className="tag">
-            {keyword}
-            <button onClick={() => removeKeyword(index)}>✖</button>
-          </div>
-        ))}
+      {/* Upload CSV Section */}
+      <div className="csv-upload-section">
+        <label className="csv-instruction">
+          {selectedType === "Reply to Comment" &&
+            "Upload CSV: First column - Keywords, Second column - Comment Reply."}
+          {selectedType === "Send DM" &&
+            "Upload CSV: First column - Keywords, Second column - DM Reply."}
+          {selectedType === "Comment + DM" &&
+            "Upload CSV: First column - Keywords, Second - Comment Reply, Third - DM Reply."}
+        </label>
+        <div className="csv-upload-container">
+          <input
+            type="file"
+            accept=".csv"
+            className="upload-csv-input"
+            style={{ padding: "0px", border: "0px" }}
+            onChange={(e) => {
+              if (e.target.files && e.target.files[0]) {
+                handleCSVUpload(e.target.files[0]);
+              }
+            }}
+          />
+        </div>
       </div>
 
+      <div style={{ overflowY: "auto", maxHeight: "400px" }}>
+        {/* Keywords */}
+        <label>Keywords</label>
+        <div className="tag-list">
+          {keywords.map((keyword, index) => (
+            <div key={index} className="tag">
+              {keyword}
+              <button onClick={() => removeKeyword(index)}>✖</button>
+            </div>
+          ))}
+        </div>
 
-      {/* Comment Answers */}
-      {(selectedType === "Reply to Comment" || selectedType === "Comment + DM") && (
-        <>
-          <label>Answer List- Comment</label>
-          <div className="input-group">
-            <textarea
-              className="input"
-              
-              placeholder="type and then enter"
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault(); 
-                  addAnswer("comment", e.currentTarget.value);
-                  e.currentTarget.value = "";
-                }
-              }}
-            />
-          </div>
-          <div className="tag-list">
-            {commentAnswers.map((answer, index) => (
-              <span key={index} className="tag">
-                {answer}
-                <button onClick={() => removeAnswer("comment", index)}>✖</button>
-              </span>
-            ))}
-          </div>
-        </>
-      )}
+        {/* Comment Answers */}
+        {(selectedType === "Reply to Comment" || selectedType === "Comment + DM") && (
+          <>
+            <label>Answer List- Comment</label>
+            <div className="tag-list">
+              {commentAnswers.map((answer, index) => (
+                <span key={index} className="tag">
+                  {answer}
+                  <button onClick={() => removeAnswer("comment", index)}>✖</button>
+                </span>
+              ))}
+            </div>
+          </>
+        )}
 
-      {/* DM Answers */}
-      {(selectedType === "Send DM" || selectedType === "Comment + DM") && (
-        <>
-          <label>Answer List DM</label>
-          <div className="input-group">
-            <textarea
-              className="input"
-              
-              placeholder="Create new and then enter"
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault(); 
-                  addAnswer("dm", e.currentTarget.value);
-                  e.currentTarget.value = "";
-                }
-              }}
-            />
-          </div>
-          <div className="tag-list">
-            {dmAnswers.map((answer, index) => (
-              <span key={index} className="tag">
-                {answer}
-                <button onClick={() => removeAnswer("dm", index)}>✖</button>
-              </span>
-            ))}
-          </div>
-        </>
-      )}
+        {/* DM Answers */}
+        {(selectedType === "Send DM" || selectedType === "Comment + DM") && (
+          <>
+            <label>Answer List DM</label>
+            <div className="tag-list">
+              {dmAnswers.map((answer, index) => (
+                <span key={index} className="tag">
+                  {answer}
+                  <button onClick={() => removeAnswer("dm", index)}>✖</button>
+                </span>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Submit and Cancel */}
