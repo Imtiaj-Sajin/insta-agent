@@ -5,8 +5,13 @@ const HeaderUI: React.FC = () => {
   const [paletteIndex, setPaletteIndex] = useState(0);
 
   const togglePalette = () => {
-    // Define the two palettes
-    const palettes = [
+    // Define the two palettes with explicit types
+    type Palette = Record<
+      "--navbar-active-bg" | "--light-orange" | "--button-soft-color" | "--button-soft-border-color",
+      string
+    >;
+
+    const palettes: Palette[] = [
       {
         "--navbar-active-bg": "#ED4B00",
         "--light-orange": "#ec4b00de",
@@ -28,7 +33,9 @@ const HeaderUI: React.FC = () => {
     // Update the CSS variables
     const root = document.documentElement;
     const selectedPalette = palettes[newIndex];
-    Object.keys(selectedPalette).forEach((key) => {
+
+    // Cast the keys to keyof Palette
+    (Object.keys(selectedPalette) as (keyof Palette)[]).forEach((key) => {
       root.style.setProperty(key, selectedPalette[key]);
     });
   };

@@ -180,7 +180,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
           try {
             setNewMessage(''); 
             setAttachments([]); 
-            const response = await sendVideo({pageId, recipientId, accessToken, file: attachment });
+            const response = await sendVideo(pageId as string, recipientId, accessToken, attachment );
             console.log('Response videop:', response);
             const updatedMessages = [...messages];
             const tempMessageIndex = updatedMessages.findIndex(
@@ -286,7 +286,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
                   ) : attachment.video_data ? (
                     <video controls src={attachment.video_data?.url} style={{ width: "100%", borderRadius: "8px" }} />
                   ) : (
-                    <ImageModal imageUrl={attachment.image_data?.url} />
+                    <ImageModal imageUrl={attachment.image_data?.url || ""} />
                   )}
                 </div>
               ))}

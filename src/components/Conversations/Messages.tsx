@@ -13,7 +13,7 @@ const Messages = () => {
   const [selectedFilter, setSelectedFilter] = useState("All");
   // const [showRightDiv, setShowRightDiv] = useState(false);
   const [pageAccessToken, setPageAccessToken] = useState<string>();
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(false);
   const [currentView, setCurrentView] = useState("conversation"); // "conversation", "inbox", or "profile"
   // const username = process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME;
   const [loading, setLoading] = useState<boolean>(true); // Track loading state
@@ -99,10 +99,11 @@ const exchangeToken = async (code: string) => {
       setIsMobile(window.innerWidth <= 768);
       if (!isMobile) setCurrentView("conversation"); // Reset view on desktop
     };
-
+    handleResize(); 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [isMobile]);
+
 
   const filteredConversations = conversations.filter((conversation) => {
     if (selectedFilter === "All") return true;
