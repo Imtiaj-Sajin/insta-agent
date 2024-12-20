@@ -1,4 +1,3 @@
-import {WebhookPayload, ParsedPayload} from "../types/interfaces"
 export function isLink(message: string) {
     const urlRegex = /https?:\/\/[^\s]+/; // Regex to detect HTTP/HTTPS URLs
     return urlRegex.test(message); // Returns true if a link is found
@@ -28,7 +27,7 @@ export function determineFileType(file: File | undefined): string {
     return 'unknown';
   }
 
-export function parseWebhookPayload(payload: WebhookPayload): ParsedPayload {
+export function parseWebhookPayload(payload: any) {
       console.log("hello")
       if (payload.object === 'instagram' && payload.entry) {
         console.log("hello payload")

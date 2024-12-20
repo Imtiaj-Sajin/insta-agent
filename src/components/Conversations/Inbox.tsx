@@ -129,7 +129,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
       const incomingMessage = parseWebhookPayload(JSON.parse(data));
   
       if (!incomingMessage.is_echo) {//&& incomingMessage.type!=="message_read") {      
-        const senderId  = incomingMessage.from.id; // Use senderId as the cache key
+        const senderId  = incomingMessage?.from?.id; // Use senderId as the cache key
         queryClient.setQueryData(['messages', pageAccessToken, senderId], (oldMessages?: Message[]) => {
           return oldMessages ? [incomingMessage, ...oldMessages] : [incomingMessage];
         });
@@ -204,7 +204,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
             });
           }
            
-          } catch (error) {
+          } catch (error: any) {
             console.error('Failed to send video:', error.message);
           }
         })();
@@ -243,12 +243,13 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
 
 
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter') {
-      return handleSendMessage();
+      event.preventDefault(); 
+      handleSendMessage();
     }
   };
-
+  
   return selectedConversation ? (
     <span className="inbox-container"  style={{ padding: 0}}>
       <div ref={containerRef} className="inbox-messages" style={{ display: "flex", flexDirection: "column-reverse", padding: "10px", gap: "10px"}}>
@@ -285,7 +286,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
                   ) : attachment.video_data ? (
                     <video controls src={attachment.video_data?.url} style={{ width: "100%", borderRadius: "8px" }} />
                   ) : (
-                    <ImageModal imageUrl={attachment.image_data?.url} alt="attachment" style={{ width: "100%", borderRadius: "8px" }} />
+                    <ImageModal imageUrl={attachment.image_data?.url} />
                   )}
                 </div>
               ))}
