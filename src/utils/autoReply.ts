@@ -19,7 +19,7 @@ export default function WebhookHandler() {
           const response = await replyToComment(parsedData.commentId);
           console.log("Reply response:", response);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error processing webhook:", error.message);
       }
     });
@@ -33,7 +33,7 @@ export default function WebhookHandler() {
 }
 
 // Helper: Parse webhook payload
-function parseWebhookPayload(payload) {
+function parseWebhookPayload(payload: any) {
   try {
     const entry = payload.entry?.[0];
     const changes = entry?.changes?.[0];
@@ -45,14 +45,14 @@ function parseWebhookPayload(payload) {
       text: changes?.value?.text,
       username: changes?.value?.from?.username,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error parsing webhook payload:", error.message);
     return {};
   }
 }
 
 // Helper: Reply to the comment
-async function replyToComment(commentId) {
+async function replyToComment(commentId: string) {
   const PAGE_ACCESS_TOKEN = (await cookies()).get("pageAccessToken")?.value;
   if (!PAGE_ACCESS_TOKEN) {
     console.error("Access token is missing from cookies");
@@ -80,7 +80,7 @@ async function replyToComment(commentId) {
     }
 
     return data; // Reply ID if successful
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error replying to comment:", error.message);
     throw error;
   }
