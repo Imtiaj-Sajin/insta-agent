@@ -7,6 +7,7 @@ import { GoKebabHorizontal } from 'react-icons/go';
 import {IoIosArrowBack} from 'react-icons/io'
 import { formatLastMessageTime } from '@/utils/functions';
 import { Conversation } from '@/types/interfaces';
+import Image from 'next/image';
 
 const Messages = () => {
   const [selectedConversation, setSelectedConversation] = useState<Conversation>();
@@ -161,7 +162,8 @@ const exchangeToken = async (code: string) => {
                 }}
               >
                 {/* Profile Picture */}
-                <img
+                
+                {/* <img
                   src={conv.participant_details?.profile_pic}
                   alt={conv.name}
                   style={{
@@ -171,8 +173,19 @@ const exchangeToken = async (code: string) => {
                     objectFit: "cover",
                     marginRight: "10px",
                   }}
+                /> */}
+                <Image
+                  src={conv.participant_details?.profile_pic||"xd"}
+                  alt={conv.name}
+                  width={50}
+                  height={50}
+                  style={{
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    marginRight: "10px",
+                  }}
                 />
-                
+                                
                 {/* Conversation Details */}
                 <span style={{ flex: 1, marginLeft: "10px" }}>
                   <h2 style={{ margin: "0 0 5px", fontSize: "1rem", fontWeight: "600" }}>{conv.name}</h2>
@@ -258,7 +271,7 @@ const exchangeToken = async (code: string) => {
           <IoIosArrowBack />
         </button>      
         <span>
-          <img
+          {/* <img
             src={selectedConversation? selectedConversation.participant_details?.profile_pic : "https://imtiaj-sajin.github.io/images/image1.JPG"}
             alt="Profile"
             style={{
@@ -268,7 +281,19 @@ const exchangeToken = async (code: string) => {
               cursor: "pointer",
               margin: "8px",
             }}
-          />
+          /> */}
+
+          <Image
+                  src={selectedConversation? selectedConversation.participant_details?.profile_pic || "": ""}
+                  alt="Profile"
+                  width={50}
+                  height={50}
+                  style={{
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    marginRight: "10px",
+                  }}
+                />
         </span> 
         <span style={{ display: "flex", flexDirection:"column", justifyContent: "space-between"}}><span>{selectedConversation?.name}</span> <span style={{color:"rgb(200,200,200)", fontSize: "14px"}}>{"Active 1h ago"}</span> </span> 
         

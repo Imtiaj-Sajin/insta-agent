@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Image from "next/image";
 interface ImageModalProps {
   imageUrl: string;
 }
@@ -11,12 +12,28 @@ const ImageModal: React.FC<ImageModalProps>  = ({ imageUrl }) => {
   return (
     <div>
       {/* Thumbnail with lazy loading */}
-      <img
+      {/* <img
         src={imageUrl}
         alt="Preview"
         loading="lazy"
         onClick={openModal}
         style={{
+          cursor: "pointer",
+          maxWidth: "200px",
+          borderRadius: "10px",
+        }}
+      /> */}
+      <Image
+        src={imageUrl||"null"}
+        alt="Preview"
+        width={500}
+        height={500}
+        onClick={openModal}
+        placeholder="blur"
+        blurDataURL="data:image/jpeg..."
+        style={{
+          width: 'auto',
+          height: 'auto',      
           cursor: "pointer",
           maxWidth: "200px",
           borderRadius: "10px",
@@ -41,7 +58,7 @@ const ImageModal: React.FC<ImageModalProps>  = ({ imageUrl }) => {
           onClick={closeModal}
         >
           {/* High-Resolution Image in Modal */}
-          <img
+          {/* <img
             src={imageUrl}
             alt="Full Preview"
             style={{
@@ -51,7 +68,25 @@ const ImageModal: React.FC<ImageModalProps>  = ({ imageUrl }) => {
               boxShadow: "0px 0px 0px rgba(255, 255, 255, 0.5)",
             }}
             onClick={(e) => e.stopPropagation()}
+          /> */}
+
+          <Image
+            src={imageUrl||"null"}
+            alt="Full Preview"
+            layout="intrinsic"
+            width={500}
+            height={500}
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: 'auto',
+              height: 'auto',      
+              maxWidth: "90%",
+              maxHeight: "90%",
+              borderRadius: "10px",
+              boxShadow: "0px 0px 0px rgba(255, 255, 255, 0.5)",
+            }}
           />
+
           {/* Close Button */}
           <button
             onClick={closeModal}
