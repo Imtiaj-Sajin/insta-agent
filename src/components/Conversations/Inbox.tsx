@@ -133,7 +133,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
         queryClient.setQueryData(['messages', pageAccessToken, senderId], (oldMessages?: Message[]) => {
           return oldMessages ? [incomingMessage, ...oldMessages] : [incomingMessage];
         });
-     }
+      }
     });
   
     return () => {
@@ -186,24 +186,22 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
             const tempMessageIndex = updatedMessages.findIndex(
               (msg) => msg.id === newMessageToAdd.id
             );
-          if (tempMessageIndex > -1) {
-            console.log("am i ever coming here???  ")
-            updatedMessages[tempMessageIndex] = {
-              ...updatedMessages[tempMessageIndex],
-              message: 'Video sent successfully', // Or update as needed
-              attachments: [
-                {
-                  type: 'video',
-                  video_data: { url: response?.video_url, width: 640, height: 360 }, // Example URL and size
-                },
-              ],
-            };
-
-            queryClient.setQueryData(['messages', pageAccessToken, recipientId], (oldMessages?: Message[]) => {
-              return oldMessages ? [updatedMessages, ...oldMessages] : [updatedMessages];
-            });
-          }
-           
+            if (tempMessageIndex > -1) {
+              console.log("am i ever coming here???  ")
+              updatedMessages[tempMessageIndex] = {
+                ...updatedMessages[tempMessageIndex],
+                message: 'Video sent successfully', // Or update as needed
+                attachments: [
+                  {
+                    type: 'video',
+                    video_data: { url: response?.video_url, width: 640, height: 360 }, // Example URL and size
+                  },
+                ],
+              };
+              queryClient.setQueryData(['messages', pageAccessToken, recipientId], (oldMessages?: Message[]) => {
+                return oldMessages ? [updatedMessages, ...oldMessages] : [updatedMessages];
+              });
+            }
           } catch (error: any) {
             console.error('Failed to send video:', error.message);
           }
