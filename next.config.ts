@@ -15,6 +15,16 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    serverActions:{
+      allowedOrigins: [
+        "http://localhost:3000",
+        "https://nkf448kn-3000.asse.devtunnels.ms", // Trust the dev tunnel
+      ],
+      
+    } 
+    //serverActionsStrictOrigin: false, // Loosen strict origin checks in development
+  },
 };
 
 export default nextConfig;

@@ -43,13 +43,12 @@ export async function login(prevState: any, formData: FormData) {
 
   const { email, password } = result.data;
 
-  // Find user by email and password
   const user = testUsers.find(
     (u) => u.email === email && u.password === password
   );
 
   if (user) {
-    await createSession(user.id);
+    await createSession(user.id, user.type);
     console.log("creating sesiion")
 
     return {
