@@ -175,7 +175,7 @@ const exchangeToken = async (code: string) => {
                   }}
                 /> */}
                 <Image
-                  src={conv.participant_details?.profile_pic||"xd"}
+                  src={conv.participant_details?.profile_pic||"https://images.ctfassets.net/23aumh6u8s0i/6pjUKboBuFLvCKkE3esaFA/5f2101d6d2add5c615db5e98a553fc44/nextjs.jpeg"}
                   alt={conv.name}
                   width={50}
                   height={50}
