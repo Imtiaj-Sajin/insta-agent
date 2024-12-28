@@ -12,8 +12,11 @@ import Agent from "./admin/Agents";
 import Notification from "./admin/Notification";
 import Insights from "@/components/Insights/Insights";
 import HeaderUI from "@/utils/header";
+import "react-icons";
 import { FaRobot, FaBell, FaUser, FaComments, FaCog } from "react-icons/fa";
 import { ImStatsBars2 } from "react-icons/im";
+import { logout } from "../login/actions";
+import { FiPower } from "react-icons/fi";
 
 const queryClient = new QueryClient();
 
@@ -133,7 +136,12 @@ function Navbar({ onSelect }: NavbarProps) {
       <button onClick={() => onSelect("settings")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>
         <FaCog />
         <span>Settings</span>
+
       </button>
+      <span>
+        <FiPower/>
+      <button onClick={() => logout()}>Logout</button>
+    </span>
     </nav>
   );
 }
