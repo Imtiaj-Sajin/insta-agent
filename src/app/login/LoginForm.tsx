@@ -1,12 +1,21 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import { login } from "./actions";
+import { useRouter } from "next/navigation";
 
 export function LoginForm() {
   const [state, loginAction] = useActionState(login, undefined);
+  const router = useRouter(); 
+  useEffect(()=>{
 
+    if (state?.success) {
+      
+      router.push(state.redirectTo);  // Perform client-side navigation
+    }
+
+  });
   return (
     <form action={loginAction} className="flex max-w-[300px] flex-col gap-2">
       <div className="flex flex-col gap-2">
