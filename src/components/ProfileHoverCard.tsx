@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { logout } from "../app/login/actions";
+// import { logout } from "../app/login/actions";
 
 import React, { useState, useEffect } from "react";
 
@@ -82,7 +82,7 @@ const ProfileHoverCard = ({ user }:any) => {
             </div>
           </div>
           <button
-            onClick={logout} // Call logout function when clicking the button
+            // onClick={logout} // Call logout function when clicking the button
             style={{
               backgroundColor: "red",
               color: "white",
