@@ -1,4 +1,9 @@
-  /* Reset some default browser styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Reset some default browser styles */
   *,
   *::before,
   *::after {

@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Quicksand:wght@400;600&display=swap');
+
+.container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.left {
+  flex: 1;
+  font-family: 'Poppins', sans-serif; /* Clean and modern */
+
+  background-color: #f8f9fa; /* Light grey background */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem 8%;
+}
+
+.logo {
+  position: absolute;
+  top: 5%;
+  left: 8%;
+  transform: translateY(-50%);
+  /* background: rgb(255, 61, 2);
+  color: white;
+  border: none;
+  border-radius: 50%; */
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.left h1 {
+  
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #212529;
+  margin-bottom: .5rem;
+  margin-top: 1rem;
+}
+
+
+.right {
+  flex: 1;
+  width: 50% !important;
+  background-color: #ffffff; /* White background */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
+    gap: 2rem;
+    padding: 15%;
+}
+
+  
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .option:hover {
+    transform: translateY(-3px);
+  }
+  
+  .icon img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .option h3 {
+    font-family: 'Poppins', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .option p {
+    color: #6c757d;
+  }
+  
+  .left p, .option p {
+    font-family: 'Quicksand', sans-serif; /* Approachable and soft */
+    color: #6c757d;
+    padding: 0px;
+    margin-top: .5rem;
+    font-size: 0.9rem;
+
+  }
