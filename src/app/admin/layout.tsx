@@ -15,7 +15,6 @@ import HeaderUI from "@/utils/header";
 import "react-icons";
 import { FaRobot, FaBell, FaUser, FaComments, FaCog } from "react-icons/fa";
 import { ImStatsBars2 } from "react-icons/im";
-import { logout } from "../login/actions";
 import { FiPower } from "react-icons/fi";
 
 const queryClient = new QueryClient();
@@ -140,7 +139,7 @@ function Navbar({ onSelect }: NavbarProps) {
       </button>
       <span>
         <FiPower/>
-      <button onClick={() => logout()}>Logout</button>
+      <button >Logout</button>
     </span>
     </nav>
   );

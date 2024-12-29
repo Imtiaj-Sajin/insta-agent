@@ -1,8 +1,16 @@
+import ProfileHoverCard from "@/components/ProfileHoverCard";
 import React, { useState } from "react";
+
 import { FaBell } from "react-icons/fa";
 
 const HeaderUI: React.FC = () => {
   const [paletteIndex, setPaletteIndex] = useState(0);
+
+  const user = {
+    name: "John Doe",
+    role: "Admin",
+    profilePicUrl: "https://fakeimg.pl/300/", // Replace with actual URL or session data
+  };
 
   const togglePalette = () => {
     // Define the two palettes with explicit types
@@ -123,17 +131,8 @@ const HeaderUI: React.FC = () => {
       </div>
 
       {/* Profile Icon */}
-      <div>
-        <img
-          src="https://imtiaj-sajin.github.io/images/image1.JPG"
-          alt="Profile"
-          style={{
-            width: "30px",
-            height: "30px",
-            borderRadius: "50%",
-            cursor: "pointer",
-          }}
-        />
+<div style={{ position: "relative" }}>
+        <ProfileHoverCard user={user} />
       </div>
     </span>
   );
