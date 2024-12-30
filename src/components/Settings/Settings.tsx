@@ -5,6 +5,7 @@ import { MdOutlineEditNotifications } from "react-icons/md";
 import { AiFillInstagram } from "react-icons/ai";
 
 import "./Settings.css"; // Import the CSS file
+import { signOut } from "next-auth/react";
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -110,6 +111,9 @@ const Settings = () => {
             </div>
             <button onClick={handleLogin} className="save-button">
               Re-authenticate
+            </button>
+            <button className="bg-white rounded-full border border-gray-200 text-gray-800 px-4 py-2 flex items-center space-x-2 hover:bg-gray-200">
+              <span onClick={() => signOut()}>Logout</span>
             </button>
           </div>
         );
