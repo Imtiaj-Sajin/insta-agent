@@ -103,7 +103,7 @@
 .mButton {
   position: absolute;
   top: 5%;
-  right: 1%;
+  right: 2%;
   
   width: 150px;
   height: 40px;
@@ -113,7 +113,7 @@
   gap: 10px;
   background-color: var(--navbar-active-bg);
   border-radius: 30px;
-  color: rgb(19, 19, 19);
+ color: rgb(19, 19, 19);
   font-weight: 600;
   border: none;
   /* position: relative; */
@@ -152,7 +152,7 @@
 .privacy{
   position: absolute;
   bottom: 5%;
-  right: 1%;
+  right: 2%;
   font-family: 'Quicksand', sans-serif; /* Approachable and soft */
   color: #6c757d;
   cursor: pointer;
