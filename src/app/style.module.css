@@ -82,6 +82,7 @@
   font-size: 1.2rem;
   font-weight: 600;
     margin-bottom: 0.5rem;
+    margin-top: 1rem;
   }
   
   .option p {
@@ -96,3 +97,80 @@
     font-size: 0.9rem;
 
   }
+
+  /* ---- */
+  /* From Uiverse.io by vinodjangid07 */ 
+.mButton {
+  position: absolute;
+  top: 5%;
+  right: 1%;
+  
+  width: 150px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  background-color: var(--navbar-active-bg);
+  border-radius: 30px;
+  color: rgb(19, 19, 19);
+  font-weight: 600;
+  border: none;
+  /* position: relative; */
+  cursor: pointer;
+  transition-duration: .2s;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.116);
+  padding-left: 8px;
+  transition-duration: .5s;
+}
+
+.svgIcon {
+  height: 25px;
+  transition-duration: 1.5s;
+}
+
+.bell path {
+  fill: rgb(19, 19, 19);
+}
+
+.mButton:hover {
+  background-color: rgb(192, 255, 20);
+  transition-duration: .5s;
+}
+
+.mButton:active {
+  transform: scale(0.97);
+  transition-duration: .2s;
+}
+
+.mButton:hover .svgIcon {
+  transform: rotate(250deg);
+  transition-duration: 1.5s;
+}
+
+/* ---------------------Privacy Policy------------- */
+.privacy{
+  position: absolute;
+  bottom: 5%;
+  right: 1%;
+  font-family: 'Quicksand', sans-serif; /* Approachable and soft */
+  color: #6c757d;
+  cursor: pointer;
+  transition-duration: .5s;
+
+  
+}
+.privacy:hover {
+  /* border-bottom: 1px solid #6c757d; */
+
+  transition-duration: .5s;
+}
+
+
+/* --------------------mobile--------------- */
+@media only screen and (max-width: 768px) {
+  .left{
+    display: none;
+
+  }
+}
