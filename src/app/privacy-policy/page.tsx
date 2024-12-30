@@ -1,9 +1,9 @@
 // File: ./src/app/privacy-policy/page.tsx
-"use client";
-import React, { useEffect, useState } from 'react';
+// "use client";
+// import React, { useEffect, useState } from 'react';
 import styles from './PrivacyPolicy.module.css';
 import Head from 'next/head';
-import './../style.module.css';
+// import './../style.module.css';
 
 
 
@@ -24,11 +24,11 @@ const PrivacyPolicy = () => {
   };
 
   // State to manage the current year to prevent hydration mismatch
-  const [year, setYear] = useState<number>(new Date().getFullYear());
-
-  useEffect(() => {
-    setYear(new Date().getFullYear());
-  }, []);
+  // const [year, setYear] = useState<number>(new Date().getFullYear());
+  const year =2024;
+  // useEffect(() => {
+  //   setYear(new Date().getFullYear());
+  // }, []);
 
   return (
     <div className={styles.container} style={theme as React.CSSProperties}>
