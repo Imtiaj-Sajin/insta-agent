@@ -1,3 +1,4 @@
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 // import { logout } from "../app/login/actions";
 
@@ -82,6 +83,14 @@ const ProfileHoverCard = ({ user }:any) => {
             </div>
           </div>
           <button
+                // <button className="bg-white rounded-full border border-gray-200 text-gray-800 px-4 py-2 flex items-center space-x-2 hover:bg-gray-200">
+                //   <img
+                //     className="h-8 w-8 rounded-full"
+                //     src="https://xsgames.co/randomusers/avatar.php?g=male"
+                //     alt="User profile"
+                //   />{/* </button> */}
+                 onClick={() => signOut()}
+                
             // onClick={logout} // Call logout function when clicking the button
             style={{
               backgroundColor: "red",

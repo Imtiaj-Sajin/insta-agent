@@ -16,6 +16,7 @@ import "react-icons";
 import { FaRobot, FaBell, FaUser, FaComments, FaCog } from "react-icons/fa";
 import { ImStatsBars2 } from "react-icons/im";
 import { FiPower } from "react-icons/fi";
+import { loginIsRequiredServer } from "@/lib/auth";
 
 const queryClient = new QueryClient();
 
@@ -31,11 +32,11 @@ const geistMono = localFont({
 });
 
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) {  //await loginIsRequiredServer();
   return (
     <QueryClientProvider client={queryClient}>
     <html lang="en">
@@ -57,6 +58,8 @@ function NavbarLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+
   const [selectedContent, setSelectedContent] = useState("home");
   const [isMobile, setIsMobile] = useState(false);
   // const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -135,14 +138,24 @@ function Navbar({ onSelect }: NavbarProps) {
       <button onClick={() => onSelect("settings")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>
         <FaCog />
         <span>Settings</span>
-
       </button>
-      <span>
-        <FiPower/>
-      <button >Logout</button>
-    </span>
+
     </nav>
   );
 }
+// "use client"
+// import Tweet from "@/components/tweet";
+// //import TwitterNavbar from "@/components/twitterNavbar";
+// import prisma from "@/lib/prisma";
 
+// export default function Layout({ children }: { children: any }) {
+//   return (
+//     <main className="flex w-full justify-center items-center">
+//       {/* <TwitterNavbar /> */}
+//       <div className="flex flex-col w-full justify-center items-center">
+//         {children}
+//       </div>
+//     </main>
+//   );
+// }
 
