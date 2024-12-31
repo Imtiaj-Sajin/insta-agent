@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           return res.status(500).json({ success: false, error: "Failed to fetch tokens." });
         }
 
-g        res.status(200).json({ success: true, tokens: results });
+        res.status(200).json({ success: true, tokens: results });
       });
     } catch (error) {
       console.error("Unexpected error fetching tokens:", error);
