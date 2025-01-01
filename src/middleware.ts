@@ -14,6 +14,10 @@ export async function middleware(req:any) {
 
   const userType = token.type; // Assuming token contains 'type'
 
+  if (userType == 'guest') {
+    return NextResponse.redirect(new URL('/signup', req.url));
+  }
+
   // Authorization logic
   if (url.startsWith('/admin/dashboard') && userType !== 'admin') {
     return NextResponse.redirect(new URL('/moderator/dashboard', req.url));

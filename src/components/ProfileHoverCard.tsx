@@ -4,15 +4,41 @@ import { useRouter } from "next/navigation";
 
 import React, { useState, useEffect } from "react";
 
-const ProfileHoverCard = ({ user }:any) => {
+const ProfileHoverCard = () => {
   const [isCardVisible, setIsCardVisible] = useState(false); // State to toggle card visibility
   const [cardPosition, setCardPosition] = useState<"top" | "bottom">("bottom"); // State to control card's position
   const [cardAlignment, setCardAlignment] = useState<"left" | "right">("left"); // State to control card alignment
-
+  const [token, setToken] = useState<any>(null);
   const toggleCardVisibility = () => {
     setIsCardVisible((prev) => !prev); // Toggle visibility on click
     setCardPosition("bottom"); // Set default position (you can add logic to alternate)
   };
+  useEffect(() => {
+  const fetchToken = async () => {
+    try {
+      const response = await fetch("/api/header", {
+        method: "GET",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Token Data:", data);
+        setToken(data.token);
+      } else {
+        console.error("Failed to fetch token, status:", response.status);
+      }
+    } catch (error) {
+      console.error("Error fetching token:", error);
+    }
+  };
+
+  fetchToken();
+}, []);
+
+const user = {
+  name: token?.name || "John Doe",
+  role: token?.type || "User",
+  profilePicUrl: token?.picture || "https://fakeimg.pl/300/",
+};
 
   useEffect(() => {
     if (isCardVisible) {
@@ -78,8 +104,8 @@ const ProfileHoverCard = ({ user }:any) => {
               }}
             />
             <div>
-              <p style={{ fontWeight: "bold" }}>{user.id}</p>
-              <p style={{ fontSize: "12px", color: "#777" }}>{user.userType}</p>
+              <p style={{ fontWeight: "bold" }}>{user.name}</p>
+              <p style={{ fontSize: "12px", color: "#777" }}>{user.role}</p>
             </div>
           </div>
           <button

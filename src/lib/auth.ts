@@ -55,12 +55,36 @@ export const authConfig: NextAuthOptions = {
   ],
   //callbacks added, remove next 7 line safely, deletion will affect midlleware.ts
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.type = user.type; // Add type to token
-      }
+    // async jwt({ token, user }) {
+    //   if (user) {
+    //     token.type = user.type; // Add type to token
+    //   }
+    //   return token;
+    // },
+    async jwt({ token, account, user }) {
+      if (account?.provider === "google") {
+        // Get the email from the Google profile
+        const email = token.email||"";
+
+        // Check if the email exists in the admin table
+        const adminUser = await prisma.admin.findFirst({ where: { email } });
+        if (adminUser) {
+          token.type = "admin";
+        } else {
+          // Check if the email exists in the user table
+          const dbUser = await prisma.user.findFirst({ where: { email } });
+          token.type = dbUser ? "moderator" : "guest";
+        }
+      }else{
+          if (user) {
+            token.type = user.type; 
+          }
+          return token;
+        }
+
       return token;
     },
+
   }
 };
 
