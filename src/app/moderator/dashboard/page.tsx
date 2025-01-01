@@ -1,4 +1,8 @@
-const ModeratorDashboard: React.FC = () => {
+import { loginIsRequiredServer } from "@/lib/auth";
+
+const ModeratorDashboard: React.FC = async () => {
+      await loginIsRequiredServer();
+  
     return '';
   };
   

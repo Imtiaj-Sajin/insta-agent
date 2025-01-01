@@ -32,8 +32,17 @@ export const authConfig: NextAuthOptions = {
         //We are going to use a simple === operator
         //In production DB, passwords should be encrypted using something like bcrypt...
         if (dbUser && dbUser.password === credentials.password) {
-          const { password, createdAt, id, ...dbUserWithoutPassword } = dbUser;
-          return dbUserWithoutPassword as User;
+          const { password, createdAt,id, ...dbUserWithoutPassword } = dbUser;
+          return { ...dbUserWithoutPassword, type: "moderator" } as User;
+        }
+        // Check in the admin table
+        const adminUser = await prisma.admin.findFirst({
+          where: { email: credentials.email },
+        });
+
+        if (adminUser && adminUser.password === credentials.password) {
+          const { password, id, ...adminUserWithoutPassword } = adminUser;
+          return { ...adminUserWithoutPassword, type: "admin" } as User;
         }
 
         return null;
@@ -44,10 +53,20 @@ export const authConfig: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
+  //callbacks added, remove next 7 line safely, deletion will affect midlleware.ts
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.type = user.type; // Add type to token
+      }
+      return token;
+    },
+  }
 };
 
 export async function loginIsRequiredServer() {
   const session = await getServerSession(authConfig);
+  
   if (!session) return redirect("/");
 }
 
