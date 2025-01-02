@@ -18,12 +18,23 @@ const CreateAutomation = () => {
 
   // Fetch Instagram posts
   const fetchPosts = async () => {
-    const data = postss;
-    const formattedPosts = data.data.map((post: { id: string; caption?: string }) => ({
-      id: post.id,
-      caption: post.caption || "No caption available",
-    }));
-    setPosts(formattedPosts);
+    try {
+      const response = await fetch("/api/fetch-posts");
+      const result = await response.json();
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+      const formattedPosts = result.data.media?.data.map((post: { id: string; caption?: string }) => ({
+        id: post.id,
+        caption: post.caption || "No caption available",
+      })) || [];
+  
+      setPosts(formattedPosts);
+    } catch (error: any) {
+      console.error("Error fetching posts:", error.message);
+      alert("Failed to fetch posts: " + error.message);
+    }
   };
 
   useEffect(() => {
