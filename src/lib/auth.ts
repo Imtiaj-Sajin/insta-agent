@@ -94,10 +94,10 @@ export async function loginIsRequiredServer() {
   if (!session) return redirect("/");
 }
 
-export function loginIsRequiredClient() {
-  if (typeof window !== "undefined") {
-    const session = useSession();
-    // const router = useRouter();//error occurs 1
-    // if (!session) router.push("/");//error occurs 1
-  }
-}
+// export function loginIsRequiredClient() { //probaly this function is causing hydration error
+//   if (typeof window !== "undefined") {
+//     const session = useSession();
+//     // const router = useRouter();//error occurs 1
+//     // if (!session) router.push("/");//error occurs 1
+//   }
+// }
