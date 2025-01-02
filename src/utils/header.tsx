@@ -1,12 +1,37 @@
 import ProfileHoverCard from "@/components/ProfileHoverCard";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { FaBell } from "react-icons/fa";
 
 const HeaderUI: React.FC = () => {
   const [paletteIndex, setPaletteIndex] = useState(0);
+  const [token, setToken] = useState<any>(null);
+  const [name, setName] = useState<any>(null);
+  const [role, setRole] = useState<any>(null);
+  const [picture, setPicture] = useState<any>(null);
+  useEffect(() => {
+  const fetchToken = async () => {
+      try {
+        const response = await fetch("/api/header", {
+          method: "GET",
+        });
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Token Data:", data);
+          setToken(data.token);
+
+        } else {
+          console.error("Failed to fetch token, status:", response.status);
+        }
+      } catch (error) {
+        console.error("Error fetching token:", error);
+      }
+    };
+
+    fetchToken();
+  }, []);
+
   const togglePalette = () => {
-    // Define the two palettes with explicit types
     type Palette = Record<
       "--navbar-active-bg" | "--light-orange" | "--button-soft-color" | "--button-soft-border-color",
       string
@@ -124,8 +149,20 @@ const HeaderUI: React.FC = () => {
       </div>
 
       {/* Profile Icon */}
-<div style={{ position: "relative" }}>
-        <ProfileHoverCard/>
+      <div style={{
+          position: "relative",
+          marginRight: "20px",
+          borderRadius: "50%",
+          border: "1px solid rgba(0, 0, 0, 0.2)",
+          backgroundColor: "rgba(250, 250, 250, 0.05)",
+          width: "30px",
+          height: "30px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+        }}>
+        <ProfileHoverCard token={token}/>
       </div>
     </span>
   );

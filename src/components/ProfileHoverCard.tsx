@@ -1,44 +1,16 @@
 import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
-// import { logout } from "../app/login/actions";
-
 import React, { useState, useEffect } from "react";
 
-const ProfileHoverCard = () => {
+const ProfileHoverCard = ({ token }: { token: any }) => {
   const [isCardVisible, setIsCardVisible] = useState(false); // State to toggle card visibility
   const [cardPosition, setCardPosition] = useState<"top" | "bottom">("bottom"); // State to control card's position
   const [cardAlignment, setCardAlignment] = useState<"left" | "right">("left"); // State to control card alignment
-  const [token, setToken] = useState<any>(null);
+
   const toggleCardVisibility = () => {
     setIsCardVisible((prev) => !prev); // Toggle visibility on click
     setCardPosition("bottom"); // Set default position (you can add logic to alternate)
   };
-  useEffect(() => {
-  const fetchToken = async () => {
-    try {
-      const response = await fetch("/api/header", {
-        method: "GET",
-      });
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Token Data:", data);
-        setToken(data.token);
-      } else {
-        console.error("Failed to fetch token, status:", response.status);
-      }
-    } catch (error) {
-      console.error("Error fetching token:", error);
-    }
-  };
 
-  fetchToken();
-}, []);
-
-const user = {
-  name: token?.name || "John Doe",
-  role: token?.type || "User",
-  profilePicUrl: token?.picture || "https://fakeimg.pl/300/",
-};
 
   useEffect(() => {
     if (isCardVisible) {
@@ -54,14 +26,14 @@ const user = {
         setCardAlignment("left");
       }
     }
-  }, [isCardVisible]);
-
+  }, [isCardVisible, token]);
+  if (!token) return null;
   return (
     <div style={{ position: "relative", display: "inline-block" }}>
       {/* Profile Pic with onClick to toggle the hover card */}
       <div onClick={toggleCardVisibility}>
         <img
-          src={user.profilePicUrl?user.profilePicUrl:"https://fakeimg.pl/300/"}
+          src={token.picture?token.picture:"https://fakeimg.pl/300/"}
           alt="Profile"
           style={{
             width: "30px",
@@ -95,7 +67,7 @@ const user = {
         >
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <img
-              src={user.profilePicUrl?user.profilePicUrl:"https://fakeimg.pl/300/"}
+              src={token.picture?token.picture:"https://fakeimg.pl/300/"}
               alt="Profile"
               style={{
                 width: "40px",
@@ -104,20 +76,12 @@ const user = {
               }}
             />
             <div>
-              <p style={{ fontWeight: "bold" }}>{user.name}</p>
-              <p style={{ fontSize: "12px", color: "#777" }}>{user.role}</p>
+              <p style={{ fontWeight: "bold" }}>{token.name}</p>
+              <p style={{ fontSize: "12px", color: "#777" }}>{token.type}</p>
             </div>
           </div>
           <button
-                // <button className="bg-white rounded-full border border-gray-200 text-gray-800 px-4 py-2 flex items-center space-x-2 hover:bg-gray-200">
-                //   <img
-                //     className="h-8 w-8 rounded-full"
-                //     src="https://xsgames.co/randomusers/avatar.php?g=male"
-                //     alt="User profile"
-                //   />{/* </button> */}
-                 onClick={() => signOut()}
-                
-            // onClick={logout} // Call logout function when clicking the button
+            onClick={() => signOut()}
             style={{
               backgroundColor: "red",
               color: "white",
