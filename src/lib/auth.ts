@@ -1,11 +1,9 @@
 import { NextAuthOptions, User, getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-// import { redirect, useRouter } from "next/navigation";
-
+// import { redirect, useRouter } from "next/navigation";//error occurs 1
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import GithubProvider from "next-auth/providers/github";
 
 import prisma from "./prisma";
 
@@ -34,8 +32,17 @@ export const authConfig: NextAuthOptions = {
         //We are going to use a simple === operator
         //In production DB, passwords should be encrypted using something like bcrypt...
         if (dbUser && dbUser.password === credentials.password) {
-          const { password, createdAt, id, ...dbUserWithoutPassword } = dbUser;
-          return dbUserWithoutPassword as User;
+          const { password, createdAt,id, ...dbUserWithoutPassword } = dbUser;
+          return { ...dbUserWithoutPassword, type: "moderator" } as User;
+        }
+        // Check in the admin table
+        const adminUser = await prisma.admin.findFirst({
+          where: { email: credentials.email },
+        });
+
+        if (adminUser && adminUser.password === credentials.password) {
+          const { password, id, ...adminUserWithoutPassword } = adminUser;
+          return { ...adminUserWithoutPassword, type: "admin" } as User;
         }
 
         return null;
@@ -45,22 +52,52 @@ export const authConfig: NextAuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
-    GithubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID as string,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-    }),
   ],
+  //callbacks added, remove next 7 line safely, deletion will affect midlleware.ts
+  callbacks: {
+    // async jwt({ token, user }) {
+    //   if (user) {
+    //     token.type = user.type; // Add type to token
+    //   }
+    //   return token;
+    // },
+    async jwt({ token, account, user }) {
+      if (account?.provider === "google") {
+        // Get the email from the Google profile
+        const email = token.email||"";
+
+        // Check if the email exists in the admin table
+        const adminUser = await prisma.admin.findFirst({ where: { email } });
+        if (adminUser) {
+          token.type = "admin";
+        } else {
+          // Check if the email exists in the user table
+          const dbUser = await prisma.user.findFirst({ where: { email } });
+          token.type = dbUser ? "moderator" : "guest";
+        }
+      }else{
+          if (user) {
+            token.type = user.type; 
+          }
+          return token;
+        }
+
+      return token;
+    },
+
+  }
 };
 
 export async function loginIsRequiredServer() {
   const session = await getServerSession(authConfig);
+  
   if (!session) return redirect("/");
 }
 
 export function loginIsRequiredClient() {
   if (typeof window !== "undefined") {
     const session = useSession();
-    // const router = useRouter();
-    // if (!session) router.push("/");
+    // const router = useRouter();//error occurs 1
+    // if (!session) router.push("/");//error occurs 1
   }
 }

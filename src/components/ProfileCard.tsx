@@ -1,6 +1,7 @@
 import React from 'react';
 
 const ProfileCard = ({ profileData }: { profileData: any }) => {
+  
   return (
     <span
       className="profile-card"

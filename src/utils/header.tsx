@@ -5,13 +5,6 @@ import { FaBell } from "react-icons/fa";
 
 const HeaderUI: React.FC = () => {
   const [paletteIndex, setPaletteIndex] = useState(0);
-
-  const user = {
-    name: "John Doe",
-    role: "Admin",
-    profilePicUrl: "https://fakeimg.pl/300/", // Replace with actual URL or session data
-  };
-
   const togglePalette = () => {
     // Define the two palettes with explicit types
     type Palette = Record<
@@ -132,7 +125,7 @@ const HeaderUI: React.FC = () => {
 
       {/* Profile Icon */}
 <div style={{ position: "relative" }}>
-        <ProfileHoverCard user={user} />
+        <ProfileHoverCard/>
       </div>
     </span>
   );
