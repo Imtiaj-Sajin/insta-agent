@@ -62,7 +62,6 @@ function NavbarLayout({
 
   const [selectedContent, setSelectedContent] = useState("home");
   const [isMobile, setIsMobile] = useState(false);
-  // const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
     const handleResize = () => {

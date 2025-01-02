@@ -6,9 +6,6 @@ import { FaBell } from "react-icons/fa";
 const HeaderUI: React.FC = () => {
   const [paletteIndex, setPaletteIndex] = useState(0);
   const [token, setToken] = useState<any>(null);
-  const [name, setName] = useState<any>(null);
-  const [role, setRole] = useState<any>(null);
-  const [picture, setPicture] = useState<any>(null);
   useEffect(() => {
   const fetchToken = async () => {
       try {

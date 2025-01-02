@@ -12,6 +12,9 @@ import { FaBell, FaUser, FaComments } from "react-icons/fa";
 import { ImStatsBars2 } from "react-icons/im";
 import "../../styles/index.css";
 import '../admin/admin/Automation.css';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import HeaderUI from "@/utils/header";
+const queryClient = new QueryClient();
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
@@ -30,13 +33,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <QueryClientProvider client={queryClient}>
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <NavbarLayout>{children}</NavbarLayout>
       </body>
     </html>
+    </QueryClientProvider>
   );
 }
+
+type NavbarProps = {
+  onSelect: (section: string) => void;
+};
 
 function NavbarLayout({
   children,
@@ -44,6 +53,7 @@ function NavbarLayout({
   children: React.ReactNode;
 }) {
   const [selectedContent, setSelectedContent] = useState("home");
+  const [isMobile, setIsMobile] = useState(false);
 
   const renderContent = () => {
     switch (selectedContent) {
@@ -55,12 +65,10 @@ function NavbarLayout({
         return <Settings/>;
       case "insights":  
         return <Insights/>;
-      case "chats":  
-        return <Chats/>;
       case "profile":  
         return <Profile/>;
       default:
-        return <div>Home Content</div>;
+        return <Messages/>;
     }
   };
 
@@ -68,18 +76,13 @@ function NavbarLayout({
     <div className="app">
       <Navbar onSelect={setSelectedContent} />
       <main className="content" >
+      {!isMobile?<HeaderUI/>:<></>}
         {renderContent()}
         {children}
       </main>
     </div>
   );
 }
-
-
-
-type NavbarProps = {
-  onSelect: (section: string) => void;
-};
 
 function Navbar({ onSelect }: NavbarProps) {
   return (
