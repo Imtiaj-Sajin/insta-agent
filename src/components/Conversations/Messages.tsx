@@ -9,7 +9,7 @@ import { formatLastMessageTime, parseWebhookPayload } from '@/utils/functions';
 import { Conversation, Message } from '@/types/interfaces';
 import Image from 'next/image';
 import { io } from 'socket.io-client';
-const socket = io('https://nkf448kn-3001.asse.devtunnels.ms/'); 
+const socket = io('https://j7f0x0n5-3001.asse.devtunnels.ms/'); 
 
 const Messages = () => {
   const [selectedConversation, setSelectedConversation] = useState<Conversation>();

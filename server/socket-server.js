@@ -1,7 +1,7 @@
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
-
+const backgroundTaskAutoDMCM = require( 'F:/Dev/Web/insta-agent/src/utils/autoDmComment.js');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -35,4 +35,10 @@ app.post("/api/sendMessage", (req, res) => {
 
 server.listen(3001, () => {
   console.log("Socket.IO server running on http://localhost:3001");
+
+  (async () => {
+    console.log('Starting the background task...');
+    await backgroundTaskAutoDMCM();
+  })().catch((error) => console.error('Background task error:', error));
 });
+

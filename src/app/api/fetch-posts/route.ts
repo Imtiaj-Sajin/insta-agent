@@ -1,8 +1,8 @@
 import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
-    // const ACCESS_TOKEN = req.cookies.get('pageAccessToken')?.value
-    const ACCESS_TOKEN = "EAAnZByvmjelsBO0K1CN86Vi3ZCpP4beK5XZAjaAuUlvEg4vSvZAGOKJYChHToqnYaEtF3dNjSC37n0HhH860FmBj586ZCDqfIVdhoMgk5WGtgRNOELbYW8HQ4lwZAxtTH5ROi0K3dlgk53RfEuOlInVQmJMkGX7LoxvAPktwwT1tVFgS5kidnkvO2PSOQvRZCSNycmODYfhJd4ZCNczcONZAOLJoZD"
+    // const ACCESS_TOKEN = req.cookies.get('longLivedToken')?.value
+    const ACCESS_TOKEN = "EAAnZByvmjelsBOzt7hEeiw53adbnJJmchgbQYB4mfgzvWYLXmEHEiZC2sSpNG5XBcTiQx9yttWBUyJpuLAlyK2gtYub76X1IZAoot9ZAJUX47SF0vwHC3aAO99bLQSd4THXotYgERcpCcuUgnowgcvySuZADzkasUmGVf9RjBx48v3Jx7p6sFTaWMMwVGzkEZD"
     console.log("ACCESS_TOKEN yyyyyy ==> ", ACCESS_TOKEN);
     // const ACCESS_TOKEN = req.nextUrl.searchParams.get("accessToken")
 

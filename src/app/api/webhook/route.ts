@@ -70,24 +70,25 @@ export async function POST(req: NextRequest) {
   
       const parsedData = parseWebhookPayload(payload);
       console.log("Parsed webhook payload:", parsedData);
-
-      await fetch('/api/storeWebhookComment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          comment_id: parsedData.commentId,
-          page_id: parsedData.pageId,
-          media_id: parsedData.postId,
-          media_type: parsedData.mediaType,
-          user_id: parsedData.senderId,
-          username: parsedData.username,
-          parent_comment_id: parsedData.parentCommentId,
-          comment_text: parsedData.text,
-          event_time: parsedData.eventTime,
-        }),
-      });
+      if(parsedData.mediaType==='FEED' && parsedData.username!=process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME){
+          await fetch('https://j7f0x0n5-3000.asse.devtunnels.ms/api/storeWebhookComment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            comment_id: parsedData.commentId,
+            page_id: parsedData.pageId,
+            media_id: parsedData.postId,
+            media_type: parsedData.mediaType,
+            user_id: parsedData.senderId,
+            username: parsedData.username,
+            parent_comment_id: parsedData.parentCommentId,
+            comment_text: parsedData.text,
+            event_time: parsedData.eventTime,
+          }),
+        });
+      }
 
       if(parsedData.username!=process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME&&parsedData.commentId&&parsedData.postId==='18006198179676267')
       {
@@ -109,7 +110,7 @@ export async function POST(req: NextRequest) {
       }
       else if(parsedData.commentId){return new Response('Comment replied', { status: 200 });}
       else{
-        await fetch("https://nkf448kn-3001.asse.devtunnels.ms/api/sendMessage", {
+        await fetch("https://j7f0x0n5-3001.asse.devtunnels.ms/api/sendMessage", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: body }),
@@ -177,7 +178,7 @@ function parseWebhookPayload(payload: any) {
   }
 }
 
-async function replyToComment(commentId:any, replyMessage:string) {
+export async function replyToComment(commentId:any, replyMessage:string) {
   try {
     if (!PAGE_ACCESS_TOKEN) {
       console.error("Access token is missing from cookies");
@@ -209,7 +210,7 @@ async function replyToComment(commentId:any, replyMessage:string) {
   }
 }
 
-async function sendTextMessage(recipientId: string, newMessage: string) {
+export async function sendTextMessage(recipientId: string, newMessage: string) {
   if (!PAGE_ACCESS_TOKEN) {
     console.error('Access token is missing.');
     return;
