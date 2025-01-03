@@ -1,7 +1,6 @@
 import React from 'react';
 
 const ProfileCard = ({ profileData }: { profileData: any }) => {
-  
   return (
     <span
       className="profile-card"
@@ -14,6 +13,9 @@ const ProfileCard = ({ profileData }: { profileData: any }) => {
         width: '350px',
         maxWidth: '100%',
         margin: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center', // Center elements horizontally
       }}
     >
       {/* Profile Picture */}
@@ -27,7 +29,7 @@ const ProfileCard = ({ profileData }: { profileData: any }) => {
         }}
       >
         <img
-          src={profileData?.profile_pic||"https://fakeimg.pl/300"}
+          src={profileData?.profile_pic || 'https://fakeimg.pl/300'}
           alt={`${profileData.name}'s Profile`}
           style={{
             borderRadius: '50%',
@@ -80,7 +82,7 @@ const ProfileCard = ({ profileData }: { profileData: any }) => {
         <button
           className="primary"
           style={{
-            backgroundColor:"#ED4B00",
+            backgroundColor: '#ED4B00',
             border: '1px solid #fff',
             borderRadius: '10px',
             color: '#fff',
@@ -103,7 +105,7 @@ const ProfileCard = ({ profileData }: { profileData: any }) => {
             padding: '10px 25px',
           }}
         >
-          {profileData.is_business_follow_user? 'Following' : 'Follow'}
+          {profileData.is_business_follow_user ? 'Following' : 'Follow'}
         </button>
       </div>
     </span>
