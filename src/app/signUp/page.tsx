@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import styles from "./signIn.module.css";
-import "../../styles/index.css";
+// import "../../styles/index.css";
 
 const SignUpPage = () => {
   return (
