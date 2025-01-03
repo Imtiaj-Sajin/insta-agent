@@ -35,7 +35,8 @@ const SignUpPage = () => {
           </svg>
         </div> */}
 
-        <img src="/rb_4898.png" style={{ width: "60%" }} />
+        <img src="/Social tree-cuate.png" style={{ width: "60%" }} />
+        
         <h1>Create Your Account</h1>
         <p>Join us today to simplify and optimize your social automation!</p>
       </div>

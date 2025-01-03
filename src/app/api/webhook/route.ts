@@ -70,6 +70,25 @@ export async function POST(req: NextRequest) {
   
       const parsedData = parseWebhookPayload(payload);
       console.log("Parsed webhook payload:", parsedData);
+
+      await fetch('/api/storeWebhookComment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          comment_id: parsedData.commentId,
+          page_id: parsedData.pageId,
+          media_id: parsedData.postId,
+          media_type: parsedData.mediaType,
+          user_id: parsedData.senderId,
+          username: parsedData.username,
+          parent_comment_id: parsedData.parentCommentId,
+          comment_text: parsedData.text,
+          event_time: parsedData.eventTime,
+        }),
+      });
+
       if(parsedData.username!=process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME&&parsedData.commentId&&parsedData.postId==='18006198179676267')
       {
         const text=parsedData.text;
@@ -117,18 +136,40 @@ function verifySignature(payload: string, signature: string): boolean {
     return expectedSignature === signature;
   }
   
-function parseWebhookPayload(payload:any) {
+// function parseWebhookPayload(payload:any) {
+//   try {
+//     const entry = payload.entry?.[0];
+//     const changes = entry?.changes?.[0];
+//     const commentId = changes?.value?.id;
+
+//     return {
+//       commentId,
+//       postId: changes?.value?.media?.id,
+//       text: changes?.value?.text,
+//       username: changes?.value?.from?.username,
+//       senderId: changes?.value?.from?.id,
+//     };
+//   } catch (error: any) {
+//     console.error("Error parsing webhook payload:", error.message);
+//     return {};
+//   }
+// }
+function parseWebhookPayload(payload: any) {
   try {
     const entry = payload.entry?.[0];
     const changes = entry?.changes?.[0];
-    const commentId = changes?.value?.id;
+    const value = changes?.value;
 
     return {
-      commentId,
-      postId: changes?.value?.media?.id,
-      text: changes?.value?.text,
-      username: changes?.value?.from?.username,
-      senderId: changes?.value?.from?.id,
+      commentId: value?.id,
+      postId: value?.media?.id,
+      text: value?.text,
+      username: value?.from?.username,
+      senderId: value?.from?.id,
+      parentCommentId: value?.parent_id,
+      mediaType: value?.media?.media_product_type,
+      pageId: entry?.id,
+      eventTime: payload?.entry?.[0]?.time,
     };
   } catch (error: any) {
     console.error("Error parsing webhook payload:", error.message);
