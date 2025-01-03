@@ -83,6 +83,7 @@ export function parseWebhookPayload(payload: any) {
                 to: { data: { username: "string", id: event.recipient.id } },
                 message: event.message.text,
                 created_time: new Date(event.timestamp),
+                timestamp: event.timestamp,
                 id: event.message.mid,
                 is_echo:  event.message.is_echo,
               };

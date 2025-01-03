@@ -118,6 +118,7 @@ function verifySignature(payload: string, signature: string): boolean {
   }
   
 function parseWebhookPayload(payload:any) {
+console.log("payload ==> ", payload);
   try {
     const entry = payload.entry?.[0];
     const changes = entry?.changes?.[0];
