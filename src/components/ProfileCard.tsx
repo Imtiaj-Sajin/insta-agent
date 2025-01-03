@@ -27,7 +27,7 @@ const ProfileCard = ({ profileData }: { profileData: any }) => {
         }}
       >
         <img
-          src={profileData.profile_pic}
+          src={profileData?.profile_pic||"https://fakeimg.pl/300"}
           alt={`${profileData.name}'s Profile`}
           style={{
             borderRadius: '50%',

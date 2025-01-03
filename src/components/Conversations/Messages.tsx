@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Inbox from './Inbox';
 import './conversations.css';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import ProfileCard from '../ProfileCard';
 import { GoKebabHorizontal } from 'react-icons/go';
 import {IoIosArrowBack} from 'react-icons/io'
-import { formatLastMessageTime } from '@/utils/functions';
-import { Conversation } from '@/types/interfaces';
+import { formatLastMessageTime, parseWebhookPayload } from '@/utils/functions';
+import { Conversation, Message } from '@/types/interfaces';
 import Image from 'next/image';
+import { io } from 'socket.io-client';
+const socket = io('https://nkf448kn-3001.asse.devtunnels.ms/'); 
 
 const Messages = () => {
   const [selectedConversation, setSelectedConversation] = useState<Conversation>();
@@ -18,7 +20,8 @@ const Messages = () => {
   const [currentView, setCurrentView] = useState("conversation"); // "conversation", "inbox", or "profile"
   // const username = process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME;
   const [loading, setLoading] = useState<boolean>(true); // Track loading state
-  
+  const queryClient = useQueryClient();
+
   
   const toggleView = (view: any) => setCurrentView(view);
 
@@ -26,8 +29,10 @@ const Messages = () => {
     const response = await fetch(`/api/conversations?accessToken=${accessToken}`, {
       method: 'GET',
     });
+    console.log("response ==> ", response);
 
     if (!response.ok) {
+      console.log("response ok ==> ", response);
       throw new Error('Failed to fetch conversation list');
     }
     setLoading(false);
@@ -105,6 +110,44 @@ const exchangeToken = async (code: string) => {
     return () => window.removeEventListener("resize", handleResize);
   }, [isMobile]);
 
+  useEffect(() => {
+    socket.on("receiveMessage", (data) => {
+      console.log("Received data:", data);
+      const incomingMessage = parseWebhookPayload(JSON.parse(data));
+      console.log("incomingMessage ==> ", incomingMessage);
+  
+      if (!incomingMessage.is_echo) {
+        const senderId = incomingMessage?.from?.id;
+  
+        // // Update messages cache for the conversation
+        queryClient.setQueryData(['conversations', pageAccessToken, senderId], (oldMessages?: Message[]) => {
+          return oldMessages ? [incomingMessage, ...oldMessages] : [incomingMessage];
+        });
+  
+        // Update conversation list cache
+        queryClient.setQueryData(['conversationList', pageAccessToken], (oldConversations?: Conversation[]) => {
+          if (!oldConversations) return [];
+  
+          return oldConversations.map((conversation) => {
+            if (conversation.participant_details?.id === senderId) {
+return {
+                ...conversation,
+                last_message: incomingMessage.message, // Update last message
+                updated_time: incomingMessage.timestamp
+                
+              };
+            }
+            return conversation;
+          });
+        });
+      }
+    });
+  
+    return () => {
+      socket.off("receiveMessage");
+    };
+  }, [queryClient, pageAccessToken]);
+  
 
   const filteredConversations = conversations.filter((conversation) => {
     if (selectedFilter === "All") return true;
@@ -190,7 +233,7 @@ const exchangeToken = async (code: string) => {
                 <span style={{ flex: 1, marginLeft: "10px" }}>
                   <h2 style={{ margin: "0 0 5px", fontSize: "1rem", fontWeight: "600" }}>{conv.name}</h2>
                   <p style={{ margin: 0, fontSize: "0.9rem", color: "gray", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                    {conv.last_message}
+                    {conv.last_message.slice(0,25).concat("...")}
                   </p>
                 </span>
 
