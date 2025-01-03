@@ -168,13 +168,14 @@ return {
       {(!isMobile || currentView === "conversation") && (
         <span
           style={{
+            background:"#fff",
             flex: isMobile ? "1" : "2",
             display: isMobile && currentView !== "conversation" ? "none" : "block",
             overflowY: "auto",
             borderRight: isMobile ? "none" : "1px solid #ddd",
           }}
         >
-          <h1>Conversations</h1>
+          {/* <h1>Conversations</h1> */}
           {!filteredConversations?
           Array.from({ length: 5 }).map((_, index) => (
             <div
@@ -194,16 +195,19 @@ return {
             <span
                 key={conv.id}
                 onClick={() => handleSelectConversation(conv)}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = conv.isUnread ? '#f9f9f9' : 'white')}
                 style={{
-                  cursor: "pointer",  
+                  cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
                   padding: "10px 10px",
                   borderBottom: "1px solid #ddd",
-                  //backgroundColor: conv.isUnread ? "#f9f9f9" : "white", // Highlight unread messages
+                  backgroundColor: conv.isUnread ? "#f9f9f9" : "white", // Highlight unread messages
                 }}
               >
+
                 {/* Profile Picture */}
                 
                 {/* <img

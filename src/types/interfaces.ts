@@ -33,6 +33,7 @@ export interface Conversation {
     last_message: string;
     participant_details: ParticipantDetails | null;
     status: string;
+    isUnread?: boolean;
 }
 
 

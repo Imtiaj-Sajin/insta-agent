@@ -145,20 +145,19 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
   const handleSendMessage = async () => {
     if (newMessage || attachments.length) {
       const recipientId =
-        messages[0].from.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME
-          ? messages[0].to.data[0].id
-          : messages[0].from.id;
+        messages[0]?.from?.username === process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME
+          ? messages[0]?.to?.data[0]?.id
+          : messages[0]?.from?.id;
   
       const attachment = attachments[0]?.file;
       const fileType = determineFileType(attachment);
-      console.log("Detected file type:", fileType);
-
+  
       const newMessageToAdd = {
-        from: { username: process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME, id: pageId }, // Use appropriate user info
+        from: { username: process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME, id: pageId },
         to: { data: [{ id: recipientId }] },
         message: newMessage,
         created_time: new Date().toISOString(),
-        id: Math.random().toString(36).substr(2, 9), // Temporary ID, replaced later if needed
+        id: Math.random().toString(36).substr(2, 9),
         attachments: [],
       };
   
@@ -166,64 +165,35 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
         return oldMessages ? [newMessageToAdd, ...oldMessages] : [newMessageToAdd];
       });
   
-      if (fileType === "video") {
-        if(newMessage){
-          const message=newMessage;
-          setNewMessage(''); 
-          await sendText(recipientId, pageAccessToken, message);
-        }
-        console.log("Video type detected");
-        (async () => {
-          const pageId = process.env.NEXT_PUBLIC_FACEBOOK_PAGE_ID;
-          const accessToken = pageAccessToken;
+      setNewMessage(''); // Reset text input immediately
+      setAttachments([]); // Clear attachments regardless of type
   
-          try {
-            setNewMessage(''); 
-            setAttachments([]); 
-            const response = await sendVideo(pageId as string, recipientId, accessToken, attachment );
-            console.log('Response videop:', response);
-            const updatedMessages = [...messages];
-            const tempMessageIndex = updatedMessages.findIndex(
-              (msg) => msg.id === newMessageToAdd.id
-            );
-            if (tempMessageIndex > -1) {
-              console.log("am i ever coming here???  ")
-              updatedMessages[tempMessageIndex] = {
-                ...updatedMessages[tempMessageIndex],
-                message: 'Video sent successfully', // Or update as needed
-                attachments: [
-                  {
-                    type: 'video',
-                    video_data: { url: response?.video_url, width: 640, height: 360 }, // Example URL and size
-                  },
-                ],
-              };
-              queryClient.setQueryData(['messages', pageAccessToken, recipientId], (oldMessages?: Message[]) => {
-                return oldMessages ? [updatedMessages, ...oldMessages] : [updatedMessages];
-              });
-            }
-          } catch (error: any) {
-            console.error('Failed to send video:', error.message);
-          }
-        })();
-      } else if (fileType === "image") {
-        const attachmentUrl = await getImageUrl(attachment); // Upload image from file
-        if (attachmentUrl) {
-          if(newMessage){
-            const message=newMessage;
-            setNewMessage('');
-            await sendText(recipientId, pageAccessToken, message);
-          }
-          await sendImage(attachmentUrl, recipientId, pageAccessToken); // Send message with the uploaded image
-          setAttachments([]); 
+      if (fileType === 'video') {
+        try {
+          const response = await sendVideo(pageId as string, recipientId, pageAccessToken, attachment);
+          console.log('Video sent successfully:', response);
+        } catch (error) {
+          console.error('Error sending video:', error);
+        }
+      } else if (fileType === 'image') {
+        try {
+          const attachmentUrl = await getImageUrl(attachment);
+          await sendImage(attachmentUrl, recipientId, pageAccessToken);
+          console.log('Image sent successfully');
+        } catch (error) {
+          console.error('Error sending image:', error);
         }
       } else {
-        const message=newMessage;
-        setNewMessage(''); 
-        await sendText(recipientId, pageAccessToken, message); 
+        try {
+          await sendText(recipientId, pageAccessToken, newMessage);
+          console.log('Text message sent successfully');
+        } catch (error) {
+          console.error('Error sending text message:', error);
+        }
       }
     }
   };
+  
   
   const handleAttachmentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files ? Array.from(event.target.files) : [];
