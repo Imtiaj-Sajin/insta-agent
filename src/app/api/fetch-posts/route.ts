@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 export async function GET(req: NextRequest) {
     // const ACCESS_TOKEN = req.cookies.get('longLivedToken')?.value
     const ACCESS_TOKEN = "EAAnZByvmjelsBOzt7hEeiw53adbnJJmchgbQYB4mfgzvWYLXmEHEiZC2sSpNG5XBcTiQx9yttWBUyJpuLAlyK2gtYub76X1IZAoot9ZAJUX47SF0vwHC3aAO99bLQSd4THXotYgERcpCcuUgnowgcvySuZADzkasUmGVf9RjBx48v3Jx7p6sFTaWMMwVGzkEZD"
-    console.log("ACCESS_TOKEN yyyyyy ==> ", ACCESS_TOKEN);
+    console.log("ACCESS_TOKEN==> ", ACCESS_TOKEN);
     // const ACCESS_TOKEN = req.nextUrl.searchParams.get("accessToken")
 
   try {
