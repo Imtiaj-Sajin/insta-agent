@@ -228,7 +228,7 @@ const CreateAutomation = () => {
       </div>
 
       <div style={{ overflowY: "auto", maxHeight: "400px" }}>
-        {/* Keywords */}
+        {/* Keywords
         <label>Keywords</label>
         <div className="tag-list">
           {keywords.map((keyword, index) => (
@@ -237,9 +237,38 @@ const CreateAutomation = () => {
               <button onClick={() => removeKeyword(index)}>✖</button>
             </div>
           ))}
-        </div>
+        </div> */}
 
-        {/* Comment Answers */}
+
+
+        {/* Keywords */}
+      <label>Keywords</label>
+      <div className="input-group">
+        <textarea
+          className="input"
+          style={{height:"45px"}}
+          // type="text"
+          placeholder="Add keyword"
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+                  e.preventDefault(); 
+                  addKeyword(e.currentTarget.value);
+              e.currentTarget.value = "";
+            }
+          }}
+        />
+      </div>
+      <div className="tag-list">
+        {keywords.map((keyword, index) => (
+          <div key={index} className="tag">
+            {keyword}
+            <button onClick={() => removeKeyword(index)}>✖</button>
+          </div>
+        ))}
+      </div>
+
+
+        {/* Comment Answers
         {(selectedType === "Reply to Comment" || selectedType === "Comment + DM") && (
           <>
             <label>Answer List- Comment</label>
@@ -252,10 +281,39 @@ const CreateAutomation = () => {
               ))}
             </div>
           </>
-        )}
+        )} */}
+
+        {/* Comment Answers */}
+      {(selectedType === "Reply to Comment" || selectedType === "Comment + DM") && (
+        <>
+          <label>Answer List- Comment</label>
+          <div className="input-group">
+            <textarea
+              className="input"
+              
+              placeholder="type and then enter"
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault(); 
+                  addAnswer("comment", e.currentTarget.value);
+                  e.currentTarget.value = "";
+                }
+              }}
+            />
+          </div>
+          <div className="tag-list">
+            {commentAnswers.map((answer, index) => (
+              <span key={index} className="tag">
+                {answer}
+                <button onClick={() => removeAnswer("comment", index)}>✖</button>
+              </span>
+            ))}
+          </div>
+        </>
+      )}
 
         {/* DM Answers */}
-        {(selectedType === "Send DM" || selectedType === "Comment + DM") && (
+        {/* {(selectedType === "Send DM" || selectedType === "Comment + DM") && (
           <>
             <label>Answer List DM</label>
             <div className="tag-list">
@@ -268,6 +326,35 @@ const CreateAutomation = () => {
             </div>
           </>
         )}
+      </div> */}
+      {/* DM Answers */}
+      {(selectedType === "Send DM" || selectedType === "Comment + DM") && (
+        <>
+          <label>Answer List DM</label>
+          <div className="input-group">
+            <textarea
+              className="input"
+              
+              placeholder="Create new and then enter"
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault(); 
+                  addAnswer("dm", e.currentTarget.value);
+                  e.currentTarget.value = "";
+                }
+              }}
+            />
+          </div>
+          <div className="tag-list">
+            {dmAnswers.map((answer, index) => (
+              <span key={index} className="tag">
+                {answer}
+                <button onClick={() => removeAnswer("dm", index)}>✖</button>
+              </span>
+            ))}
+          </div>
+        </>
+      )}
       </div>
 
       {/* Submit and Cancel */}
