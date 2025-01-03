@@ -1,86 +1,162 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 import Link from "next/link";
 import styles from "./signIn.module.css";
-// import "../../styles/index.css";
-
+// import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 const SignUpPage = () => {
+  const [step, setStep] = useState(1); // 1: Email, 2: OTP, 3: Complete Signup
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    // redirect("/");
+    
+    e.preventDefault();
+    try {
+      
+      const response = await fetch("/api/signup/otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("OTP sent to your email!");
+        setStep(2);
+      } else {
+        alert(data.error || "Something went wrong");
+      }
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+      alert("Failed to send OTP");
+    }
+  };
+
+  const handleOtpSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("/api/signup/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp }),
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("OTP verified successfully!");
+        setStep(3);
+      } else {
+        alert(data.error || "Invalid OTP");
+      }
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+      alert("Failed to verify OTP");
+    }
+  };
+
+      // const router = useRouter(); 
+
+      const handleSignupSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (password !== confirmPassword) {
+          alert("Passwords do not match");
+          return;
+        }
+        try {
+          const response = await fetch("/api/signup/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password, name: "User" }),
+          });
+          const data = await response.json();
+      
+          if (response.ok) {
+            alert("Signup successful!");
+            // window.location.href = "https://nkf448kn-3000.asse.devtunnels.ms/"; 
+            window.location.href = process.env.NEXT_PUBLIC_BASE_URL || "/";
+            // redirect("/");
+          } else {
+            alert(data.error || "Something went wrong");
+          }
+        } catch (error) {
+          console.error("Error signing up:", error);
+          alert("Failed to sign up");
+        }
+      };
+      
+
+
   return (
     <div className={styles.container}>
-      {/* Left Section */}
       <div className={styles.left}>
-        {/* <div className={styles.logo}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="82"
-            height="60"
-            fill="none"
-            viewBox="0 0 82 40"
-          >
-            <path
-              fill="#FFD43D"
-              d="M73.365 19.71c0 2.904-2.241 5.31-5.27 5.31-3.03 0-5.228-2.406-5.228-5.31 0-2.905 2.199-5.312 5.228-5.312s5.27 2.407 5.27 5.311Z"
-            ></path>
-            <path
-              fill="#FF0C81"
-              d="M48.764 19.544c0 2.946-2.323 5.145-5.27 5.145-2.904 0-5.227-2.2-5.227-5.145 0-2.947 2.323-5.104 5.228-5.104 2.946 0 5.27 2.158 5.27 5.104Z"
-            ></path>
-            <path
-              fill="#11EEFC"
-              d="M20.074 25.02c3.029 0 5.27-2.406 5.27-5.31 0-2.905-2.241-5.312-5.27-5.312-3.03 0-5.228 2.407-5.228 5.311 0 2.905 2.199 5.312 5.228 5.312Z"
-            ></path>
-            <path
-              fill="#171A26"
-              d="M68.095 30.54c-6.307 0-11.12-4.897-11.12-10.872 0-5.934 4.855-10.83 11.12-10.83 6.349 0 11.162 4.938 11.162 10.83 0 5.975-4.855 10.871-11.162 10.871Zm0-5.52c3.03 0 5.27-2.406 5.27-5.31 0-2.905-2.24-5.312-5.27-5.312-3.029 0-5.228 2.407-5.228 5.311 0 2.905 2.199 5.312 5.228 5.312ZM43.08 40c-4.813 0-8.506-2.116-10.373-5.934l4.896-2.655c.913 1.784 2.614 3.195 5.394 3.195 3.486 0 5.85-2.448 5.85-6.473v-.374c-1.12 1.411-3.111 2.49-6.016 2.49-5.768 0-10.373-4.481-10.373-10.581 0-5.934 4.813-10.788 11.12-10.788 6.431 0 11.162 4.605 11.162 10.788v8.299C54.74 35.27 49.76 40 43.08 40Zm.415-15.311c2.946 0 5.27-2.2 5.27-5.145 0-2.947-2.324-5.104-5.27-5.104-2.905 0-5.228 2.158-5.228 5.104s2.323 5.145 5.228 5.145ZM20.074 30.54c-6.307 0-11.12-4.897-11.12-10.872 0-5.934 4.854-10.83 11.12-10.83 6.348 0 11.162 4.938 11.162 10.83 0 5.975-4.855 10.871-11.162 10.871Zm0-5.52c3.029 0 5.27-2.406 5.27-5.31 0-2.905-2.241-5.312-5.27-5.312-3.03 0-5.228 2.407-5.228 5.311 0 2.905 2.199 5.312 5.228 5.312ZM0 0h5.892v30H0V0ZM82 6.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"
-            ></path>
-          </svg>
-        </div> */}
-
         <img src="/Social tree-cuate.png" style={{ width: "60%" }} />
-        
         <h1>Create Your Account</h1>
         <p>Join us today to simplify and optimize your social automation!</p>
       </div>
 
-      {/* Right Section */}
       <div className={styles.right}>
-        <h1 className={styles.formTitle}>Sign Up</h1>
+        {step === 1 && (
+          <form className={styles.form} onSubmit={handleEmailSubmit}>
+            <h1 className={styles.formTitle}>Enter Your Email</h1>
+            <input
+              type="email"
+              placeholder="Email"
+              className={styles.input}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <button type="submit" className={styles.submitButton}>
+              Send OTP
+            </button>
+          </form>
+        )}
 
-        <form className={styles.form}>
-          <input
-            type="email"
-            placeholder="Email"
-            className={styles.input}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className={styles.input}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            className={styles.input}
-            required
-          />
-          <button type="submit" className={styles.submitButton}>
-            Sign Up
-          </button>
-        </form>
+        {step === 2 && (
+          <form className={styles.form} onSubmit={handleOtpSubmit}>
+            <h1 className={styles.formTitle}>Verify OTP</h1>
+            <input
+              type="text"
+              placeholder="Enter OTP"
+              className={styles.input}
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              required
+            />
+            <button type="submit" className={styles.submitButton}>
+              Verify OTP
+            </button>
+          </form>
+        )}
 
-        <div className={styles.divider}>
-          <span>OR</span>
-        </div>
-
-        <button className={styles.googleButton}>
-          <img
-            src="/google.png"
-            alt="Google Icon"
-            className={styles.googleIcon}
-          />
-          Continue with Google
-        </button>
+        {step === 3 && (
+          <form className={styles.form} onSubmit={handleSignupSubmit}>
+            <h1 className={styles.formTitle}>Complete Signup</h1>
+            <input
+              type="password"
+              placeholder="Password"
+              className={styles.input}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              className={styles.input}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+            <button type="submit" className={styles.submitButton}>
+              Sign Up
+            </button>
+          </form>
+        )}
 
         <p className={styles.footerText}>
           Already have an account?{" "}
