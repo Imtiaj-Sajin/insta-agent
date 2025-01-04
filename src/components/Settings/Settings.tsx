@@ -6,6 +6,7 @@ import { AiFillInstagram } from "react-icons/ai";
 
 import "./Settings.css"; // Import the CSS file
 import { signOut } from "next-auth/react";
+import AutomationSlider from "../Slider/Slider"; // Import your AutomationSlider component
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -51,33 +52,54 @@ const Settings = () => {
             <button className="save-button">Save Changes</button>
           </div>
         );
-      case "automation":
-        return (
-          <div>
-            <h2 className="section-title">Automation Settings</h2>
-            <div className="form-group">
-              <label>Default Automation Type:</label>
-              <select className="input">
-                <option>Reply to Comment</option>
-                <option>Send DM</option>
-                <option>Comment+DM</option>
-              </select>
+        case "automation":
+          return (
+            <div>
+              <h2 className="section-title">Automation Settings</h2>
+              <div className="form-group">
+                <label>Default Automation Type:</label>
+                <select className="input">
+                  <option>Reply to Comment</option>
+                  <option>Send DM</option>
+                  <option>Comment+DM</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Max Daily Automations:</label>
+                <input type="number" placeholder="Number of automations" className="input" />
+              </div>
+              <AutomationSlider /> {/* Slider for automation delay */}
+              <div className="form-group">
+                <label>Number of Cycles Before Rest:</label>
+                <input
+                  type="number"
+                  min={1}
+                  max={20}
+                  placeholder="Number of cycles"
+                  className="input"
+                />
+              </div>
+              <div className="form-group">
+                <label>Rest Time (No Tasks):</label>
+                <input
+                  type="number"
+                  min={1}
+                  max={60}
+                  placeholder="Rest time in minutes"
+                  className="input"
+                  style={{marginBottom:0.5}}
+                />
+                <small className="description">
+                  If there are no tasks for the specified cycles, the automation will rest for this duration (in minutes).
+                </small>
+              </div>
+              <button className="save-button" style={{marginTop:"1rem"}}>Save Changes</button>
             </div>
-            <div className="form-group">
-              <label>Max Daily Automations:</label>
-              <input type="number" placeholder="Number of automations" className="input" />
-            </div>
-            <div className="form-group">
-              <label>Message Delay:</label>
-              <input
-                type="number"
-                placeholder="Message Delay between automations"
-                className="input"
-              />
-            </div>
-            <button className="save-button">Save Changes</button>
-          </div>
-        );
+          );
+        
+
+
+
       case "notifications":
         return (
           <div>

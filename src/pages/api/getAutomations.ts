@@ -70,7 +70,7 @@ const getAutomations = async (req: NextApiRequest, res: NextApiResponse) => {
       // Transform results into the expected structure
       const automations = rows.reduce((acc: any[], row: any) => {
         let automation = acc.find((item) => item.auto_id === row.auto_id);
-
+      
         if (!automation) {
           automation = {
             auto_id: row.auto_id,
@@ -82,15 +82,15 @@ const getAutomations = async (req: NextApiRequest, res: NextApiResponse) => {
           };
           acc.push(automation);
         }
-
-        // Add comment and DM answers if they exist
-        if (row.comment_answer) {
+      
+        // Add unique comment and DM answers
+        if (row.comment_answer && !automation.comment_answers.includes(row.comment_answer)) {
           automation.comment_answers.push(row.comment_answer);
         }
-        if (row.dm_answer) {
+        if (row.dm_answer && !automation.dm_answers.includes(row.dm_answer)) {
           automation.dm_answers.push(row.dm_answer);
         }
-
+      
         return acc;
       }, []);
 

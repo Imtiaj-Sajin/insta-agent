@@ -98,7 +98,7 @@ const CreateAutomation = () => {
         if (index === 0) return;
   
         // Split the row by commas to extract columns
-        const columns = row.split(',');
+        const columns = row.split(',').map((col) => col.trim().replace(/^"|"$/g, '')); // Remove surrounding quotes
   
         // Push values into the respective arrays, trimming spaces
         if (columns[0]) newKeywords.push(columns[0].trim()); // First column -> Keywords

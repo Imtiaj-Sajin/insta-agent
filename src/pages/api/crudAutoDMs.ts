@@ -1,4 +1,103 @@
-import { pool } from "../../database/db";
+// import { pool } from "../../database/db";
+// import { NextApiRequest, NextApiResponse } from "next";
+
+// export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+//     if (req.method === "POST") {
+//         const { auto_id, answer, action, newAnswer } = req.body;
+
+//         if (!auto_id || !answer || !action) {
+//             return res.status(400).json({ error: "auto_id, answer, and action are required." });
+//         }
+
+//         try {
+//             const client = await pool.connect();
+
+//             try {
+//                 let responseMessage;
+
+//                 switch (action) {
+//                     case "add":
+//                         const addQuery = `
+//                             INSERT INTO rdm (answer, auto_id)
+//                             VALUES ($1, $2)
+//                             RETURNING *;
+//                         `;
+//                         const addResult = await client.query(addQuery, [answer, auto_id]);
+
+//                         responseMessage = {
+//                             message: "DM reply added successfully.",
+//                             dmReply: addResult.rows[0],
+//                         };
+//                         break;
+
+//                     case "modify":
+//                         if (!newAnswer) {
+//                             return res.status(400).json({ error: "newAnswer is required to modify a DM reply." });
+//                         }
+
+//                         const modifyQuery = `
+//                             UPDATE rdm
+//                             SET answer = $1
+//                             WHERE auto_id = $2 AND answer = $3
+//                             RETURNING *;
+//                         `;
+//                         const modifyResult = await client.query(modifyQuery, [newAnswer, auto_id, answer]);
+
+//                         if (modifyResult.rowCount === 0) {
+//                             return res.status(404).json({
+//                                 error: "DM reply not found for the provided auto_id and answer.",
+//                             });
+//                         }
+
+//                         responseMessage = {
+//                             message: "DM reply modified successfully.",
+//                             dmReply: modifyResult.rows[0],
+//                         };
+//                         break;
+
+//                     case "delete":
+//                         const deleteQuery = `
+//                             DELETE FROM rdm
+//                             WHERE auto_id = $1 AND answer = $2
+//                             RETURNING *;
+//                         `;
+//                         const deleteResult = await client.query(deleteQuery, [auto_id, answer]);
+
+//                         if (deleteResult.rowCount === 0) {
+//                             return res.status(404).json({
+//                                 error: "DM reply not found for the provided auto_id and answer.",
+//                             });
+//                         }
+
+//                         responseMessage = {
+//                             message: "DM reply deleted successfully.",
+//                             dmReply: deleteResult.rows[0],
+//                         };
+//                         break;
+
+//                     default:
+//                         return res.status(400).json({ error: "Invalid action. Use 'add', 'modify', or 'delete'." });
+//                 }
+
+//                 res.status(200).json(responseMessage);
+//             } catch (error) {
+//                 console.error("Error during CRUD operation:", error);
+//                 res.status(500).json({ error: "Failed to perform the operation." });
+//             } finally {
+//                 client.release();
+//             }
+//         } catch (error) {
+//             console.error("Database connection error:", error);
+//             res.status(500).json({ error: "Database connection failed." });
+//         }
+//     } else {
+//         res.setHeader("Allow", ["POST"]);
+//         res.status(405).end(`Method ${req.method} not allowed.`);
+//     }
+// }
+
+
+import { pool } from "../../database/dbc";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
@@ -10,7 +109,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         try {
-            const client = await pool.connect();
+            const connection = await pool.promise().getConnection();
 
             try {
                 let responseMessage;
@@ -19,14 +118,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     case "add":
                         const addQuery = `
                             INSERT INTO rdm (answer, auto_id)
-                            VALUES ($1, $2)
-                            RETURNING *;
+                            VALUES (?, ?)
                         `;
-                        const addResult = await client.query(addQuery, [answer, auto_id]);
+                        const [addResult] = await connection.query(addQuery, [answer, auto_id]);
 
                         responseMessage = {
                             message: "DM reply added successfully.",
-                            dmReply: addResult.rows[0],
+                            dmReply: { id: (addResult as any).insertId, answer, auto_id },
                         };
                         break;
 
@@ -37,13 +135,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                         const modifyQuery = `
                             UPDATE rdm
-                            SET answer = $1
-                            WHERE auto_id = $2 AND answer = $3
-                            RETURNING *;
+                            SET answer = ?
+                            WHERE auto_id = ? AND answer = ?
                         `;
-                        const modifyResult = await client.query(modifyQuery, [newAnswer, auto_id, answer]);
+                        const [modifyResult]: any = await connection.query(modifyQuery, [newAnswer, auto_id, answer]);
 
-                        if (modifyResult.rowCount === 0) {
+                        if (modifyResult.affectedRows === 0) {
                             return res.status(404).json({
                                 error: "DM reply not found for the provided auto_id and answer.",
                             });
@@ -51,19 +148,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                         responseMessage = {
                             message: "DM reply modified successfully.",
-                            dmReply: modifyResult.rows[0],
+                            dmReply: { auto_id, answer: newAnswer },
                         };
                         break;
 
                     case "delete":
                         const deleteQuery = `
                             DELETE FROM rdm
-                            WHERE auto_id = $1 AND answer = $2
-                            RETURNING *;
+                            WHERE auto_id = ? AND answer = ?
                         `;
-                        const deleteResult = await client.query(deleteQuery, [auto_id, answer]);
+                        const [deleteResult]: any = await connection.query(deleteQuery, [auto_id, answer]);
 
-                        if (deleteResult.rowCount === 0) {
+                        if (deleteResult.affectedRows === 0) {
                             return res.status(404).json({
                                 error: "DM reply not found for the provided auto_id and answer.",
                             });
@@ -71,7 +167,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                         responseMessage = {
                             message: "DM reply deleted successfully.",
-                            dmReply: deleteResult.rows[0],
                         };
                         break;
 
@@ -84,7 +179,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 console.error("Error during CRUD operation:", error);
                 res.status(500).json({ error: "Failed to perform the operation." });
             } finally {
-                client.release();
+                connection.release();
             }
         } catch (error) {
             console.error("Database connection error:", error);
