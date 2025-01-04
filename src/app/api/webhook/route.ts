@@ -88,27 +88,35 @@ export async function POST(req: NextRequest) {
             event_time: parsedData.eventTime,
           }),
         });
+        
+        await fetch("https://j7f0x0n5-3001.asse.devtunnels.ms/api/sendMessage", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: body }),
+        });        
+        return new Response('EVENT_RECEIVED', { status: 200 });
+
       }
 
-      if(parsedData.username!=process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME&&parsedData.commentId&&parsedData.postId==='18006198179676267')
-      {
-        const text=parsedData.text;
-        const containsKeyword = keywords.some((keyword) =>
-              text.toLowerCase().includes(keyword)
-            );
-        if(containsKeyword){
+      // if(parsedData.username!=process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME&&parsedData.commentId&&parsedData.postId==='18006198179676267')
+      // {
+      //   const text=parsedData.text;
+      //   const containsKeyword = keywords.some((keyword) =>
+      //         text.toLowerCase().includes(keyword)
+      //       );
+      //   if(containsKeyword){
 
-        const response = await replyToComment(parsedData.commentId, responses[randomInt(9)]);
-        console.log("Reply response:", response);
+      //   const response = await replyToComment(parsedData.commentId, responses[randomInt(9)]);
+      //   console.log("Reply response:", response);
 
-        const dmResponse = await sendTextMessage(parsedData.senderId, `Hi ${parsedData.username}, thanks for your comment!`);
-        console.log("DM response:", dmResponse);
+      //   const dmResponse = await sendTextMessage(parsedData.senderId, `Hi ${parsedData.username}, thanks for your comment!`);
+      //   console.log("DM response:", dmResponse);
 
-        return new Response('Comment replied', { status: 200 });
-        }
-        return new Response('Comment not replied', { status: 200 });
-      }
-      else if(parsedData.commentId){return new Response('Comment replied', { status: 200 });}
+      //   return new Response('Comment replied', { status: 200 });
+      //   }
+      //   return new Response('Comment not replied', { status: 200 });
+      // }
+      // else if(parsedData.commentId){return new Response('Comment replied', { status: 200 });}
       else{
         await fetch("https://j7f0x0n5-3001.asse.devtunnels.ms/api/sendMessage", {
           method: "POST",
@@ -155,7 +163,7 @@ function verifySignature(payload: string, signature: string): boolean {
 //     return {};
 //   }
 // }
-function parseWebhookPayload(payload: any) {
+export function parseWebhookPayload(payload: any) {
   try {
     const entry = payload.entry?.[0];
     const changes = entry?.changes?.[0];

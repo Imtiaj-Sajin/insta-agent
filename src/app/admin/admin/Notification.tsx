@@ -5,7 +5,10 @@ import { faComment, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import "../../../styles/index.css";
 import "../../../styles/globals.css";
 import "./Automation.css";
+import io from "socket.io-client";
+import { parseWebhookPayload } from "@/app/api/webhook/route";
 
+const socket = io('https://j7f0x0n5-3001.asse.devtunnels.ms/'); 
 interface NotificationData {
   noti_id: string;
   notification_type: string;
@@ -40,6 +43,47 @@ const Notification: FC = () => {
     };
 
     fetchNotifications();
+  }, []);
+
+
+  useEffect(() => {
+      // Request permission for notifications when the component mounts
+  const requestNotificationPermission = async () => {
+    if (window.Notification.permission === "default") {
+      await window.Notification.requestPermission();
+    }
+  };
+
+  requestNotificationPermission();
+    socket.on("receiveMessage", (data) => {
+        const parsedNotification = parseWebhookPayload(JSON.parse(data));
+  
+        if (parsedNotification&&parsedNotification.commentId) {
+          setNotifications((prevNotifications) => [
+            
+            {
+              noti_id:parsedNotification.commentId,
+              notification_type: "comment", // Example type
+              sender_id: parsedNotification.senderId,
+              sender_username: parsedNotification.username,
+              media_id: parsedNotification.postId,
+              text: parsedNotification.text,
+              created_at: new Date().toISOString(), // Use current timestamp
+            },
+            ...prevNotifications,
+          ]);
+          if (window.Notification.permission === "granted") {
+            new window.Notification("New Comment", {
+              body: `${parsedNotification.username}: ${parsedNotification.text}`,
+              icon: "public/logo.jpg", // Optional icon
+            });
+          }
+        }
+    });
+    // Cleanup socket listener on unmount
+    return () => {
+      socket.off("receiveMessage");
+    };
   }, []);
 
   const toggleDivs = (forceShowRightDiv?: boolean): void => {

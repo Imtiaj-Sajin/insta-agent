@@ -3,6 +3,7 @@ import "./Automation.css";
 import CreateAutomation from "./CreateAutomation";
 import AutomationDetails from "./automationDetails/AutomationDetails";
 
+
 interface AutomationData {
   auto_id: string;
   post_id: string;
@@ -35,6 +36,10 @@ const Automation: FC = () => {
     fetchAutomations();
   }, []);
 
+
+  
+
+    
   const showContent = (automation: AutomationData): void => {
     setSelectedContent(
       <AutomationDetails
