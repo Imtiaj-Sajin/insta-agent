@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DiGitBranch } from "react-icons/di";
 import { BsPersonFillGear } from "react-icons/bs";
 import { MdOutlineEditNotifications } from "react-icons/md";
@@ -10,6 +10,74 @@ import AutomationSlider from "../Slider/Slider"; // Import your AutomationSlider
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("profile");
+  const [settings, setSettings] = useState({
+      defaultAutomationType: "Reply to Comment",
+      maxDailyAutomations: "",
+      cyclesBeforeRest: "",
+      restTime: "",
+      min: "",
+      max: "",
+    });
+  
+    const [loading, setLoading] = useState(true);
+  
+    useEffect(() => {
+      const fetchSettings = async () => {
+        try {
+          const response = await fetch(`/api/automationsettings`);
+          if (response.ok) {
+            const data = await response.json();
+            setSettings({
+              defaultAutomationType: data.defaultAutomationType || "Reply to Comment",
+              maxDailyAutomations: data.dailyauto || "",
+              cyclesBeforeRest: data.cycle || "",
+              restTime: data.notaskrest || "",
+              min: data.min || "",
+              max: data.max || "",
+            });
+          } else {
+            console.error("Failed to fetch settings");
+          }
+        } catch (error) {
+          console.error("Error fetching automation settings:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchSettings();
+    },[]);
+  
+    const handleChange = (field:any, value:any) => {
+      setSettings((prev) => ({ ...prev, [field]: value }));
+    };
+  
+    const saveChanges = async () => {
+      try {
+        const response = await fetch(`/api/automationsettings`, {
+          method: "POST", // Use POST or PUT as appropriate
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            dailyauto: settings.maxDailyAutomations,
+            cycle: settings.cyclesBeforeRest,
+            notaskrest: settings.restTime,
+          }),
+        });
+  
+        if (response.ok) {
+          alert("Settings saved successfully!");
+        } else {
+          const errorData = await response.json();
+          console.error("Error saving automation settings:", errorData);
+          alert("Failed to save settings.");
+        }
+      } catch (error) {
+        console.error("Error saving automation settings:", error);
+        alert("Failed to save settings.");
+      }
+    }
 
   const handleLogin = () => {
     const appId = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID;
@@ -66,9 +134,14 @@ const Settings = () => {
               </div>
               <div className="form-group">
                 <label>Max Daily Automations:</label>
-                <input type="number" placeholder="Number of automations" className="input" />
-              </div>
-              <AutomationSlider /> {/* Slider for automation delay */}
+                <input
+                  type="number"
+                  placeholder="Number of automations"
+                  className="input"
+                  value={settings.maxDailyAutomations}
+                  onChange={(e) => handleChange("maxDailyAutomations", e.target.value)}
+                />              </div>
+              <AutomationSlider min={settings.min} max={settings.max}/> {/* Slider for automation delay */}
               <div className="form-group">
                 <label>Number of Cycles Before Rest:</label>
                 <input
@@ -77,6 +150,8 @@ const Settings = () => {
                   max={20}
                   placeholder="Number of cycles"
                   className="input"
+                  value={settings.cyclesBeforeRest}
+                  onChange={(e) => handleChange("cyclesBeforeRest", e.target.value)}
                 />
               </div>
               <div className="form-group">
@@ -87,19 +162,17 @@ const Settings = () => {
                   max={60}
                   placeholder="Rest time in minutes"
                   className="input"
-                  style={{marginBottom:0.5}}
+                  value={settings.restTime}
+                  onChange={(e) => handleChange("restTime", e.target.value)}
                 />
                 <small className="description">
                   If there are no tasks for the specified cycles, the automation will rest for this duration (in minutes).
                 </small>
               </div>
-              <button className="save-button" style={{marginTop:"1rem"}}>Save Changes</button>
+              <button className="save-button" style={{marginTop:"1rem"}} onClick={saveChanges}>Save Changes</button>
             </div>
           );
         
-
-
-
       case "notifications":
         return (
           <div>

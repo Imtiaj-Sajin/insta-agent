@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./Slider.css";
 
-const AutomationSlider = () => {
+const AutomationSlider = (min:any, max:any) => {
+
   const [delay, setDelay] = useState({ min: 0.5, max: 600 }); // Seconds
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>, type: "min" | "max") => {
@@ -76,7 +77,7 @@ const AutomationSlider = () => {
           />
         </div>
         <div>
-          <label>Max:</label>
+          <label>Maxc: {max?max:2}</label>
           <input
             type="text"
             value={formatTime(delay.max)}

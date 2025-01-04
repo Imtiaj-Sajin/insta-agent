@@ -53,7 +53,7 @@ export const authConfig: NextAuthOptions = {
           );
     
           if (isPasswordValid) {
-            const { password, id, ...adminUserWithoutPassword } = adminUser;
+            const { password, ...adminUserWithoutPassword } = adminUser;
             return { ...adminUserWithoutPassword, type: "admin" } as User; // Return admin without password
           }
         }
@@ -82,6 +82,7 @@ export const authConfig: NextAuthOptions = {
         const adminUser = await prisma.admin.findFirst({ where: { email } });
         if (adminUser) {
           token.type = "admin";
+          token.id = adminUser.id;
         } else {       
           const dbUser = await prisma.user.findFirst({ where: { email } });
           if (dbUser) {
@@ -93,6 +94,7 @@ export const authConfig: NextAuthOptions = {
       }else{
           if (user) {
             token.type = user.type; 
+            token.id = user.id; 
           }
           return token;
         }

@@ -29,3 +29,15 @@ model Otp {
   createdAt DateTime @default(now())
   expiresAt DateTime
 }
+
+model Automationsettings {
+  id              Int    @id @default(autoincrement())
+  min             Int
+  max             Int
+  dailyauto       Int
+  cycle           Int
+  notaskrest      Int
+  pageaccesstoken String
+  pageusername    String @unique
+  adminid         Int
+}
