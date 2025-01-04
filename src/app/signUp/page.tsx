@@ -9,6 +9,7 @@ const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName]=useState("")
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
@@ -70,7 +71,7 @@ const SignUpPage = () => {
           const response = await fetch("/api/signup/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password, name: "User" }),
+            body: JSON.stringify({ email, password, name}),
           });
           const data = await response.json();
       
@@ -136,6 +137,14 @@ const SignUpPage = () => {
         {step === 3 && (
           <form className={styles.form} onSubmit={handleSignupSubmit}>
             <h1 className={styles.formTitle}>Complete Signup</h1>
+            <input
+              type="name"
+              placeholder="Full Name"
+              className={styles.input}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
             <input
               type="password"
               placeholder="Password"

@@ -1,6 +1,7 @@
 import { NextAuthOptions, User, getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import bcrypt from "bcrypt"
 // import { redirect, useRouter } from "next/navigation";//error occurs 1
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
@@ -27,24 +28,35 @@ export const authConfig: NextAuthOptions = {
           where: { email: credentials.email },
         });
 
-        console.log(dbUser);
-        //Verify Password here
-        //We are going to use a simple === operator
-        //In production DB, passwords should be encrypted using something like bcrypt...
-        if (dbUser && dbUser.password === credentials.password) {
-          const { password, createdAt,id, ...dbUserWithoutPassword } = dbUser;
-          return { ...dbUserWithoutPassword, type: "moderator" } as User;
+        if (dbUser) {
+          // Verify the hashed password
+          const isPasswordValid = await bcrypt.compare(
+            credentials.password,
+            dbUser.password
+          );
+    
+          if (isPasswordValid) {
+            const { password, createdAt, id, ...dbUserWithoutPassword } = dbUser;
+            return { ...dbUserWithoutPassword, type: "moderator" } as User; // Return user without password
+          }
         }
         // Check in the admin table
         const adminUser = await prisma.admin.findFirst({
           where: { email: credentials.email },
         });
-
-        if (adminUser && adminUser.password === credentials.password) {
-          const { password, id, ...adminUserWithoutPassword } = adminUser;
-          return { ...adminUserWithoutPassword, type: "admin" } as User;
+    
+        if (adminUser) {
+          // Verify the hashed password
+          const isPasswordValid = await bcrypt.compare(
+            credentials.password,
+            adminUser.password
+          );
+    
+          if (isPasswordValid) {
+            const { password, id, ...adminUserWithoutPassword } = adminUser;
+            return { ...adminUserWithoutPassword, type: "admin" } as User; // Return admin without password
+          }
         }
-
         return null;
       },
     }),
@@ -61,7 +73,7 @@ export const authConfig: NextAuthOptions = {
     //   }
     //   return token;
     // },
-    async jwt({ token, account, user }) {
+    async jwt({ token, account, user }) {//check for errors
       if (account?.provider === "google") {
         // Get the email from the Google profile
         const email = token.email||"";
@@ -70,10 +82,13 @@ export const authConfig: NextAuthOptions = {
         const adminUser = await prisma.admin.findFirst({ where: { email } });
         if (adminUser) {
           token.type = "admin";
-        } else {
-          // Check if the email exists in the user table
+        } else {       
           const dbUser = await prisma.user.findFirst({ where: { email } });
-          token.type = dbUser ? "moderator" : "guest";
+          if (dbUser) {
+            token.type = "moderator";
+          } else {
+            return null; 
+          }
         }
       }else{
           if (user) {

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import styles from './style.module.css';
 import Link from "next/link";
@@ -37,15 +38,12 @@ const HomePage = async() => {
 
         <img src="/rb_4898.png" style={{width:"60%"}}/>
         <h1>Where would you like to start?</h1>
-        <p>Don’t worry, you can connect other channels later.</p>
+        <p>Don’t worry, you can connect other channels later.</p><Link className={styles.signupbutton} href={'/signUp'} >Sign Up</Link>
       </div>
 
       {/* ----------------right-------------------- */}
       <div className={styles.right}>
-
         <ModeratorSignInButton />
-
-
         <Link className={styles.privacy} href="/privacy-policy">
             Privacy Policy
           </Link>
@@ -81,14 +79,14 @@ const HomePage = async() => {
           </div>
         </div>
 
-    <div className="flex flex-col items-center mt-10 p-10 shadow-md">
-        <h1 className="mt-10 mb-4 text-4xl font-bold">Sign In</h1>
-          <GoogleSignInButton />
-        <span className="text-2xl font-semibold text-white text-center mt-8">
-          Or
-        </span>
-          <CredentialsForm />
-      </div>
+          {/* <div className="flex flex-col items-center mt-10 p-10 shadow-md">
+            <h1 className="mt-10 mb-4 text-4xl font-bold">Sign In</h1>
+              <GoogleSignInButton />
+            <span className="text-2xl font-semibold text-white text-center mt-8">
+              Or
+            </span>
+              <CredentialsForm />
+          </div> */}
       
       </div>
     </div>
