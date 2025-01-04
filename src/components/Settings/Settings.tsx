@@ -54,7 +54,7 @@ const Settings = () => {
         );
         case "automation":
           return (
-            <div>
+            <div className='autoSettBody' style={{maxHeight:'80vh',overflowY:'auto'}}>
               <h2 className="section-title">Automation Settings</h2>
               <div className="form-group">
                 <label>Default Automation Type:</label>

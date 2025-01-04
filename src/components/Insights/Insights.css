@@ -1,143 +1,117 @@
-/* src/components/Insights/Insights.css */
+/* Dashboard Container */
+.insights-dashboard {
+  font-family: "Poppins", sans-serif;
+  background-color: var(--background-light);
+  padding: 20px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
 
-/* General Styles */
-/* General Styles */
-.insights-container {
-    padding: 1rem;
-    background-color: #f7f9fc;
-    min-height: 100vh;
-    font-family: Arial, sans-serif;
-    overflow: scroll !important;
+/* Header */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.agent-label {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.agent-selector {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid var(--divider-color);
+  font-size: 1rem;
+  font-family: "Quicksand", sans-serif;
+}
+
+.search-box {
+  padding: 8px;
+  width: 200px;
+  border: 1px solid var(--divider-color);
+  border-radius: 5px;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Insights Boxes */
+.insights-boxes {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.insight-box {
+  flex: 1;
+  background: #fff;
+  border-radius: 10px;
+  text-align: center;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.insight-box h3 {
+  font-size: 1rem;
+  color: var(--secondary-text);
+  margin-bottom: 10px;
+}
+
+.insight-box p {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.total-messages {
+  background: #fff;
+  border-top: 4px solid var(--navbar-active-bg);
+}
+
+.new-conversations {
+  background: #fff;
+  border-top: 4px solid var(--secondary-color);
+}
+
+.avg-response-time {
+  background: #fff;
+  border-top: 4px solid var(--navbar-active-bg);
+}
+
+/* Chart */
+.chart-wrapper {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chart-wrapper h3 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  color: var(--secondary-text);
+}
+
+.chart {
+  width: 100%;
+  height: 300px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .insights-boxes {
+    flex-direction: column;
   }
-  
-  .insights-title {
-    font-size: 1.8rem;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 1.5rem;
-    color: #333;
-  }
-  
-  .selector-wrapper {
-    margin-bottom: 1rem;
-    text-align: center;
-  }
-  
-  .agent-selector {
-    padding: 0.5rem 0.8rem;
-    font-size: 1rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    background: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Chart Section */
-  .chart-wrapper {
-    background: #fff;
-    border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 1.5rem;
-  }
-  
-  .chart {
-    height: 300px;
+
+  .search-box {
     width: 100%;
   }
-  
-  /* Insights Boxes */
-  .insights-boxes {
-    display: grid; /* Switch to grid layout */
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Auto-adjust for screen size */
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .insight-box {
-    background: #fff;
-    border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .insight-box:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  }
-  
-  .insight-box h2 {
-    font-size: 1.1rem;
-    color: #666;
-    margin-bottom: 0.5rem;
-  }
-  
-  .insight-box p {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .insight-box.total {
-    background: #4a90e2;
-    color: #fff;
-  }
-  
-  .insight-box.new-conversations {
-    background: #7ed321;
-    color: #fff;
-  }
-  
-  .insight-box.follow-ups {
-    background: #f5a623;
-    color: #fff;
-  }
-  
-  
-  /* Responsive Styles */
-  @media (max-width: 768px) {
-    .insights-container {
-      padding: 0.8rem;
-    }
-  
-    .insights-title {
-      font-size: 1.5rem;
-    }
-  
-    .chart-wrapper {
-      padding: 0.8rem;
-    }
-  
-    .chart {
-      height: 250px;
-    }
-  
-    .insights-boxes {
-      grid-template-columns: repeat(2, 1fr); /* Two boxes per row */
-      gap: 1rem;
-    }
-  
-    .insight-box {
-      padding: 0.8rem;
-    }
-  
-    .insight-box h2 {
-      font-size: 0.9rem;
-    }
-  
-    .insight-box p {
-      font-size: 1.5rem;
-    }
-  
-    .agent-selector {
-      width: 100%;
-      padding: 0.6rem;
-    }
-    
-    .insight-box:nth-child(3) {
-        grid-column: span 2; /* Spans two columns */
-      }
-  }
-  
+}
