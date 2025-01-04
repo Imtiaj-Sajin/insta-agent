@@ -17,34 +17,64 @@ const Insights = () => {
     const dailyMessages = selectedAgent.insights.dailyMessages;
 
     const option: echarts.EChartsOption = {
-      title: {
-        text: `Daily Messages Replied:`,
-        left: "center",
-        textStyle: {
-          fontSize: 18,
-        },
-      },
-      tooltip: {
-        trigger: "axis",
-      },
       xAxis: {
         type: "category",
         data: dailyMessages.map((item) => item.date),
+        axisLine: {
+          lineStyle: {
+            color: "#dfe4ea",
+          },
+        },
         axisLabel: {
-          rotate: 45,
+          fontSize: 12,
         },
       },
       yAxis: {
         type: "value",
+        name: "Messages",
+        axisLine: {
+          show: false,
+        },
+        splitLine: {
+          lineStyle: {
+            color: "#dfe4ea",
+          },
+        },
+        axisLabel: {
+          fontSize: 12,
+        },
+      },
+      tooltip: {
+        trigger: "axis",
+        axisPointer: {
+          type: "shadow",
+        },
+        backgroundColor: "#fff",
+        borderColor: "#ccc",
+        textStyle: {
+          color: "#333",
+        },
+      },
+      grid: {
+        top: "10%",
+        bottom: "15%",
+        left: "5%",
+        right: "5%",
+      },
+      legend: {
+        show: false,
       },
       series: [
         {
+          name: "Messages Replied",
           data: dailyMessages.map((item) => item.messagesReplied),
           type: "bar",
-          barWidth: "60%",
+          barWidth: "30%",
           itemStyle: {
-            color: "#4A90E2",
-            // borderRadius: "1rem",
+            borderRadius: [4, 4, 0, 0],
+            color: function (params) {
+              return params.dataIndex % 2 === 0 ? "#ed4b00" : "#333465";
+            },
           },
         },
       ],
@@ -61,44 +91,52 @@ const Insights = () => {
   };
 
   return (
-    <div className="insights-container">
-      <h1 className="insights-title">Agent Insights</h1>
-
-      {/* Agent Selector */}
-      <div className="selector-wrapper">
-        <label htmlFor="agent-selector">Select Agent: </label>
-        <select
-          id="agent-selector"
-          className="agent-selector"
-          onChange={handleAgentChange}
-        >
-          {insightsData.agents.map((agent) => (
-            <option key={agent.id} value={agent.id}>
-              {agent.name}
-            </option>
-          ))}
-        </select>
+    <div className="insights-dashboard">
+      {/* Header */}
+      <div className="dashboard-header">
+        <div className="agent-select-wrapper">
+          {/* <label htmlFor="agent-selector" className="agent-label">
+            Agent
+          </label> */}
+          <select
+            id="agent-selector"
+            className="agent-selector"
+            onChange={handleAgentChange}
+          >
+            {insightsData.agents.map((agent) => (
+              <option key={agent.id} value={agent.id}>
+                {agent.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <input
+          type="text"
+          placeholder="Search"
+          className="search-box"
+        />
       </div>
-
-      {/* Graph Section */}
-      {/* <div className="chart-wrapper"> */}
-        <div ref={chartRef} className="chart"></div>
-      {/* </div> */}
 
       {/* Insights Boxes */}
       <div className="insights-boxes">
-        <div className="insight-box total">
-          <h2>Total Messages Replied</h2>
+        <div className="insight-box total-messages">
+          <h3>Total Messages Replied</h3>
           <p>{selectedAgent.insights.monthlySummary.totalMessagesReplied}</p>
         </div>
         <div className="insight-box new-conversations">
-          <h2>New Conversations</h2>
+          <h3>New Conversations</h3>
           <p>{selectedAgent.insights.monthlySummary.totalNewConversations}</p>
         </div>
-        <div className="insight-box follow-ups">
-          <h2>Average Response Time</h2>
+        <div className="insight-box avg-response-time">
+          <h3>Average Response Time</h3>
           <p>{selectedAgent.insights.monthlySummary.totalFollowUps}s</p>
         </div>
+      </div>
+
+      {/* Chart Section */}
+      <div className="chart-wrapper">
+        <h3>Daily Messages Replied</h3>
+        <div ref={chartRef} className="chart"></div>
       </div>
     </div>
   );

@@ -103,12 +103,15 @@
 }
 
 
-
+/* .autoSettBody{
+  max-height:'50vh';
+} */
 
 @media (max-width: 768px) {
   .good-content{
-    overflow-y: auto;
+    padding: 25px;
   }
+ 
   .sidebar{
     padding: 1px;
   }
