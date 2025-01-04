@@ -25,7 +25,7 @@ export function GoogleSignInButton() {
 export function ModeratorSignInButton() {
   const handleClick = () => {
     // signIn();
-    signIn(undefined, { callbackUrl: '/moderator/dashboard' });
+    signIn(undefined);
 
   };
 
@@ -37,7 +37,7 @@ export function ModeratorSignInButton() {
       {/* <Image src={githubLogo} alt="Github Logo" width={20} height={20} /> */}
       <img className={styles.svgIcon}  src="https://img.icons8.com/glyph-neue/64/lifecycle--v1.png" alt="lifecycle--v1"/>
 
-      <span className="ml-4">Moderator</span>
+      <span className="ml-4">Sign In</span>
     </button>
   );
 }

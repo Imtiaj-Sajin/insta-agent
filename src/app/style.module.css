@@ -105,23 +105,23 @@
   top: 5%;
   right: 2%;
   
-  width: 150px;
+  width: 120px;
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 10px;
   background-color: var(--navbar-active-bg);
-  border-radius: 30px;
- color: rgb(19, 19, 19);
+  border-radius: 20px;
+  color: rgb(19, 19, 19);
   font-weight: 600;
   border: none;
-  /* position: relative; */
   cursor: pointer;
   transition-duration: .2s;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.116);
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0);
   padding-left: 8px;
   transition-duration: .5s;
+  border: 2px solid black;
 }
 
 .svgIcon {
@@ -135,8 +135,10 @@
 }
 
 .mButton:hover {
-  background-color: rgb(192, 255, 20);
+  background-color: #ff7d3d;
   transition-duration: .5s;
+  color: rgb(255, 255, 255);
+  border: 2px solid white
 }
 
 .mButton:active {
@@ -147,6 +149,8 @@
 .mButton:hover .svgIcon {
   transform: rotate(250deg);
   transition-duration: 1.5s;
+  color: rgb(255, 255, 255);
+
 }
 
 /* ---------------------Privacy Policy------------- */
@@ -176,4 +180,32 @@
     display: none;
 
   }
+}
+
+/* Sign Up Button Styling */
+.signupbutton {
+  display: inline-block;
+  background-color: #ff661a; /* Purple background */
+  color: #fff; /* White text */
+  font-size: 16px; /* Font size */
+  font-weight: 500; /* Medium font weight */
+  padding: 10px 20px; /* Padding for the button */
+  border: none; /* No border */
+  border-radius: 10px; /* Rounded corners */
+  text-decoration: none; /* Remove underline for links */
+  text-align: center; /* Center the text */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth hover effect */
+  cursor: pointer;
+}
+
+/* Hover and Active States */
+.signupbutton:hover {
+  background-color: #ff7d3d; /* Darker purple on hover */
+  transform: translateY(-2px); /* Lift button slightly */
+}
+
+.signupbutton:active {
+  background-color: #d65505; /* Even darker purple when clicked */
+  transform: translateY(0); /* Reset lift */
 }

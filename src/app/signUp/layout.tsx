@@ -11,7 +11,6 @@ export const metadata = {
     return (
       <html lang="en">
         <body className={" flex flex-row"} style={{margin:0}}>
-            {/* <TwitterNavbar /> */}
             {children}
         </body>
       </html>
