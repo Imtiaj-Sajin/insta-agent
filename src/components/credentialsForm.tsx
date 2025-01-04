@@ -12,7 +12,7 @@ export function CredentialsForm(props: CredentialsFormProps) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
 
