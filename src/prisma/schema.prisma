@@ -32,12 +32,12 @@ model Otp {
 
 model Automationsettings {
   id              Int    @id @default(autoincrement())
-  min             Int
-  max             Int
-  dailyauto       Int
-  cycle           Int
-  notaskrest      Int
-  pageaccesstoken String
-  pageusername    String @unique
-  adminid         Int
+  min             Int?
+  max             Int?
+  dailyauto       Int?
+  cycle           Int?
+  notaskrest      Int?
+  pageaccesstoken String?
+  pageusername    String? @unique
+  adminid         Int?
 }

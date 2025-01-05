@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   try {
     const data = await prisma.automationsettings.findFirst({
-      where: { adminid: token?.id },
+      where: { adminid: token?.id||0 },
     });
 
     if (!data) {
@@ -29,20 +29,16 @@ export async function GET(req: NextRequest) {
 
 
 export async function POST(req: NextRequest) {
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   try {
-    // Mocking adminId for demonstration; replace with your token-based logic
-    const adminId = 16; // Replace with token logic if necessary
-
-    // Parse and log the request body
+    const adminId = token?.id; 
     const body = await req.json();
     console.log("Parsed body ==> ", body);
 
-    // Convert body fields to numbers
     const dailyauto = Number(body.dailyauto);
     const cycle = Number(body.cycle);
     const notaskrest = Number(body.notaskrest);
 
-    // Validate numeric fields
     if (isNaN(dailyauto) || isNaN(cycle) || isNaN(notaskrest)) {
       return NextResponse.json(
         { error: "Invalid data: dailyauto, cycle, or notaskrest is not a number" },
@@ -58,7 +54,7 @@ export async function POST(req: NextRequest) {
     let updatedSettings;
 
     if (existingRecord) {
-      // Update existing record
+      console.log("Updating existing record with ID: ", existingRecord.id);
       updatedSettings = await prisma.automationsettings.update({
         where: { id: existingRecord.id }, // Use the unique `id` field for updating
         data: {
@@ -68,18 +64,16 @@ export async function POST(req: NextRequest) {
         },
       });
     } else {
-      // Create new record
+      console.log("Creating new record with adminId: ", adminId);
       updatedSettings = await prisma.automationsettings.create({
-        data: {
-          adminid: adminId,
-          dailyauto,
-          cycle,
-          notaskrest,
-        },
+          data: {
+          adminid: adminId,  // Ensure you provide a valid adminId
+          dailyauto: dailyauto,
+          cycle: cycle,
+          notaskrest: notaskrest,}
       });
     }
-
-    // Respond with the updated or created record
+    console.log("Updated settings: ", updatedSettings);
     return NextResponse.json(updatedSettings, { status: 200 });
   } catch (error) {
     console.error("Error saving settings:", error);
