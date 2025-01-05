@@ -1,22 +1,38 @@
 import React, { useState } from "react";
 import "./Slider.css";
 
-const AutomationSlider = (min:any, max:any) => {
+const AutomationSlider = () => {
+  const [messageDelay, setMessageDelay] = useState({ min: 0.5, max: 600 }); // Seconds for message reply
+  const [commentDelay, setCommentDelay] = useState({ min: 0.5, max: 600 }); // Seconds for comment reply
 
-  const [delay, setDelay] = useState({ min: 0.5, max: 600 }); // Seconds
-
-  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>, type: "min" | "max") => {
+  const handleSliderChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: "min" | "max",
+    delayType: "message" | "comment"
+  ) => {
     const value = parseFloat(e.target.value);
 
-    setDelay((prev) => {
-      if (type === "min" && value < prev.max) {
-        return { ...prev, min: value };
-      }
-      if (type === "max" && value > prev.min) {
-        return { ...prev, max: value };
-      }
-      return prev;
-    });
+    if (delayType === "message") {
+      setMessageDelay((prev) => {
+        if (type === "min" && value < prev.max) {
+          return { ...prev, min: value };
+        }
+        if (type === "max" && value > prev.min) {
+          return { ...prev, max: value };
+        }
+        return prev;
+      });
+    } else if (delayType === "comment") {
+      setCommentDelay((prev) => {
+        if (type === "min" && value < prev.max) {
+          return { ...prev, min: value };
+        }
+        if (type === "max" && value > prev.min) {
+          return { ...prev, max: value };
+        }
+        return prev;
+      });
+    }
   };
 
   const formatTime = (value: number) => {
@@ -28,41 +44,39 @@ const AutomationSlider = (min:any, max:any) => {
     return seconds > 0 ? `${minutes}min ${seconds}s` : `${minutes}min`;
   };
 
-  const minPercent = ((delay.min - 0.5) / (600 - 0.5)) * 100;
-  const maxPercent = ((delay.max - 0.5) / (600 - 0.5)) * 100;
+  const calculatePercent = (value: number) =>
+    ((value - 0.5) / (600 - 0.5)) * 100;
 
   return (
     <div className="slider-wrapper">
-      <label className="slider-label">Message Delay:</label>
+      {/* Message Reply Delay */}
+      <label className="slider-label">Message Reply Delay:</label>
       <div className="slider-container">
-        {/* Track */}
         <div
           className="slider-track"
           style={{
-            left: `${minPercent}%`,
-            right: `${100 - maxPercent}%`,
+            left: `${calculatePercent(messageDelay.min)}%`,
+            right: `${100 - calculatePercent(messageDelay.max)}%`,
           }}
         ></div>
 
-        {/* Min Handle */}
         <input
           type="range"
           min={0.5}
           max={600}
           step={0.5}
-          value={delay.min}
-          onChange={(e) => handleSliderChange(e, "min")}
+          value={messageDelay.min}
+          onChange={(e) => handleSliderChange(e, "min", "message")}
           className="slider-thumb"
         />
 
-        {/* Max Handle */}
         <input
           type="range"
           min={0.5}
           max={600}
           step={0.5}
-          value={delay.max}
-          onChange={(e) => handleSliderChange(e, "max")}
+          value={messageDelay.max}
+          onChange={(e) => handleSliderChange(e, "max", "message")}
           className="slider-thumb"
         />
       </div>
@@ -71,16 +85,68 @@ const AutomationSlider = (min:any, max:any) => {
           <label>Min:</label>
           <input
             type="text"
-            value={formatTime(delay.min)}
+            value={formatTime(messageDelay.min)}
             readOnly
             className="slider-value-display"
           />
         </div>
         <div>
-          <label>Maxc: {max?max:2}</label>
+          <label>Max:</label>
           <input
             type="text"
-            value={formatTime(delay.max)}
+            value={formatTime(messageDelay.max)}
+            readOnly
+            className="slider-value-display"
+          />
+        </div>
+      </div>
+<br />
+      {/* Comment Reply Delay */}
+      <label className="slider-label">Comment Reply Delay:</label>
+      <div className="slider-container">
+        <div
+          className="slider-track"
+          style={{
+            left: `${calculatePercent(commentDelay.min)}%`,
+            right: `${100 - calculatePercent(commentDelay.max)}%`,
+          }}
+        ></div>
+
+        <input
+          type="range"
+          min={0.5}
+          max={600}
+          step={0.5}
+          value={commentDelay.min}
+          onChange={(e) => handleSliderChange(e, "min", "comment")}
+          className="slider-thumb"
+        />
+
+        <input
+          type="range"
+          min={0.5}
+          max={600}
+          step={0.5}
+          value={commentDelay.max}
+          onChange={(e) => handleSliderChange(e, "max", "comment")}
+          className="slider-thumb"
+        />
+      </div>
+      <div className="slider-values">
+        <div>
+          <label>Min:</label>
+          <input
+            type="text"
+            value={formatTime(commentDelay.min)}
+            readOnly
+            className="slider-value-display"
+          />
+        </div>
+        <div>
+          <label>Max:</label>
+          <input
+            type="text"
+            value={formatTime(commentDelay.max)}
             readOnly
             className="slider-value-display"
           />

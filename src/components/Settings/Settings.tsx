@@ -124,14 +124,14 @@ const Settings = () => {
           return (
             <div className='autoSettBody' style={{maxHeight:'80vh',overflowY:'auto'}}>
               <h2 className="section-title">Automation Settings</h2>
-              <div className="form-group">
+              {/* <div className="form-group">
                 <label>Default Automation Type:</label>
                 <select className="input">
                   <option>Reply to Comment</option>
                   <option>Send DM</option>
                   <option>Comment+DM</option>
                 </select>
-              </div>
+              </div> */}
               <div className="form-group">
                 <label>Max Daily Automations:</label>
                 <input
@@ -142,6 +142,7 @@ const Settings = () => {
                   onChange={(e) => handleChange("maxDailyAutomations", e.target.value)}
                 />              </div>
               <AutomationSlider min={settings.min} max={settings.max}/> {/* Slider for automation delay */}
+              {/* <AutomationSlider min={settings.min} max={settings.max}/>  */}
               <div className="form-group">
                 <label>Number of Cycles Before Rest:</label>
                 <input
