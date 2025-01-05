@@ -202,12 +202,14 @@ const Settings = () => {
             <div className="form-group">
               <p>Connected Instagram Account:</p>
               <p className="connected-account">@current_username</p>
-              <button className="disconnect-button">Disconnect Account</button>
+              <button className="save-button">Disconnect Account</button>
             </div>
             <button onClick={handleLogin} className="save-button">
               Re-authenticate
             </button>
-            <button className="bg-white rounded-full border border-gray-200 text-gray-800 px-4 py-2 flex items-center space-x-2 hover:bg-gray-200">
+            <br/>
+            <br/>
+            <button className="save-button" >
               <span onClick={() => signOut()}>Logout</span>
             </button>
           </div>

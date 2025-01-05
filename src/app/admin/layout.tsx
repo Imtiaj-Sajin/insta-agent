@@ -11,6 +11,7 @@ import Chats from "../../components/Chats";
 import Agent from "./admin/Agents";
 import Notification from "./admin/Notification";
 import Insights from "@/components/Insights/Insights";
+import Ai from "@/components/Ai/Ai";
 import HeaderUI from "@/utils/header";
 import "react-icons";
 import { FaRobot, FaBell, FaUser, FaComments, FaCog } from "react-icons/fa";
@@ -89,8 +90,10 @@ function NavbarLayout({
         return <Insights/>;
       case "notification":
         return <Notification/>;
+      case "ai":
+        return <Ai/>;
       default:
-        return <Messages/>;
+        return <Settings/>;
     }
   };
   
@@ -132,6 +135,11 @@ function Navbar({ onSelect }: NavbarProps) {
       <button onClick={() => onSelect("insights")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>
         <ImStatsBars2 />
         <span>Insights</span>
+      </button>
+      
+      <button onClick={() => onSelect("ai")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>
+        <ImStatsBars2 />
+        <span>Ai</span>
       </button>
 
       <button onClick={() => onSelect("settings")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>

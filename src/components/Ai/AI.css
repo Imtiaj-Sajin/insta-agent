@@ -1,0 +1,150 @@
+/* General Container */
+.ai-container {
+  display: flex;
+  font-family: "Poppins", sans-serif;
+  height: 100vh;
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 200px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+}
+
+.sidebar li.active {
+  background-color: #ed4b00;
+  color: #fff;
+}
+
+.sidebar li:hover {
+  background-color: #f0f0f0;
+}
+
+.icon {
+  font-size: 1.2rem;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+/* Upload Section */
+.upload-section h2 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.upload-box {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  background-color: #ffffff;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.upload-icon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #ed4b00;
+}
+
+.upload-link {
+  color: #ed4b00;
+  cursor: pointer;
+}
+
+.upload-link:hover {
+  text-decoration: underline;
+}
+
+.upload-hint {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.pdf-note {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #999;
+}
+
+/* Sources Summary */
+.sources-summary {
+  margin-top: 30px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.sources-summary h2 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.character-count {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ed4b00;
+}
+
+.create-chatbot-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.create-chatbot-button:hover {
+  background-color: #ed4b00;
+}
