@@ -90,7 +90,7 @@ function NavbarLayout({
         return <Insights/>;
       case "notification":
         return <Notification/>;
-      case "notification":
+      case "ai":
         return <Ai/>;
       default:
         return <Settings/>;
@@ -137,7 +137,7 @@ function Navbar({ onSelect }: NavbarProps) {
         <span>Insights</span>
       </button>
       
-      <button onClick={() => onSelect("insights")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>
+      <button onClick={() => onSelect("ai")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>
         <ImStatsBars2 />
         <span>Ai</span>
       </button>
