@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client';
 import nodemailer from 'nodemailer';
 
 const prisma = new PrismaClient();
-
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
@@ -11,7 +10,7 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
   tls: {
-    rejectUnauthorized: false, // Allow self-signed certificates
+    rejectUnauthorized: false,
   },
 });
 
@@ -19,34 +18,30 @@ export async function POST(req: NextRequest) {
   try {
     const { email } = await req.json();
 
-    // Check if user already exists
     const existingUser = await prisma.admin.findUnique({
       where: { email },
     });
 
-    if (existingUser) {
+    if (!existingUser) {
       return NextResponse.json(
-        { error: 'Email already registered' },
-        { status: 409 }
+        { error: 'Email not registered' },
+        { status: 404 }
       );
     }
 
-    // Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes expiry
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    // Save OTP to the database
     await prisma.otp.upsert({
       where: { email },
       update: { code: otp, expiresAt },
       create: { email, code: otp, expiresAt },
     });
 
-    // Send OTP via email
     await transporter.sendMail({
       from: process.env.EMAIL,
       to: email,
-      subject: 'Your OTP Code',
+      subject: 'Your OTP Code for Password Reset',
       text: `Your OTP is ${otp}. It will expire in 10 minutes.`,
     });
 

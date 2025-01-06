@@ -7,8 +7,8 @@
   padding: 20px;
 }
 
-/* Sidebar */
-.sidebar {
+/* AiSidebar */
+.AiSidebar {
   width: 200px;
   background-color: #ffffff;
   border-radius: 8px;
@@ -19,12 +19,12 @@
   gap: 20px;
 }
 
-.sidebar ul {
+.AiSidebar ul {
   list-style: none;
   padding: 0;
 }
 
-.sidebar li {
+.AiSidebar li {
   font-size: 1rem;
   font-weight: 500;
   color: #333;
@@ -37,12 +37,12 @@
   transition: background-color 0.3s;
 }
 
-.sidebar li.active {
+.AiSidebar li.active {
   background-color: #ed4b00;
   color: #fff;
 }
 
-.sidebar li:hover {
+.AiSidebar li:hover {
   background-color: #f0f0f0;
 }
 
