@@ -9,6 +9,7 @@ import { signOut } from "next-auth/react";
 import AutomationSlider from "../Slider/Slider"; // Import your AutomationSlider component
 
 const Settings = () => {
+  const [pageAccessToken, setPageAccessToken] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("profile");
   const [settings, setSettings] = useState({
       maxDailyAutomations: "",
@@ -114,7 +115,32 @@ const Settings = () => {
       console.log("Disconnecting account...");
     };
     
-    
+
+  // Exchange token function: This will exchange the 'code' for a page access token
+  const exchangeToken = async (code: string) => {
+    try {
+      const tokenResponse = await fetch('/api/exchange-token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code }), // Send the code to exchange for the token
+      });
+
+      const tokenData = await tokenResponse.json();
+
+      if (tokenResponse.ok) {
+        const accessToken = tokenData.pageAccessToken;
+        console.log('Page access token retrieved via exchange-token API:', accessToken);
+        setPageAccessToken(accessToken); // Store the access token in state
+      } else {
+        console.error('Failed to exchange token:', tokenData.error);
+      }
+    } catch (err) {
+      console.error('Error handling token exchange process:', err);
+    }
+  };
+  
   const handleLogin = () => {
     const appId = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID;
     const redirectUri = process.env.NEXT_PUBLIC_FACEBOOK_REDIRECT_URI;
@@ -130,6 +156,20 @@ const Settings = () => {
 
     window.location.href = loginUrl;
   };
+
+    // Capture code and exchange token after redirect
+    useEffect(() => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      if (code) {
+        console.log('Authorization code received:', code);
+        if (!pageAccessToken) {
+          exchangeToken(code); // Exchange code for the access token
+        }
+      } else {
+        console.error('Authorization code not found');
+      }
+    }, [pageAccessToken]);
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -368,7 +408,7 @@ const Settings = () => {
         color: "#fff",
         width: "100%",
       }}
-      onClick={signOut}
+      onClick={() =>signOut()}
     >
       Logout
     </button>
