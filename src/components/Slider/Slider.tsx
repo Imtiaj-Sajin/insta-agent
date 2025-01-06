@@ -1,9 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Slider.css";
 
-const AutomationSlider = () => {
-  const [messageDelay, setMessageDelay] = useState({ min: 0.5, max: 600 }); // Seconds for message reply
-  const [commentDelay, setCommentDelay] = useState({ min: 0.5, max: 600 }); // Seconds for comment reply
+type AutomationSliderProps = {
+  messageMin: number;
+  messageMax: number;
+  commentMin: number;
+  commentMax: number;
+  onMessageDelayChange: (min: number, max: number) => void;
+  onCommentDelayChange: (min: number, max: number) => void;
+};
+
+const AutomationSlider: React.FC<AutomationSliderProps> = ({
+  messageMin,
+  messageMax,
+  commentMin,
+  commentMax,
+  onMessageDelayChange,
+  onCommentDelayChange,
+}) => {
+  const [localMessageDelay, setLocalMessageDelay] = useState({ min: messageMin, max: messageMax });
+  const [localCommentDelay, setLocalCommentDelay] = useState({ min: commentMin, max: commentMax });
+
+  useEffect(() => {
+    // Synchronize with parent when prop values change
+    setLocalMessageDelay({ min: messageMin, max: messageMax });
+    setLocalCommentDelay({ min: commentMin, max: commentMax });
+  }, [messageMin, messageMax, commentMin, commentMax]);
 
   const handleSliderChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -13,24 +35,32 @@ const AutomationSlider = () => {
     const value = parseFloat(e.target.value);
 
     if (delayType === "message") {
-      setMessageDelay((prev) => {
+      setLocalMessageDelay((prev) => {
+        let newDelay = { ...prev };
         if (type === "min" && value < prev.max) {
-          return { ...prev, min: value };
+          newDelay.min = value;
         }
         if (type === "max" && value > prev.min) {
-          return { ...prev, max: value };
+          newDelay.max = value;
         }
-        return prev;
+        if (newDelay !== prev) {
+          onMessageDelayChange(newDelay.min, newDelay.max); // Notify parent of change
+        }
+        return newDelay;
       });
     } else if (delayType === "comment") {
-      setCommentDelay((prev) => {
+      setLocalCommentDelay((prev) => {
+        let newDelay = { ...prev };
         if (type === "min" && value < prev.max) {
-          return { ...prev, min: value };
+          newDelay.min = value;
         }
         if (type === "max" && value > prev.min) {
-          return { ...prev, max: value };
+          newDelay.max = value;
         }
-        return prev;
+        if (newDelay !== prev) {
+          onCommentDelayChange(newDelay.min, newDelay.max); // Notify parent of change
+        }
+        return newDelay;
       });
     }
   };
@@ -55,8 +85,8 @@ const AutomationSlider = () => {
         <div
           className="slider-track"
           style={{
-            left: `${calculatePercent(messageDelay.min)}%`,
-            right: `${100 - calculatePercent(messageDelay.max)}%`,
+            left: `${calculatePercent(localMessageDelay.min)}%`,
+            right: `${100 - calculatePercent(localMessageDelay.max)}%`,
           }}
         ></div>
 
@@ -65,7 +95,7 @@ const AutomationSlider = () => {
           min={0.5}
           max={600}
           step={0.5}
-          value={messageDelay.min}
+          value={localMessageDelay.min}
           onChange={(e) => handleSliderChange(e, "min", "message")}
           className="slider-thumb"
         />
@@ -75,7 +105,7 @@ const AutomationSlider = () => {
           min={0.5}
           max={600}
           step={0.5}
-          value={messageDelay.max}
+          value={localMessageDelay.max}
           onChange={(e) => handleSliderChange(e, "max", "message")}
           className="slider-thumb"
         />
@@ -85,7 +115,7 @@ const AutomationSlider = () => {
           <label>Min:</label>
           <input
             type="text"
-            value={formatTime(messageDelay.min)}
+            value={formatTime(localMessageDelay.min)}
             readOnly
             className="slider-value-display"
           />
@@ -94,21 +124,22 @@ const AutomationSlider = () => {
           <label>Max:</label>
           <input
             type="text"
-            value={formatTime(messageDelay.max)}
+            value={formatTime(localMessageDelay.max)}
             readOnly
             className="slider-value-display"
           />
         </div>
       </div>
-<br />
+
       {/* Comment Reply Delay */}
+      <br />
       <label className="slider-label">Comment Reply Delay:</label>
       <div className="slider-container">
         <div
           className="slider-track"
           style={{
-            left: `${calculatePercent(commentDelay.min)}%`,
-            right: `${100 - calculatePercent(commentDelay.max)}%`,
+            left: `${calculatePercent(localCommentDelay.min)}%`,
+            right: `${100 - calculatePercent(localCommentDelay.max)}%`,
           }}
         ></div>
 
@@ -117,7 +148,7 @@ const AutomationSlider = () => {
           min={0.5}
           max={600}
           step={0.5}
-          value={commentDelay.min}
+          value={localCommentDelay.min}
           onChange={(e) => handleSliderChange(e, "min", "comment")}
           className="slider-thumb"
         />
@@ -127,7 +158,7 @@ const AutomationSlider = () => {
           min={0.5}
           max={600}
           step={0.5}
-          value={commentDelay.max}
+          value={localCommentDelay.max}
           onChange={(e) => handleSliderChange(e, "max", "comment")}
           className="slider-thumb"
         />
@@ -137,7 +168,7 @@ const AutomationSlider = () => {
           <label>Min:</label>
           <input
             type="text"
-            value={formatTime(commentDelay.min)}
+            value={formatTime(localCommentDelay.min)}
             readOnly
             className="slider-value-display"
           />
@@ -146,7 +177,7 @@ const AutomationSlider = () => {
           <label>Max:</label>
           <input
             type="text"
-            value={formatTime(commentDelay.max)}
+            value={formatTime(localCommentDelay.max)}
             readOnly
             className="slider-value-display"
           />

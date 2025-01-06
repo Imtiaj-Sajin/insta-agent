@@ -38,8 +38,12 @@ export async function POST(req: NextRequest) {
     const dailyauto = Number(body.dailyauto);
     const cycle = Number(body.cycle);
     const notaskrest = Number(body.notaskrest);
+    const messagemin = Number(body.messagemin);
+    const messagemax = Number(body.messagemax);
+    const commentmin = Number(body.commentmin);
+    const commentmax = Number(body.commentmax);
 
-    if (isNaN(dailyauto) || isNaN(cycle) || isNaN(notaskrest)) {
+    if (isNaN(dailyauto) || isNaN(cycle) || isNaN(notaskrest) || isNaN(messagemin) || isNaN(messagemax) || isNaN(commentmin) || isNaN(commentmax)) {
       return NextResponse.json(
         { error: "Invalid data: dailyauto, cycle, or notaskrest is not a number" },
         { status: 400 }
@@ -61,6 +65,10 @@ export async function POST(req: NextRequest) {
           dailyauto,
           cycle,
           notaskrest,
+          messagemin,
+          messagemax,
+          commentmin,
+          commentmax,
         },
       });
     } else {
@@ -70,7 +78,12 @@ export async function POST(req: NextRequest) {
           adminid: adminId,  // Ensure you provide a valid adminId
           dailyauto: dailyauto,
           cycle: cycle,
-          notaskrest: notaskrest,}
+          notaskrest: notaskrest,
+          messagemin: messagemin,
+          messagemax: messagemax,
+          commentmin: commentmin,
+          commentmax: commentmax,
+        }
       });
     }
     console.log("Updated settings: ", updatedSettings);

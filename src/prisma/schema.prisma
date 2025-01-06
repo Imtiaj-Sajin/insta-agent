@@ -32,8 +32,10 @@ model Otp {
 
 model Automationsettings {
   id              Int    @id @default(autoincrement())
-  min             Int?
-  max             Int?
+  messagemin      Int?
+  messagemax      Int?
+  commentmin      Int?
+  commentmax      Int?
   dailyauto       Int?
   cycle           Int?
   notaskrest      Int?

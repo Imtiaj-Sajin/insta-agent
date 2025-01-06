@@ -11,13 +11,28 @@ import AutomationSlider from "../Slider/Slider"; // Import your AutomationSlider
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const [settings, setSettings] = useState({
-      defaultAutomationType: "Reply to Comment",
       maxDailyAutomations: "",
       cyclesBeforeRest: "",
       restTime: "",
-      min: "",
-      max: "",
+      messageMin: 0, // Add messageMin, messageMax, commentMin, commentMax to state
+      messageMax: 0,
+      commentMin: 0,
+      commentMax: 0,
     });
+    const [messageMin, setMessageMin] = useState(100); 
+    const [messageMax, setMessageMax] = useState(300);
+    const [commentMin, setCommentMin] = useState(10);
+    const [commentMax, setCommentMax] = useState(180);
+  
+    // const handleMessageDelayChange = (min: number, max: number) => {
+    //   setMessageMin(min);
+    //   setMessageMax(max);
+    // };
+  
+    // const handleCommentDelayChange = (min: number, max: number) => {
+    //   setCommentMin(min);
+    //   setCommentMax(max);
+    // };
   
     const [loading, setLoading] = useState(true);
   
@@ -27,13 +42,16 @@ const Settings = () => {
           const response = await fetch(`/api/automationsettings`);
           if (response.ok) {
             const data = await response.json();
+            console.log("data get==> ", data);
             setSettings({
-              defaultAutomationType: data.defaultAutomationType || "Reply to Comment",
               maxDailyAutomations: data.dailyauto || "",
               cyclesBeforeRest: data.cycle || "",
               restTime: data.notaskrest || "",
-              min: data.min || "",
-              max: data.max || "",
+              messageMin: data.messagemin || 100, // Set fetched value for messageMin
+              messageMax: data.messagemax || 300, // Set fetched value for messageMax
+              commentMin: data.commentmin || 10, // Set fetched value for commentMin
+              commentMax: data.commentmax || 180, // Set fetched value for commentMax
+    
             });
           } else {
             console.error("Failed to fetch settings");
@@ -52,6 +70,15 @@ const Settings = () => {
       setSettings((prev) => ({ ...prev, [field]: value }));
     };
   
+    const handleMessageDelayChange = (min: number, max: number) => {
+      setSettings((prev) => ({ ...prev, messageMin: min, messageMax: max }));
+    };
+  
+    const handleCommentDelayChange = (min: number, max: number) => {
+      setSettings((prev) => ({ ...prev, commentMin: min, commentMax: max }));
+    };
+
+
     const saveChanges = async () => {
       try {
         const response = await fetch(`/api/automationsettings`, {
@@ -63,6 +90,10 @@ const Settings = () => {
             dailyauto: settings.maxDailyAutomations,
             cycle: settings.cyclesBeforeRest,
             notaskrest: settings.restTime,
+            messagemin: settings.messageMin, // Send messageMin value
+            messagemax: settings.messageMax, // Send messageMax value
+            commentmin: settings.commentMin, // Send commentMin value
+            commentmax: settings.commentMax, // Send commentMax value  
           }),
         });
   
@@ -79,6 +110,11 @@ const Settings = () => {
       }
     }
 
+    const handleDisconnect = () => {
+      console.log("Disconnecting account...");
+    };
+    
+    
   const handleLogin = () => {
     const appId = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID;
     const redirectUri = process.env.NEXT_PUBLIC_FACEBOOK_REDIRECT_URI;
@@ -141,7 +177,15 @@ const Settings = () => {
                   value={settings.maxDailyAutomations}
                   onChange={(e) => handleChange("maxDailyAutomations", e.target.value)}
                 />              </div>
-              <AutomationSlider min={settings.min} max={settings.max}/> {/* Slider for automation delay */}
+              {/* <AutomationSlider min={settings.min} max={settings.max}/> Slider for automation delay */}
+              <AutomationSlider
+                messageMin={settings.messageMin}
+                messageMax={settings.messageMax}
+                commentMin={settings.commentMin}
+                commentMax={settings.commentMax}
+                onMessageDelayChange={handleMessageDelayChange}
+                onCommentDelayChange={handleCommentDelayChange}
+              />
               {/* <AutomationSlider min={settings.min} max={settings.max}/>  */}
               <div className="form-group">
                 <label>Number of Cycles Before Rest:</label>
@@ -198,22 +242,263 @@ const Settings = () => {
         );
       case "account":
         return (
-          <div>
-            <h2 className="section-title">Account Settings</h2>
-            <div className="form-group">
-              <p>Connected Instagram Account:</p>
-              <p className="connected-account">@current_username</p>
-              <button className="save-button">Disconnect Account</button>
-            </div>
-            <button onClick={handleLogin} className="save-button">
-              Re-authenticate
-            </button>
-            <br/>
-            <br/>
-            <button className="save-button" >
-              <span onClick={() => signOut()}>Logout</span>
-            </button>
-          </div>
+<>
+<h2 className="section-title">Account Settings</h2>
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+      padding: "20px",
+      border: "1px solid #ddd",
+      borderRadius: "8px",
+      width: "100%", // Adjusted for wider width
+      margin: "0",
+      backgroundColor: "#f9f9f9",
+    }}
+  >
+    {/* Main Div */}
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexWrap: "wrap", // Ensures wrapping on mobile
+        width: "100%",
+      }}
+    >
+      {/* Photo Div */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          marginRight: "10px",
+          marginBottom: "10px", // Adds spacing for mobile wrapping
+        }}
+      >
+        <img
+          src="/placeholder-photo.jpg" // Replace with the actual photo URL
+          alt="Profile"
+          style={{
+            width: "60px",
+            height: "60px",
+            borderRadius: "50%",
+            marginRight: "10px",
+            objectFit: "cover",
+            border: "2px solid #ddd",
+          }}
+        />
+        {/* Labels for Name and Username */}
+        <div>
+          <p
+            style={{
+              fontWeight: "bold",
+              fontSize: "1rem",
+              margin: "0",
+              color: "#333",
+            }}
+          >
+            John Doe {/* Replace with dynamic name */}
+          </p>
+          <p
+            style={{
+              fontSize: "0.9rem",
+              margin: "0",
+              color: "#555",
+            }}
+          >
+            @johndoe {/* Replace with dynamic username */}
+          </p>
+        </div>
+      </div>
+
+      {/* Buttons Div */}
+      <div
+        style={{
+          display: "flex",
+          gap: "10px",
+          flexWrap: "wrap", // Wrap buttons on mobile
+        }}
+      >
+        <button
+          style={{
+            padding: "10px 15px",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            backgroundColor: "#5bc0de",
+            color: "#fff",
+          }}
+          onClick={handleLogin}
+        >
+          Re-authenticate
+        </button>
+        <button
+          style={{
+            padding: "10px 15px",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            backgroundColor: "#f0ad4e",
+            color: "#fff",
+          }}
+          onClick={handleDisconnect}
+        >
+          Disconnect Account
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {/* Logout Button */}
+  <div
+    style={{
+      textAlign: "center",
+      width: "100%",
+      marginTop: "30px", // Spacing between div and logout button
+    }}
+  >
+    <button
+      style={{
+        padding: "10px 15px",
+        border: "none",
+        borderRadius: "5px",
+        cursor: "pointer",
+        backgroundColor: "#d9534f",
+        color: "#fff",
+        width: "100%",
+      }}
+      onClick={signOut}
+    >
+      Logout
+    </button>
+  </div>
+  <br />
+  <br />
+  <div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: "20px 0",
+    fontSize: "1rem",
+    fontWeight: "bold",
+    color: "#555",
+    textTransform: "uppercase",
+  }}
+>
+  <span
+    style={{
+      flex: "1",
+      borderBottom: "1px solid #ccc",
+      margin: "0 10px",
+    }}
+  ></span>
+  Disconnected Account
+  <span
+    style={{
+      flex: "1",
+      borderBottom: "1px solid #ccc",
+      margin: "0 10px",
+    }}
+  ></span>
+</div>
+<br />
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+      padding: "20px",
+      border: "1px solid #ddd",
+      borderRadius: "8px",
+      width: "100%", // Adjusted for wider width
+      margin: "0",
+      backgroundColor: "#f0f8ff",
+    }}
+  >
+    {/* Main Div */}
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexWrap: "wrap", // Ensures wrapping on mobile
+        width: "100%",
+      }}
+    >
+      {/* Photo Div */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          marginRight: "10px",
+          marginBottom: "10px", // Adds spacing for mobile wrapping
+        }}
+      >
+        <img
+          src="/placeholder-photo.jpg" // Replace with the actual photo URL
+          alt="Profile"
+          style={{
+            width: "60px",
+            height: "60px",
+            borderRadius: "50%",
+            marginRight: "10px",
+            objectFit: "cover",
+            border: "2px dashed #ccc",
+          }}
+        />
+        {/* Labels for Name and Username */}
+        <div>
+          <p
+            style={{
+              fontWeight: "bold",
+              fontSize: "1rem",
+              margin: "0",
+              color: "#333",
+            }}
+          >
+            John Doe {/* Replace with dynamic name */}
+          </p>
+          <p
+            style={{
+              fontSize: "0.9rem",
+              margin: "0",
+              color: "#555",
+            }}
+          >
+            @johndoe {/* Replace with dynamic username */}
+          </p>
+        </div>
+      </div>
+
+      {/* Buttons Div */}
+      <div
+        style={{
+          display: "flex",
+          gap: "10px",
+          flexWrap: "wrap", // Wrap buttons on mobile
+        }}
+      >
+        <button
+          style={{
+            padding: "10px 15px",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            backgroundColor: "#5cb85c",
+            color: "#fff",
+          }}
+          onClick={handleDisconnect}
+        >
+          Connect Account
+        </button>
+      </div>
+    </div>
+  </div>
+</>
+
+
         );
       default:
         return <div>Select a tab to view settings.</div>;
