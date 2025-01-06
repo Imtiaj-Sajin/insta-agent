@@ -10,8 +10,8 @@ const Ai = () => {
 
   return (
     <div className="ai-container">
-      {/* Sidebar */}
-      <div className="sidebar">
+      {/* AiSidebar */}
+      <div className="AiSidebar">
         <ul>
           <li
             className={activeTab === "files" ? "active" : ""}
