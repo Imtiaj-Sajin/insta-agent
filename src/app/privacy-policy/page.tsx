@@ -1,9 +1,6 @@
-// File: ./src/app/privacy-policy/page.tsx
-// "use client";
-// import React, { useEffect, useState } from 'react';
 import styles from './PrivacyPolicy.module.css';
 import Head from 'next/head';
-// import './../style.module.css';
+
 
 
 
