@@ -18,6 +18,8 @@ import { FaRobot, FaBell, FaUser, FaComments, FaCog } from "react-icons/fa";
 import { ImStatsBars2 } from "react-icons/im";
 import { FiPower } from "react-icons/fi";
 import { loginIsRequiredServer } from "@/lib/auth";
+import { LuBotMessageSquare } from "react-icons/lu";
+import { RiChatVoiceAiFill } from "react-icons/ri";
 
 const queryClient = new QueryClient();
 
@@ -138,8 +140,8 @@ function Navbar({ onSelect }: NavbarProps) {
       </button>
       
       <button onClick={() => onSelect("ai")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>
-        <ImStatsBars2 />
-        <span>Ai</span>
+        <RiChatVoiceAiFill />
+        <span>Chat Bot</span>
       </button>
 
       <button onClick={() => onSelect("settings")} className="flex items-center space-x-2" style={{justifyContent:'left'}}>
