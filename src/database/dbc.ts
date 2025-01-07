@@ -12,7 +12,7 @@ const pool = mysql.createPool({
   host: 'localhost', // Default hostname for local connections
   user: 'root',      // Default MySQL username (replace if you've changed it)
   password: '',      // Default MySQL password (replace with your actual password if set)
-  database: 'instaNew', // Replace with your database name
+  database: 'instaagent', // Replace with your database name
   port: 3306         // Default MySQL port
 });
 

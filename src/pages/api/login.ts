@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       try {
         // Query to find the user in the credentials table
         const [rows]: any[] = await connection.query(
-          "SELECT * FROM credentials WHERE email = ?",
+          "SELECT * FROM User WHERE email = ?",
           [email]
         );
 

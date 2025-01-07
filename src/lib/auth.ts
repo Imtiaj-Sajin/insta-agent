@@ -20,7 +20,7 @@ export const authConfig: NextAuthOptions = {
         try {
           // Query the user table in MySQL
           const [userRows]: any[] = await pool.promise().query(
-            "SELECT * FROM users WHERE email = ?",
+            "SELECT * FROM user WHERE email = ?",
             [credentials.email]
           );
           const dbUser = userRows[0];
@@ -36,7 +36,7 @@ export const authConfig: NextAuthOptions = {
 
           // Check in the admin table in MySQL
           const [adminRows]: any[] = await pool.promise().query(
-            "SELECT * FROM admins WHERE email = ?",
+            "SELECT * FROM admin WHERE email = ?",
             [credentials.email]
           );
           const adminUser = adminRows[0];
@@ -70,7 +70,7 @@ export const authConfig: NextAuthOptions = {
 
           // Check if the email exists in the admin table
           const [adminRows]: any[] = await pool.promise().query(
-            "SELECT * FROM admins WHERE email = ?",
+            "SELECT * FROM admin WHERE email = ?",
             [email]
           );
           const adminUser = adminRows[0];
@@ -81,7 +81,7 @@ export const authConfig: NextAuthOptions = {
           } else {
             // Check if the email exists in the user table
             const [userRows]: any[] = await pool.promise().query(
-              "SELECT * FROM users WHERE email = ?",
+              "SELECT * FROM user WHERE email = ?",
               [email]
             );
             const dbUser = userRows[0];
