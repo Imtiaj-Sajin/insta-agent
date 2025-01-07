@@ -6,7 +6,6 @@ import { getSession } from 'next-auth/react';
 
 export async function middleware(req:any) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  console.log("token ==> ", token);
   const url = req.nextUrl.pathname;
   if (!token) {
     return NextResponse.redirect(new URL('/', req.url));

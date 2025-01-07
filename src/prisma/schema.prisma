@@ -34,12 +34,12 @@ model Automationsettings {
   id              Int    @id @default(autoincrement())
   messagemin      Int?
   messagemax      Int?
-  commentmin      Int?
+  commentmin      Int?  
   commentmax      Int?
   dailyauto       Int?
   cycle           Int?
   notaskrest      Int?
-  pageaccesstoken String?
+  pageaccesstoken String? 
   pageusername    String? @unique
-  adminid         Int?
+  adminid         Int?    @unique
 }

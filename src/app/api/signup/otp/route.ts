@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
 import nodemailer from 'nodemailer';
+import { pool } from '../../../../database/dbc';  // Import your MySQL pool
 
-const prisma = new PrismaClient();
-
+// Create a nodemailer transport
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
@@ -19,12 +18,14 @@ export async function POST(req: NextRequest) {
   try {
     const { email } = await req.json();
 
-    // Check if user already exists
-    const existingUser = await prisma.admin.findUnique({
-      where: { email },
-    });
+    // Check if email already exists in the admins table
+    const [existingAdminRows]: any = await pool.execute(
+      'SELECT * FROM admin WHERE email = ?',
+      [email]
+    );
 
-    if (existingUser) {
+    if (existingAdminRows.length > 0) {
+      // If email exists, return an error
       return NextResponse.json(
         { error: 'Email already registered' },
         { status: 409 }
@@ -36,11 +37,12 @@ export async function POST(req: NextRequest) {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes expiry
 
     // Save OTP to the database
-    await prisma.otp.upsert({
-      where: { email },
-      update: { code: otp, expiresAt },
-      create: { email, code: otp, expiresAt },
-    });
+    await pool.execute(
+      `INSERT INTO otp (email, code, expiresAt) 
+      VALUES (?, ?, ?)
+      ON DUPLICATE KEY UPDATE code = ?, expiresAt = ?`,
+      [email, otp, expiresAt, otp, expiresAt]
+    );
 
     // Send OTP via email
     await transporter.sendMail({
