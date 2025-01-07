@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
 
     // Check if email already exists in the admins table
     const [existingAdminRows]: any = await pool.execute(
-      'SELECT * FROM admins WHERE email = ?',
+      'SELECT * FROM admin WHERE email = ?',
       [email]
     );
 
