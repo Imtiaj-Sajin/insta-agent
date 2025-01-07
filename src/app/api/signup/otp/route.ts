@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
-import { pool } from '../../../../database/dbc';  // Import the MySQL pool
+import { pool } from '../../../../database/dbc';  // Import your MySQL pool
 
 // Create a nodemailer transport
 const transporter = nodemailer.createTransport({
@@ -19,10 +19,21 @@ export async function POST(req: NextRequest) {
     const { email } = await req.json();
 
     // Check if user already exists in the admins table
-    const [existingUserRows]: [any[]] = await pool.execute(
-      'SELECT * FROM admins WHERE email = ?',
-      [email]
-    );
+    let existingUserRows;
+    try {
+      const query = "SELECT agent_id, username, name, email, phone, title FROM agents;";
+      
+      // Execute query using MySQL pool
+      const [results]:any = await pool.execute(query);
+
+      existingUserRows = results;
+    } catch (error) {
+      console.error("Error in query execution:", error);
+      return NextResponse.json(
+        { error: "Failed to fetch agents" },
+        { status: 500 }
+      );
+    }
 
     if (existingUserRows.length > 0) {
       return NextResponse.json(
