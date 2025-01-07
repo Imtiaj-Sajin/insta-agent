@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from "react";
 import Link from "next/link";
-import styles from "./signIn.module.css";
+import styles from "./signup.module.css";
 // import { useRouter } from "next/navigation";
 import { redirect } from "next/navigation";
 const SignUpPage = () => {
