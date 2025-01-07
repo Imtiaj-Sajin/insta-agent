@@ -1,10 +1,10 @@
 import mysql from 'mysql2';
 
 const pool = mysql.createPool({
-  host: 'https://phpstack-1385749-5130276.cloudwaysapps.com',  // Replace with the host you found
-  user: 'eusgvaqdpj',                     // Replace with your MySQL username
-  password: 'tsQ7Fsmj9x',             // Replace with your MySQL password
-  database: 'eusgvaqdpj',                      // Replace with your database name
+  host: 'commentzap.com',  // Replace with the host you found
+  user: 'ubfmchaagz',                     // Replace with your MySQL username
+  password: 'HNKUtvaY9D',             // Replace with your MySQL password
+  database: 'ubfmchaagz',                      // Replace with your database name
   port: 3306,                                  // Default MySQL port
 });
 
