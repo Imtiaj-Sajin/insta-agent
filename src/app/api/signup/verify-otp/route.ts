@@ -1,21 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { pool } from '../../../../database/dbc'; // Import your MySQL pool
 
 export async function POST(req: NextRequest) {
   try {
     const { email, otp } = await req.json();
 
-    // Find the OTP record
-    const otpRecord = await prisma.otp.findUnique({
-      where: { email },
-    });
+    // Retrieve the OTP record from the database
+    const [rows]: any = await pool.promise().execute(
+      'SELECT * FROM otp WHERE email = ?',
+      [email]
+    );
 
-    if (!otpRecord) {
+    if (rows.length === 0) {
       return NextResponse.json({ error: 'OTP not found' }, { status: 404 });
     }
 
+    const otpRecord = rows[0];
     if (otpRecord.code !== otp) {
       return NextResponse.json({ error: 'Invalid OTP' }, { status: 400 });
     }
@@ -24,10 +24,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'OTP expired' }, { status: 400 });
     }
 
-    // OTP verified, delete OTP record
-    await prisma.otp.delete({
-      where: { email },
-    });
+    // OTP verified, delete the OTP record
+    await pool.promise().execute('DELETE FROM otp WHERE email = ?', [email]);
 
     return NextResponse.json({ message: 'OTP verified' });
   } catch (error) {

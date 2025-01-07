@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
-
-const prisma = new PrismaClient();
+import { pool } from '../../../../database/dbc'; // Import your MySQL pool
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,19 +9,17 @@ export async function POST(req: NextRequest) {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Save user to the database
-    const newAdmin = await prisma.admin.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-      },
-    });
+    // Save the user in the database
+    const [result]: any = await pool.promise().execute(
+      'INSERT INTO admin (name, email, password) VALUES (?, ?, ?)',
+      [name, email, hashedPassword]
+    );
 
+    // Respond with success
     return NextResponse.json(
       {
         message: 'User registered successfully',
-        user: { id: newAdmin.id, name: newAdmin.name, email: newAdmin.email },
+        user: { id: result.insertId, name, email },
       },
       { status: 201 }
     );

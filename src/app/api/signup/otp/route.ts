@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
-import { pool } from '../../../../database/dbc';  // Import your MySQL pool
+import { pool } from '../../../../database/dbc'; // Import your MySQL pool
 
-// Create a nodemailer transport
+// Nodemailer setup
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
   tls: {
-    rejectUnauthorized: false, // Allow self-signed certificates
+    rejectUnauthorized: false,
   },
 });
 
@@ -18,14 +18,12 @@ export async function POST(req: NextRequest) {
   try {
     const { email } = await req.json();
 
-    // Check if email already exists in the admins table
-    const [existingAdminRows]: any = await pool.execute(
+    // Check if the email is already registered
+    const [existingAdminRows]: any = await pool.promise().execute(
       'SELECT * FROM admin WHERE email = ?',
       [email]
     );
-
     if (existingAdminRows.length > 0) {
-      // If email exists, return an error
       return NextResponse.json(
         { error: 'Email already registered' },
         { status: 409 }
@@ -37,7 +35,7 @@ export async function POST(req: NextRequest) {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes expiry
 
     // Save OTP to the database
-    await pool.execute(
+    await pool.promise().execute(
       `INSERT INTO otp (email, code, expiresAt) 
       VALUES (?, ?, ?)
       ON DUPLICATE KEY UPDATE code = ?, expiresAt = ?`,
