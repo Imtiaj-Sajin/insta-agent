@@ -17,7 +17,7 @@ const SignUpPage = () => {
     
     e.preventDefault();
     try {
-      const response = await fetch("/api/otp", {
+      const response = await fetch("/api/signup/otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -34,33 +34,13 @@ const SignUpPage = () => {
       console.error("Error sending OTP:", error);
       alert("Failed to send OTP");
     }
-    // try {
-    //   const response = await fetch("/api/signup/allAdmins", {
-    //     method: "GET",
-    //   });
-    
-    //   // Parse response
-    //   const data = await response.json();
-    
-    //   if (response.ok) {
-    //     alert("OTP sent to your email!");
-    //     setStep(2);
-    //   } else {
-    //     // Handle server error message
-    //     alert(data.error || "Something went wrong. Please try again.");
-    //   }
-    // } catch (error: any) {
-    //   // Handle network or unexpected errors
-    //   console.error("Error sending OTP:", error.message || error);
-    //   alert("Failed to send OTP. Please check your connection and try again.");
-    // }
     
   };
 
   const handleOtpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/verify-otp", {
+      const response = await fetch("/api/signup/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp }),
@@ -88,7 +68,7 @@ const SignUpPage = () => {
           return;
         }
         try {
-          const response = await fetch("/api/register", {
+          const response = await fetch("/api/signup/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password, name}),
@@ -97,7 +77,6 @@ const SignUpPage = () => {
       
           if (response.ok) {
             alert("Signup successful!");
-            // window.location.href = "https://nkf448kn-3000.asse.devtunnels.ms/"; 
             window.location.href = process.env.NEXT_PUBLIC_BASE_URL || "/";
             // redirect("/");
           } else {

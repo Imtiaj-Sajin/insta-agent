@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
-import { pool } from '../../database/dbc'; // Import your MySQL pool
+import { pool } from '../../../../database/dbc'; // Import your MySQL pool
 
-// Nodemailer setup
+
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
