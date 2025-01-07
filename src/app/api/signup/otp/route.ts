@@ -18,24 +18,14 @@ export async function POST(req: NextRequest) {
   try {
     const { email } = await req.json();
 
-    // Check if user already exists in the admins table
-    let existingUserRows;
-    try {
-      const query = "SELECT agent_id, username, name, email, phone, title FROM agents;";
-      
-      // Execute query using MySQL pool
-      const [results]:any = await pool.execute(query);
+    // Check if email already exists in the admins table
+    const [existingAdminRows]: any = await pool.execute(
+      'SELECT * FROM admins WHERE email = ?',
+      [email]
+    );
 
-      existingUserRows = results;
-    } catch (error) {
-      console.error("Error in query execution:", error);
-      return NextResponse.json(
-        { error: "Failed to fetch agents" },
-        { status: 500 }
-      );
-    }
-
-    if (existingUserRows.length > 0) {
+    if (existingAdminRows.length > 0) {
+      // If email exists, return an error
       return NextResponse.json(
         { error: 'Email already registered' },
         { status: 409 }
