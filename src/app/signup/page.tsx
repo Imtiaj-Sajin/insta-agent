@@ -16,25 +16,45 @@ const SignUpPage = () => {
     // redirect("/");
     
     e.preventDefault();
-    try {
-      
-      const response = await fetch("/api/otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      const data = await response.json();
+    // try {
+    //   const response = await fetch("/api/otp", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({ email }),
+    //   });
+    //   const data = await response.json();
 
+    //   if (response.ok) {
+    //     alert("OTP sent to your email!");
+    //     setStep(2);
+    //   } else {
+    //     alert(data.error || "Something went wrong");
+    //   }
+    // } catch (error) {
+    //   console.error("Error sending OTP:", error);
+    //   alert("Failed to send OTP");
+    // }
+    try {
+      const response = await fetch("/api/signup/allAdmins", {
+        method: "GET",
+      });
+    
+      // Parse response
+      const data = await response.json();
+    
       if (response.ok) {
         alert("OTP sent to your email!");
         setStep(2);
       } else {
-        alert(data.error || "Something went wrong");
+        // Handle server error message
+        alert(data.error || "Something went wrong. Please try again.");
       }
-    } catch (error) {
-      console.error("Error sending OTP:", error);
-      alert("Failed to send OTP");
+    } catch (error: any) {
+      // Handle network or unexpected errors
+      console.error("Error sending OTP:", error.message || error);
+      alert("Failed to send OTP. Please check your connection and try again.");
     }
+    
   };
 
   const handleOtpSubmit = async (e: React.FormEvent) => {
