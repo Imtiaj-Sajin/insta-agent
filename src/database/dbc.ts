@@ -1,7 +1,7 @@
 import mysql from 'mysql2';
 
 const pool = mysql.createPool({
-  host: 'phpstack-1385749-5129455.cloudwaysapps.com',  // Replace with the host you found
+  host: '146.190.92.168',  // Replace with the host you found
   user: 'eusgvaqdpj',                     // Replace with your MySQL username
   password: 'tsQ7Fsmj9x',             // Replace with your MySQL password
   database: 'eusgvaqdpj',                      // Replace with your database name
