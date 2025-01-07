@@ -18,7 +18,7 @@ const SignUpPage = () => {
     e.preventDefault();
     try {
       
-      const response = await fetch("/api/signup/otp", {
+      const response = await fetch("/api/otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -40,7 +40,7 @@ const SignUpPage = () => {
   const handleOtpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/signup/verify-otp", {
+      const response = await fetch("/api/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp }),
@@ -68,7 +68,7 @@ const SignUpPage = () => {
           return;
         }
         try {
-          const response = await fetch("/api/signup/register", {
+          const response = await fetch("/api/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password, name}),
