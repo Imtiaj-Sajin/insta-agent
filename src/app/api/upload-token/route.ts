@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma"; // Adjust the import path to your Prisma client
 import { getToken } from "next-auth/jwt";
 
 export async function POST(req: NextRequest) {
