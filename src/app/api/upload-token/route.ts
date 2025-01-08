@@ -13,8 +13,10 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+    console.log("process.env.NEXTAUTH_SECRET ==> ", process.env.NEXTAUTH_SECRET);
 
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET});
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
     console.log("token in upload-token api==> ", token);
     if (!token || !token.adminid) {
       return NextResponse.json(

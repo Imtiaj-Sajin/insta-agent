@@ -7,7 +7,7 @@ import { pool } from '@/database/dbc'; // Import your MySQL connection pool
 export async function GET(req: NextRequest) {
   try {
     // Extract the token using NextAuth
-    const token = await getToken({ req });
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET});
 
     // If token doesn't exist, return 401 Unauthorized
     if (!token || !token.adminid) {
