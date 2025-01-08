@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const token = await getToken({ req });
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET});
     console.log("token in upload-token api==> ", token);
     if (!token || !token.adminid) {
       return NextResponse.json(
