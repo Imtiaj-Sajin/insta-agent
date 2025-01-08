@@ -9,12 +9,11 @@ export async function GET(req: NextRequest) {
     // Extract the token using NextAuth
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET});
 
-    // If token doesn't exist, return 401 Unauthorized
     if (!token || !token.adminid) {
       return NextResponse.json({ error: 'Unauthorized: Token not found or invalid' }, { status: 401 });
     }
 
-    const adminid = token.adminid; // Get admin ID from the token
+    const adminid = token.id; // Get admin ID from the token
 
     // Query the database to get the page access token
     const [rows]: any = await pool
@@ -24,6 +23,7 @@ export async function GET(req: NextRequest) {
     if (rows.length === 0) {
       return NextResponse.json({ error: 'Page access token not found' }, { status: 404 });
     }
+    console.log("rows : ", rows)
 
     // Return the page access token in the response
     const { pageaccesstoken } = rows[0];

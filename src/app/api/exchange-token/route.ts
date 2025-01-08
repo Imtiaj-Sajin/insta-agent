@@ -1,7 +1,9 @@
 // src/app/api/exchange-token/route.ts
+import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
     const body = await req.json();
     const code = body.code; // Access the code from the request body
 
@@ -65,7 +67,7 @@ export async function POST(req: NextRequest) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ pageaccesstoken: pageAccessToken }),
+            body: JSON.stringify({ pageaccesstoken: pageAccessToken, adminid: token?.id }),
         });
 
         console.log("saveTokenResponse ==> ", saveTokenResponse);
