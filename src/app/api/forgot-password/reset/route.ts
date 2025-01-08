@@ -1,19 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
-
-const prisma = new PrismaClient();
+import {pool} from '@/database/dbc'; // Adjust the path if necessary
 
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
 
+    // Hash the new password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await prisma.admin.update({
-      where: { email },
-      data: { password: hashedPassword },
-    });
+    await pool.query('UPDATE admin SET password = ? WHERE email = ?', [hashedPassword, email]);
 
     return NextResponse.json({ message: 'Password reset successfully' });
   } catch (error) {

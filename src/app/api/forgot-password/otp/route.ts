@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import {pool} from '@/database/dbc'; // Adjust this path if necessary
 import nodemailer from 'nodemailer';
 
-const prisma = new PrismaClient();
+// Nodemailer setup
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
@@ -18,26 +18,33 @@ export async function POST(req: NextRequest) {
   try {
     const { email } = await req.json();
 
-    const existingUser = await prisma.admin.findUnique({
-      where: { email },
-    });
+    // Check if the email exists in the `admin` table
+    const [userResult]: any = await pool.query('SELECT * FROM admin WHERE email = ?', [email]);
 
-    if (!existingUser) {
+    if (userResult.length === 0) {
       return NextResponse.json(
         { error: 'Email not registered' },
         { status: 404 }
       );
     }
 
+    // Generate OTP and expiration time
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    await prisma.otp.upsert({
-      where: { email },
-      update: { code: otp, expiresAt },
-      create: { email, code: otp, expiresAt },
-    });
+    // Upsert OTP
+    await pool.query(
+      `
+      INSERT INTO otp (email, code, expiresAt) 
+      VALUES (?, ?, ?)
+      ON DUPLICATE KEY UPDATE
+        code = VALUES(code),
+        expiresAt = VALUES(expiresAt)
+      `,
+      [email, otp, expiresAt]
+    );
 
+    // Send email with OTP
     await transporter.sendMail({
       from: process.env.EMAIL,
       to: email,
