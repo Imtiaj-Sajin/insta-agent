@@ -8,8 +8,9 @@ export async function GET(req: NextRequest) {
   try {
     // Extract the token using NextAuth
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET});
+    console.log("token GET get-tokens==> ", token);
 
-    if (!token || !token.adminid) {
+    if (!token || !token.id) {
       return NextResponse.json({ error: 'Unauthorized: Token not found or invalid' }, { status: 401 });
     }
 
