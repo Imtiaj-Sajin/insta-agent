@@ -27,20 +27,20 @@ export async function POST(req: NextRequest) {
 
     // Save the token in the database (upsert equivalent in MySQL)
     const [existingRow]: any = await pool.promise().query(
-      "SELECT * FROM automationsettings WHERE adminid = ?",
+      "SELECT * FROM Automationsettings WHERE adminid = ?",
       [adminid]
     );
 
     if (existingRow.length > 0) {
       // Update if the adminid already exists
       await pool.promise().execute(
-        "UPDATE automationsettings SET pageaccesstoken = ? WHERE adminid = ?",
+        "UPDATE Automationsettings SET pageaccesstoken = ? WHERE adminid = ?",
         [pageaccesstoken, adminid]
       );
     } else {
       // Insert if the adminid doesn't exist
       await pool.promise().execute(
-        "INSERT INTO automationsettings (pageaccesstoken, adminid) VALUES (?, ?)",
+        "INSERT INTO Automationsettings (pageaccesstoken, adminid) VALUES (?, ?)",
         [pageaccesstoken, adminid]
       );
     }

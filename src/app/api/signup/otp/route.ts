@@ -13,6 +13,8 @@ const transporter = nodemailer.createTransport({
     rejectUnauthorized: false,
   },
 });
+console.log("process.env.EMAIL ==> ", process.env.EMAIL);
+console.log("process.env.EMAIL_PASS ==> ", process.env.EMAIL_PASS);
 
 export async function POST(req: NextRequest) {
   try {

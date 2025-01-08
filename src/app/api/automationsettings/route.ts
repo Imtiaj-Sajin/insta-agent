@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
     // Query the database to fetch automation settings
     const [rows]: any = await pool
       .promise()
-      .execute("SELECT * FROM automationsettings WHERE adminid = ?", [adminId]);
+      .execute("SELECT * FROM Automationsettings WHERE adminid = ?", [adminId]);
 
     if (rows.length === 0) {
       return NextResponse.json(
@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
     // Check if a record exists for the adminId
     const [existingRecords]: any = await pool
       .promise()
-      .execute("SELECT id FROM automationsettings WHERE adminid = ?", [
+      .execute("SELECT id FROM Automationsettings WHERE adminid = ?", [
         adminId,
       ]);
 
@@ -92,7 +92,7 @@ export async function POST(req: NextRequest) {
         .promise()
         .execute(
           `
-          UPDATE automationsettings 
+          UPDATE Automationsettings 
           SET dailyauto = ?, cycle = ?, notaskrest = ?, messagemin = ?, messagemax = ?, commentmin = ?, commentmax = ? 
           WHERE id = ?`,
           [
@@ -130,7 +130,7 @@ export async function POST(req: NextRequest) {
         .promise()
         .execute(
           `
-          INSERT INTO automationsettings (adminid, dailyauto, cycle, notaskrest, messagemin, messagemax, commentmin, commentmax) 
+          INSERT INTO Automationsettings (adminid, dailyauto, cycle, notaskrest, messagemin, messagemax, commentmin, commentmax) 
           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             adminId,

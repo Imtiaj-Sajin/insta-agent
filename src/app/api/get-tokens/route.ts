@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
     // Query the database to get the page access token
     const [rows]: any = await pool
       .promise()
-      .execute('SELECT pageaccesstoken FROM automationsettings WHERE adminid = ?', [adminid]);
+      .execute('SELECT pageaccesstoken FROM Automationsettings WHERE adminid = ?', [adminid]);
 
     if (rows.length === 0) {
       return NextResponse.json({ error: 'Page access token not found' }, { status: 404 });
