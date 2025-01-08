@@ -3,6 +3,9 @@ import { getToken } from "next-auth/jwt";
 import { pool } from "@/database/dbc"; // Import your MySQL pool
 
 export async function POST(req: NextRequest) {
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  console.log("token 7th line ==> ", token);
+
   try {
     const body = await req.json();
     const { pageaccesstoken } = body;
@@ -13,10 +16,10 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    console.log("process.env.NEXTAUTH_SECRET ==> ", process.env.NEXTAUTH_SECRET);
+    console.log("process.env.NEXTAUTH_SECRET =efewfe=> ", process.env.NEXTAUTH_SECRET);
 
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-
+    const adminid = token?.id; // Use adminid from the token
+    console.log("adminid ==> ", adminid);
     console.log("token in upload-token api==> ", token);
     if (!token || !token.adminid) {
       return NextResponse.json(
@@ -25,8 +28,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const adminid = token.adminid; // Use adminid from the token
-    console.log("adminid ==> ", adminid);
+
 
     // Save the token in the database (upsert equivalent in MySQL)
     const [existingRow]: any = await pool.promise().query(
