@@ -13,14 +13,18 @@ const transporter = nodemailer.createTransport({
     rejectUnauthorized: false,
   },
 });
+console.log("process.env.EMAIL ==> ", process.env.EMAIL);
+console.log("process.env.EMAIL_PASS ==> ", process.env.EMAIL_PASS);
 
 export async function POST(req: NextRequest) {
   try {
     const { email } = await req.json();
 
     // Check if the email exists in the `admin` table
-    const [userResult]: any = await pool.query('SELECT * FROM admin WHERE email = ?', [email]);
-
+    const [userResult]: any = await pool.promise().execute(
+      'SELECT * FROM admin WHERE email = ?',
+      [email]
+    );
     if (userResult.length === 0) {
       return NextResponse.json(
         { error: 'Email not registered' },
@@ -33,15 +37,11 @@ export async function POST(req: NextRequest) {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
     // Upsert OTP
-    await pool.query(
-      `
-      INSERT INTO otp (email, code, expiresAt) 
+    await pool.promise().execute(
+      `INSERT INTO otp (email, code, expiresAt) 
       VALUES (?, ?, ?)
-      ON DUPLICATE KEY UPDATE
-        code = VALUES(code),
-        expiresAt = VALUES(expiresAt)
-      `,
-      [email, otp, expiresAt]
+      ON DUPLICATE KEY UPDATE code = ?, expiresAt = ?`,
+      [email, otp, expiresAt, otp, expiresAt]
     );
 
     // Send email with OTP

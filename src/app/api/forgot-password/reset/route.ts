@@ -6,13 +6,12 @@ export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
 
-    // Hash the new password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await pool.query('UPDATE admin SET password = ? WHERE email = ?', [hashedPassword, email]);
-
+    //await pool.query('UPDATE admin SET password = ? WHERE email = ?', [hashedPassword, email]);
+    await pool.promise().execute('UPDATE admin SET password = ? WHERE email = ?', [hashedPassword, email]);
     return NextResponse.json({ message: 'Password reset successfully' });
-  } catch (error) {
+  } catch (error) { 
     console.error('Error resetting password:', error);
     return NextResponse.json(
       { error: 'Failed to reset password' },

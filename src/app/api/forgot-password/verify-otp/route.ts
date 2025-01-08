@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
   try {
     const { email, otp } = await req.json();
 
-    const [otpRecord]: any = await pool.query('SELECT * FROM otp WHERE email = ?', [email]);
+    const [otpRecord]: any = await pool.promise().execute('SELECT * FROM otp WHERE email = ?', [email]);
 
     if (otpRecord.length === 0) {
       return NextResponse.json({ error: 'OTP not found' }, { status: 404 });
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Delete the OTP record after verification
-    await pool.query('DELETE FROM otp WHERE email = ?', [email]);
+    await pool.promise().execute('DELETE FROM otp WHERE email = ?', [email]);
 
     return NextResponse.json({ message: 'OTP verified' });
   } catch (error) {
