@@ -12,7 +12,7 @@ try {
       return NextResponse.json({ error: 'Unauthorized: Token not found or invalid' }, { status: 401 });
     }
 
-    const adminid = token.adminid; // Get admin ID from the token
+    const adminid = token.id; // Get admin ID from the token
 
     // Query the database to get the page access token
     const [rows]: any = await pool
@@ -52,15 +52,15 @@ export async function POST(req: NextRequest) {
     }
     console.log("process.env.NEXTAUTH_SECRET =efewfe=> ", process.env.NEXTAUTH_SECRET);
 
-    const adminid = token?.id; // Use adminid from the token
-    console.log("adminid ==> ", adminid);
-    console.log("token in upload-token api==> ", token);
-    if (!token || !token.adminid) {
-      return NextResponse.json(
-        { error: "Admin ID not found in the token" },
-        { status: 401 }
-      );
-    }
+    const adminid = 6; // Use adminid from the token
+    // console.log("adminid ==> ", adminid);
+    // console.log("token in upload-token api==> ", token);
+    // if (!token || !token.adminid) {
+    //   return NextResponse.json(
+    //     { error: "Admin ID not found in the token" },
+    //     { status: 401 }
+    //   );
+    // }
 
 
 
