@@ -15,6 +15,7 @@ export async function POST(req: NextRequest) {
     }
 
     const token = await getToken({ req });
+    console.log("token in upload-token api==> ", token);
     if (!token || !token.adminid) {
       return NextResponse.json(
         { error: "Admin ID not found in the token" },

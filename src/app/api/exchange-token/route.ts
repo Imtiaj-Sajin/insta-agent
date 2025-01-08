@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
         console.log('Page access token:', pageAccessToken);
         // Return both the long-lived user access token and the page access token
 
-        const saveTokenResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/upload-token`, {
+        const saveTokenResponse = await fetch(`/api/upload-token`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -68,6 +68,7 @@ export async function POST(req: NextRequest) {
             body: JSON.stringify({ pageaccesstoken: pageAccessToken }),
         });
 
+        console.log("saveTokenResponse ==> ", saveTokenResponse);
 
         const res = NextResponse.json({ success: true, pageAccessToken: pageAccessToken });
         
