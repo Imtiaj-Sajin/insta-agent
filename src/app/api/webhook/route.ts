@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
       const parsedData = parseWebhookPayload(payload);
       console.log("Parsed webhook payload:", parsedData);
       if(parsedData.mediaType==='FEED' && parsedData.username!=process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME){
-          await fetch('https://j7f0x0n5-3000.asse.devtunnels.ms/api/storeWebhookComment', {
+          await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/storeWebhookComment`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
