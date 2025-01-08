@@ -52,53 +52,28 @@ const Messages = () => {
   //     setLoading(false);
   //   }
   // }, [isFetched]);
-const exchangeToken = async (code: string) => {
-  try {
-    const cookieResponse = await fetch('/api/get-tokens'); 
-    const cookieData = await cookieResponse.json();
-
-    if (cookieResponse.ok && cookieData.pageAccessToken) {
-      console.log('Page access token retrieved from cookies:', cookieData.pageAccessToken);
-      setPageAccessToken(cookieData.pageAccessToken);
-    } else {
-      console.log('Page access token not found in cookies. Attempting to exchange token.');
-
-      const tokenResponse = await fetch('/api/exchange-token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ code }), 
-      });
-
-      const tokenData = await tokenResponse.json();
-
-      if (tokenResponse.ok) {
-        const pageAccessToken = tokenData.pageAccessToken;
-        console.log('Page access token retrieved via exchange-token API:', pageAccessToken);
-
-        setPageAccessToken(pageAccessToken);
+  const exchangeToken = async () => {
+    try {
+      const response = await fetch('/api/get-tokens');
+      const data = await response.json();
+  
+      if (response.ok && data.pageAccessToken) {
+        console.log('Page access token retrieved:', data.pageAccessToken);
+        setPageAccessToken(data.pageAccessToken);
       } else {
-        console.error('Failed to exchange token:', tokenData.error);
+        alert('Please reauthenticate your account.');
       }
+    } catch (err) {
+      console.error('Error fetching page access token:', err);
     }
-  } catch (err) {
-    console.error('Error handling token exchange process:', err);
-  }
-};
-
-
+  };
+  
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    if (code) {
-      if(!pageAccessToken){
-          exchangeToken(code);
-      }
-    } else {
-      console.error('Authorization code not found');
+    if (!pageAccessToken) {
+      exchangeToken();
     }
-  }, []);
+  }, [pageAccessToken]);
+  
 
   useEffect(() => {
     const handleResize = () => {
