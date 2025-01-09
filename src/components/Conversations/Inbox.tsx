@@ -5,7 +5,7 @@ import io from 'socket.io-client';
 import ImageModal from '@/utils/imagePreview';
 import { determineFileType, parseWebhookPayload, isLink, getImageUrl, sendText, sendImage, sendVideo} from '@/utils/functions';
 import { Conversation, Message } from '@/types/interfaces';
-
+import Image from 'next/image';
 const socket = io('http://localhost:3001/'); 
 
 interface InboxProps {
@@ -282,11 +282,16 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
         >
           {attachments.map((attachment, index) => (
             <div key={index} style={{ position: 'relative', margin: "0px",marginLeft: "5px", padding: "0px", width: 50, height: 50, overflow: 'hidden', borderRadius: 8 }}>
-              <img
+              {/* <img
                 src={attachment.previewUrl}
                 alt="Preview"
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
+              />               */}
+              <Image
+              src={attachment.previewUrl}
+              alt="Preview"
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
               <button
                 onClick={() => removeAttachment(index)}
                 style={{

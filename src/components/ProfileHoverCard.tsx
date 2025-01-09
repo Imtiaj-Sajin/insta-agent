@@ -1,5 +1,6 @@
 import { signOut } from "next-auth/react";
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 
 const ProfileHoverCard = ({ token }: { token: any }) => {
   const [isCardVisible, setIsCardVisible] = useState(false); // State to toggle card visibility
@@ -32,7 +33,17 @@ const ProfileHoverCard = ({ token }: { token: any }) => {
     <div style={{ position: "relative", display: "inline-block" }}>
       {/* Profile Pic with onClick to toggle the hover card */}
       <div onClick={toggleCardVisibility}>
-        <img
+        {/* <img
+          src={token.picture?token.picture:"https://fakeimg.pl/300/"}
+          alt="Profile"
+          style={{
+            width: "30px",
+            height: "30px",
+            borderRadius: "50%",
+            cursor: "pointer",
+          }} 
+        />*/}
+          <Image
           src={token.picture?token.picture:"https://fakeimg.pl/300/"}
           alt="Profile"
           style={{
@@ -41,7 +52,7 @@ const ProfileHoverCard = ({ token }: { token: any }) => {
             borderRadius: "50%",
             cursor: "pointer",
           }}
-        />
+          />
       </div>
 
       {/* Profile Hover Card (Only shown when clicked) */}
@@ -66,7 +77,16 @@ const ProfileHoverCard = ({ token }: { token: any }) => {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <img
+            {/* <img
+              src={token.picture?token.picture:"https://fakeimg.pl/300/"}
+              alt="Profile"
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+              }}
+            /> */}
+            <Image
               src={token.picture?token.picture:"https://fakeimg.pl/300/"}
               alt="Profile"
               style={{
