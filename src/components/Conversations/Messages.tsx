@@ -3,6 +3,7 @@ import Inbox from './Inbox';
 import './conversations.css';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import ProfileCard from '../ProfileCard';
+import { IoIosSearch } from 'react-icons/io';
 import { GoKebabHorizontal } from 'react-icons/go';
 import {IoIosArrowBack} from 'react-icons/io'
 import { formatLastMessageTime, parseWebhookPayload } from '@/utils/functions';
@@ -133,6 +134,81 @@ return {
 
   return (
 <span style={{ display: "flex", flexDirection: isMobile ? "column" : "row", height: "100vh" }}>
+<div
+            style={{
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+              width: "100%",
+              maxWidth: "800px",
+              margin: "20px auto",
+              fontFamily: "Arial, sans-serif",
+            }}
+          >
+            {/* Header */}
+            <div
+              style={{
+                backgroundColor: "#f5f5f5",
+                padding: "10px",
+                borderBottom: "1px solid #ccc",
+                fontWeight: "bold",
+                textAlign: "center",
+              }}
+            >
+              Conversations
+            </div>
+
+            {/* Search and Filter Section */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "10px",
+              }}
+            >
+              {/* Search Input */}
+              <div style={{ flex: 1 }}>
+                <input
+                  type="text"
+                  placeholder="Search chats..."
+                  style={{
+                    width: "60%",
+                    padding: "5px",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
+                  }}
+                />
+                <button
+                  style={{
+                    marginLeft: "10px",
+                    padding: "5px 10px",
+                    border: "none",
+                    backgroundColor: "#007BFF",
+                    color: "white",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                  }}
+                >
+                  <IoIosSearch/>
+                </button>
+              </div>
+
+              {/* Filter Button */}
+              <button
+                style={{
+                  padding: "5px 10px",
+                  border: "none",
+                  backgroundColor: "#007BFF",
+                  color: "white",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  marginLeft: "10px",
+                }}
+              >
+                Filters by Agent
+              </button>
+            </div>
+          </div>
       {(!isMobile || currentView === "conversation") && (
         <span
           style={{
@@ -144,92 +220,8 @@ return {
           }}
         >
 
-          {/* <h1>Conversations</h1> */}
-          <div
-      style={{
-        border: "1px solid #ccc",
-        borderRadius: "8px",
-        width: "100%",
-        maxWidth: "800px",
-        margin: "20px auto",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
-      {/* Header */}
-      <div
-        style={{
-          backgroundColor: "#f5f5f5",
-          padding: "10px",
-          borderBottom: "1px solid #ccc",
-          fontWeight: "bold",
-          textAlign: "center",
-        }}
-      >
-        Conversations
-      </div>
+          {/* <h1>Conversations skeleton</h1> */}
 
-      {/* Search and Filter Section */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "10px",
-        }}
-      >
-        {/* Search Input */}
-        <div style={{ flex: 1 }}>
-          <label
-            style={{
-              fontSize: "14px",
-              fontWeight: "bold",
-              marginRight: "10px",
-            }}
-          >
-            Search:
-          </label>
-          <input
-            type="text"
-            placeholder="Search chats..."
-            style={{
-              width: "60%",
-              padding: "5px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-            }}
-          />
-          <button
-            style={{
-              marginLeft: "10px",
-              padding: "5px 10px",
-              border: "none",
-              backgroundColor: "#007BFF",
-              color: "white",
-              borderRadius: "4px",
-              cursor: "pointer",
-            }}
-          >
-            🔍
-          </button>
-        </div>
-
-        {/* Filter Button */}
-        <button
-          style={{
-            padding: "5px 10px",
-            border: "none",
-            backgroundColor: "#007BFF",
-            color: "white",
-            borderRadius: "4px",
-            cursor: "pointer",
-            marginLeft: "10px",
-          }}
-        >
-          Filters by Agent
-        </button>
-      </div>
-    </div>
-          {/* <h1>Conversations</h1> */}
           {!filteredConversations?
           Array.from({ length: 5 }).map((_, index) => (
             <div
