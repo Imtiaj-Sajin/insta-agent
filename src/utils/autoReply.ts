@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import io from "socket.io-client";
 
 // Replace with your server URL
-const socket = io("https://j7f0x0n5-3001.asse.devtunnels.ms/");
+const socket = io("http://localhost:3001/");
 
 export default function WebhookHandler() {
   useEffect(() => {

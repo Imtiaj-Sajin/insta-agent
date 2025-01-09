@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
           }),
         });
         
-        await fetch("https://j7f0x0n5-3001.asse.devtunnels.ms/api/sendMessage", {
+        await fetch("http://localhost:3001/api/sendMessage", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: body }),
@@ -118,7 +118,7 @@ export async function POST(req: NextRequest) {
       // }
       // else if(parsedData.commentId){return new Response('Comment replied', { status: 200 });}
       else{
-        await fetch("https://j7f0x0n5-3001.asse.devtunnels.ms/api/sendMessage", {
+        await fetch("http://localhost:3001/api/sendMessage", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: body }),
