@@ -35,7 +35,7 @@ const geistMono = localFont({
 });
 
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -95,7 +95,7 @@ function NavbarLayout({
       case "ai":
         return <Ai/>;
       default:
-        return <Settings/>;
+        return <Messages/>;
     }
   };
   

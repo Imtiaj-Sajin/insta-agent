@@ -1,7 +1,7 @@
 import { loginIsRequiredServer } from "@/lib/auth";
 
-export default async function Home() {
-    await loginIsRequiredServer();
+export default function Home() {
+    //await loginIsRequiredServer();
   
     return 
 }
