@@ -131,99 +131,63 @@ return {
     toggleView("inbox");
   };
 
-
+  const handleSearch = (query:any) => {
+    // const lowerCaseQuery = query.toLowerCase();
+    // const filtered = allConversations.filter((conv) =>
+    //   conv.name.toLowerCase().includes(lowerCaseQuery)
+    // );
+    // setFilteredConversations(filtered);
+  };
+  
   return (
 <span style={{ display: "flex", flexDirection: isMobile ? "column" : "row", height: "100vh" }}>
-<div
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              width: "100%",
-              maxWidth: "800px",
-              margin: "20px auto",
-              fontFamily: "Arial, sans-serif",
-            }}
-          >
-            {/* Header */}
-            <div
-              style={{
-                backgroundColor: "#f5f5f5",
-                padding: "10px",
-                borderBottom: "1px solid #ccc",
-                fontWeight: "bold",
-                textAlign: "center",
-              }}
-            >
-              Conversations
-            </div>
-
-            {/* Search and Filter Section */}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "10px",
-              }}
-            >
-              {/* Search Input */}
-              <div style={{ flex: 1 }}>
-                <input
-                  type="text"
-                  placeholder="Search chats..."
-                  style={{
-                    width: "60%",
-                    padding: "5px",
-                    border: "1px solid #ccc",
-                    borderRadius: "4px",
-                  }}
-                />
-                <button
-                  style={{
-                    marginLeft: "10px",
-                    padding: "5px 10px",
-                    border: "none",
-                    backgroundColor: "#007BFF",
-                    color: "white",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                  }}
-                >
-                  <IoIosSearch/>
-                </button>
-              </div>
-
-              {/* Filter Button */}
-              <button
-                style={{
-                  padding: "5px 10px",
-                  border: "none",
-                  backgroundColor: "#007BFF",
-                  color: "white",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  marginLeft: "10px",
-                }}
-              >
-                Filters by Agent
-              </button>
-            </div>
-          </div>
-      {(!isMobile || currentView === "conversation") && (
-        <span
+  {(!isMobile || currentView === "conversation") && (
+    <span
+      style={{
+        background: "#fff",
+        flex: isMobile ? "1" : "2",
+        display: isMobile && currentView !== "conversation" ? "none" : "block",
+        overflowY: "auto",
+        borderRight: isMobile ? "none" : "1px solid #ddd",
+      }}
+    >
+      {/* Add "Filter Chat" header and Search Box */}
+      <div style={{ padding: "10px", borderBottom: "1px solid #ddd", backgroundColor: "#f9f9f9", display: "flex", gap: "10px" }}>
+        {/* Search Box */}
+        <input
+          type="text"
+          placeholder="Search..."
           style={{
-            background:"#fff",
-            flex: isMobile ? "1" : "2",
-            display: isMobile && currentView !== "conversation" ? "none" : "block",
-            overflowY: "auto",
-            borderRight: isMobile ? "none" : "1px solid #ddd",
+            flex: "1",
+            padding: "8px",
+            border: "1px solid #ddd",
+            borderRadius: "4px",
+            fontSize: "1rem",
+          }}
+          onChange={(e) => handleSearch(e.target.value)} 
+        />
+        
+        {/* Filter Dropdown */}
+        <select
+          value={selectedFilter}
+          onChange={(e) => setSelectedFilter(e.target.value)} 
+          style={{
+            padding: "8px",
+            border: "1px solid #ddd",
+            borderRadius: "4px",
+            fontSize: "1rem",
           }}
         >
+          <option value="All">All</option>
+          <option value="Unanswered">Unanswered</option>
+          <option value="Agent1">Agent 1</option>
+          <option value="Agent2">Agent 2</option>
+        </select>
+      </div>
 
-          {/* <h1>Conversations skeleton</h1> */}
 
-          {!filteredConversations?
-          Array.from({ length: 5 }).map((_, index) => (
+      {!filteredConversations
+        ? Array.from({ length: 5 }).map((_, index) => (
             <div
               key={index}
               className="skeleton-loader"
@@ -236,94 +200,95 @@ return {
                 animation: "loading 1.5s infinite",
               }}
             ></div>
-          )):
-          filteredConversations.map((conv) => (
+          ))
+        : filteredConversations.map((conv) => (
             <span
-                key={conv.id}
-                onClick={() => handleSelectConversation(conv)}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = conv.isUnread ? '#f9f9f9' : 'white')}
+              key={conv.id}
+              onClick={() => handleSelectConversation(conv)}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f0f0f0")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = conv.isUnread ? "#f9f9f9" : "white")}
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "10px 10px",
+                borderBottom: "1px solid #ddd",
+                backgroundColor: conv.isUnread ? "#f9f9f9" : "white", // Highlight unread messages
+              }}
+            >
+              {/* Profile Picture */}
+              <Image
+                src={
+                  conv.participant_details?.profile_pic ||
+                  "https://images.ctfassets.net/23aumh6u8s0i/6pjUKboBuFLvCKkE3esaFA/5f2101d6d2add5c615db5e98a553fc44/nextjs.jpeg"
+                }
+                alt={conv.name}
+                width={50}
+                height={50}
                 style={{
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "10px 10px",
-                  borderBottom: "1px solid #ddd",
-                  backgroundColor: conv.isUnread ? "#f9f9f9" : "white", // Highlight unread messages
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  marginRight: "10px",
                 }}
-              >
+              />
 
-                {/* Profile Picture */}
-                
-                {/* <img
-                  src={conv.participant_details?.profile_pic}
-                  alt={conv.name}
+              {/* Conversation Details */}
+              <span style={{ flex: 1, marginLeft: "10px" }}>
+                <h2 style={{ margin: "0 0 5px", fontSize: "1rem", fontWeight: "600" }}>{conv.name}</h2>
+                <p
                   style={{
-                    borderRadius: "50%",
-                    width: "50px",
-                    height: "50px",
-                    objectFit: "cover",
-                    marginRight: "10px",
+                    margin: 0,
+                    fontSize: "0.9rem",
+                    color: "gray",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
                   }}
-                /> */}
-                <Image
-                  src={conv.participant_details?.profile_pic||"https://images.ctfassets.net/23aumh6u8s0i/6pjUKboBuFLvCKkE3esaFA/5f2101d6d2add5c615db5e98a553fc44/nextjs.jpeg"}
-                  alt={conv.name}
-                  width={50}
-                  height={50}
-                  style={{
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                    marginRight: "10px",
-                  }}
-                />
-                                
-                {/* Conversation Details */}
-                <span style={{ flex: 1, marginLeft: "10px" }}>
-                  <h2 style={{ margin: "0 0 5px", fontSize: "1rem", fontWeight: "600" }}>{conv.name}</h2>
-                  <p style={{ margin: 0, fontSize: "0.9rem", color: "gray", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                    {conv.last_message.slice(0,25).concat("...")}
-                  </p>
-                </span>
-
-                {/* Right-side Indicators */}
-                <span style={{ textAlign: "right" }}>
-                  <p style={{ margin: 0, fontSize: "0.8rem", color: "gray" }}>{formatLastMessageTime(Date.now() - Date.parse(conv.updated_time))}</p>
-                  {1?(
-                    <span
-                      style={{
-                        backgroundColor: "#007bff",
-                        color: "white",
-                        borderRadius: "50%",
-                        width: "20px",
-                        height: "20px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "0.8rem",
-                        marginTop: "5px",
-                      }}
-                    >
-                      {'2'}
-                    </span>
-                  ) : (
-                    <span
-                      style={{
-                        fontSize: "1.2rem",
-                        color: "#007bff",
-                        marginTop: "5px",
-                      }}
-                    >
-                      ✓✓ {/* Checkmark for read/delivered */}
-                    </span>
-                  )}
-                </span>
+                >
+                  {conv.last_message.slice(0, 25).concat("...")}
+                </p>
               </span>
 
+              {/* Right-side Indicators */}
+              <span style={{ textAlign: "right" }}>
+                <p style={{ margin: 0, fontSize: "0.8rem", color: "gray" }}>
+                  {formatLastMessageTime(Date.now() - Date.parse(conv.updated_time))}
+                </p>
+                {1 ? (
+                  <span
+                    style={{
+                      backgroundColor: "#007bff",
+                      color: "white",
+                      borderRadius: "50%",
+                      width: "20px",
+                      height: "20px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "0.8rem",
+                      marginTop: "5px",
+                    }}
+                  >
+                    {"2"}
+                  </span>
+                ) : (
+                  <span
+                    style={{
+                      fontSize: "1.2rem",
+                      color: "#007bff",
+                      marginTop: "5px",
+                    }}
+                  >
+                    ✓✓ {/* Checkmark for read/delivered */}
+                  </span>
+                )}
+              </span>
+            </span>
           ))}
-        </span>
-      )}
+    </span>
+  )}
+{/* </span> */}
 
 
 
