@@ -1,7 +1,8 @@
 import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
-  const ACCESS_TOKEN = req.cookies.get('pageAccessToken')?.value;
+  const url = new URL(req.url);
+  const ACCESS_TOKEN = url.searchParams.get("accessToken")
   const INSTAGRAM_USERID = process.env.NEXT_PUBLIC_INSTAGRAM_USERID;
 
   try {
