@@ -6,7 +6,7 @@ import ImageModal from '@/utils/imagePreview';
 import { determineFileType, parseWebhookPayload, isLink, getImageUrl, sendText, sendImage, sendVideo} from '@/utils/functions';
 import { Conversation, Message } from '@/types/interfaces';
 
-const socket = io('https://j7f0x0n5-3001.asse.devtunnels.ms/'); 
+const socket = io('http://localhost:3001/'); 
 
 interface InboxProps {
   pageAccessToken: string ;

@@ -8,7 +8,7 @@ import "./Automation.css";
 import io from "socket.io-client";
 import { parseWebhookPayload } from "@/app/api/webhook/route";
 
-const socket = io('https://j7f0x0n5-3001.asse.devtunnels.ms/'); 
+const socket = io('http://localhost:3001/'); 
 interface NotificationData {
   noti_id: string;
   notification_type: string;
