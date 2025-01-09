@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
     );
   }
 }
-
+//hhh
 // POST request: Save or update automation settings
 export async function POST(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });

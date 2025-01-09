@@ -14,11 +14,9 @@ const socket = io('https://j7f0x0n5-3001.asse.devtunnels.ms/');
 const Messages = () => {
   const [selectedConversation, setSelectedConversation] = useState<Conversation>();
   const [selectedFilter, setSelectedFilter] = useState("All");
-  // const [showRightDiv, setShowRightDiv] = useState(false);
   const [pageAccessToken, setPageAccessToken] = useState<string>();
   const [isMobile, setIsMobile] = useState(false);
   const [currentView, setCurrentView] = useState("conversation"); // "conversation", "inbox", or "profile"
-  // const username = process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME;
   const [loading, setLoading] = useState<boolean>(true); // Track loading state
   const queryClient = useQueryClient();
 
@@ -29,10 +27,7 @@ const Messages = () => {
     const response = await fetch(`/api/conversations?accessToken=${accessToken}`, {
       method: 'GET',
     });
-    console.log("response ==> ", response);
-
     if (!response.ok) {
-      console.log("response ok ==> ", response);
       throw new Error('Failed to fetch conversation list');
     }
     setLoading(false);
@@ -93,13 +88,11 @@ const Messages = () => {
   
       if (!incomingMessage.is_echo) {
         const senderId = incomingMessage?.from?.id;
-  
-        // // Update messages cache for the conversation
+
         queryClient.setQueryData(['conversations', pageAccessToken, senderId], (oldMessages?: Message[]) => {
           return oldMessages ? [incomingMessage, ...oldMessages] : [incomingMessage];
         });
   
-        // Update conversation list cache
         queryClient.setQueryData(['conversationList', pageAccessToken], (oldConversations?: Conversation[]) => {
           if (!oldConversations) return [];
   
@@ -150,6 +143,92 @@ return {
             borderRight: isMobile ? "none" : "1px solid #ddd",
           }}
         >
+
+          {/* <h1>Conversations</h1> */}
+          <div
+      style={{
+        border: "1px solid #ccc",
+        borderRadius: "8px",
+        width: "100%",
+        maxWidth: "800px",
+        margin: "20px auto",
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
+      {/* Header */}
+      <div
+        style={{
+          backgroundColor: "#f5f5f5",
+          padding: "10px",
+          borderBottom: "1px solid #ccc",
+          fontWeight: "bold",
+          textAlign: "center",
+        }}
+      >
+        Conversations
+      </div>
+
+      {/* Search and Filter Section */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "10px",
+        }}
+      >
+        {/* Search Input */}
+        <div style={{ flex: 1 }}>
+          <label
+            style={{
+              fontSize: "14px",
+              fontWeight: "bold",
+              marginRight: "10px",
+            }}
+          >
+            Search:
+          </label>
+          <input
+            type="text"
+            placeholder="Search chats..."
+            style={{
+              width: "60%",
+              padding: "5px",
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+            }}
+          />
+          <button
+            style={{
+              marginLeft: "10px",
+              padding: "5px 10px",
+              border: "none",
+              backgroundColor: "#007BFF",
+              color: "white",
+              borderRadius: "4px",
+              cursor: "pointer",
+            }}
+          >
+            🔍
+          </button>
+        </div>
+
+        {/* Filter Button */}
+        <button
+          style={{
+            padding: "5px 10px",
+            border: "none",
+            backgroundColor: "#007BFF",
+            color: "white",
+            borderRadius: "4px",
+            cursor: "pointer",
+            marginLeft: "10px",
+          }}
+        >
+          Filters by Agent
+        </button>
+      </div>
+    </div>
           {/* <h1>Conversations</h1> */}
           {!filteredConversations?
           Array.from({ length: 5 }).map((_, index) => (
