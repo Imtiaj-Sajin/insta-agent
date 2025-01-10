@@ -1,6 +1,6 @@
 const pool  = require('./dbc.js'); // Adjust the path to your connection file
-//const fetch = require('node-fetch');
 const { randomInt } = require('crypto');
+require('dotenv').config();
 
 // Constants for delay
 const MIN_DELAY = 20000; // 20 seconds
@@ -98,7 +98,7 @@ async function fetchLatestComment() {
 
 async function callMatchAutomationInstance(media_id, comment_text, comment_id, user_id) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/matchAutomationInstance`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}api/matchAutomationInstance`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       // body: JSON.stringify({ media_id, comment_text }),
