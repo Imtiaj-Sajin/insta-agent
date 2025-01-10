@@ -44,6 +44,8 @@ const ProfileHoverCard = ({ token }: { token: any }) => {
           }} 
         />*/}
           <Image
+          width={30}
+          height={30}
           src={token.picture?token.picture:"https://fakeimg.pl/300/"}
           alt="Profile"
           style={{
@@ -87,6 +89,8 @@ const ProfileHoverCard = ({ token }: { token: any }) => {
               }}
             /> */}
             <Image
+            width={40}
+            height={40}
               src={token.picture?token.picture:"https://fakeimg.pl/300/"}
               alt="Profile"
               style={{

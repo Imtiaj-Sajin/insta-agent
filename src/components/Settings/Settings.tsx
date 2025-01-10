@@ -194,6 +194,7 @@ const Settings = () => {
               <input type="password" placeholder="New Password" className="input" />
             </div>
             <button className="save-button">Save Changes</button>
+            
           </div>
         );
         case "automation":

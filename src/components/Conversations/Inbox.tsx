@@ -288,6 +288,8 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />               */}
               <Image
+              width={50}
+              height={50}
               src={attachment.previewUrl}
               alt="Preview"
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}

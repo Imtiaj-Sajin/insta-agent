@@ -273,8 +273,7 @@ const TermsOfService = () => {
           <p>For inquiries, support, or to report violations, please reach out via the following channels:</p>
           <ul>
             <li>Email: <a href="mailto:support@commentzap.com">support@commentzap.com</a></li>
-            <li>Address: [Insert Business Address]</li>
-            <li>Website: [Insert Website URL]</li>
+            <li>Website: <a href="https://commentzap.com/">https://commentzap.com/</a></li>
           </ul>
         </section>
 
