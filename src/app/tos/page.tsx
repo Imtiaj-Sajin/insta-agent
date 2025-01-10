@@ -19,16 +19,58 @@ const TermsOfService = () => {
 
   return (
     <div className={styles.container} style={theme as React.CSSProperties}>
+     
       <Head>
         <title>Terms of Service - Commentzap</title>
         <meta name="description" content="Detailed Terms of Service for Commentzap, the Instagram automation platform tailored for efficiency and compliance with Meta's guidelines." />
         <meta name="keywords" content="Terms of Service, Instagram Automation, Commentzap, Meta APIs, User Agreement" />
+        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "TermsofService",
+              "url": "https://www.commentzap.com/tos",
+              "name": "Terms of Service for Commentzap",
+              "description": "Detailed information on how Commentzap collects, uses, and protects your data.",
+            }),
+          }}
+        />
       </Head>
 
+      {/* Skip Navigation Link for Accessibility */}
+      <a href="#mainContent" className={styles.skipLink}>Skip to main content</a>
+
       <header className={styles.header}>
-        <h1>Terms of Service for Commentzap</h1>
-        <p className={styles.effectiveDate}>Effective Date: January 1, 2024</p>
+      <h1>Terms of Service for Commentzap</h1>
+      <p className={styles.effectiveDate}>Effective Date: December 30, 2024</p>
       </header>
+
+      <nav className={styles.nav} aria-label="Terms of Service Navigation">
+  <ul>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#scope-of-services">Scope of Services</a></li>
+    <li><a href="#description-of-services">Description of Services</a></li>
+    <li><a href="#account-registration">Account Registration and Security</a></li>
+    <li><a href="#user-conduct">User Conduct and Responsibilities</a></li>
+    <li><a href="#automation-policies">Automation Policies</a></li>
+    <li><a href="#notifications">Notification and Communication Policies</a></li>
+    <li><a href="#not-allowed-uses">Not Allowed Uses</a></li>
+    <li><a href="#user-responsibilities">User Responsibilities</a></li>
+    <li><a href="#data">Data Collection and Privacy</a></li>
+    <li><a href="#authorization">Authorization and Permissions</a></li>
+    <li><a href="#compliance">Compliance with Meta Developer Policies</a></li>
+    <li><a href="#ip">Intellectual Property</a></li>
+    <li><a href="#liability">Limitations of Liability</a></li>
+    <li><a href="#termination">Account Termination</a></li>
+    <li><a href="#law">Governing Law and Dispute Resolution</a></li>
+    <li><a href="#changes">Changes to These Terms</a></li>
+    <li><a href="#contact">Contact Information</a></li>
+  </ul>
+</nav>
+
+
 
       <main className={styles.mainContent}>
         <section id="introduction" className={styles.section}>
