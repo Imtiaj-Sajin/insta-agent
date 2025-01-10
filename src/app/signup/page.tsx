@@ -95,7 +95,14 @@ const SignUpPage = () => {
     <div className={styles.container}>
       <div className={styles.left}>
       {/* <img src="/Social tree-cuate.png" style={{ width: "60%" }} /> */}
-      <Image src="/Social tree-cuate.png" style={{ width: "60%" }} alt={""} />
+      <Image width={500} height={500} src="/Social tree-cuate.png" 
+            style={{ width: "60%",
+                    height: 'auto',      
+                    maxWidth: "90%",
+                    maxHeight: "90%",}}  
+            alt={""} layout="intrinsic"
+      />
+      
       <h1>Create Your Account</h1>
         <p>Join us today to simplify and optimize your social automation!</p>
       </div>
