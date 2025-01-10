@@ -8,7 +8,7 @@ import "./Automation.css";
 import io from "socket.io-client";
 import { parseWebhookPayload } from "@/app/api/webhook/route";
 
-const socket = io('http://localhost:3001/'); 
+const socket = io('http://commentzap.com:3001/'); 
 interface NotificationData {
   noti_id: string;
   notification_type: string;

@@ -10,7 +10,7 @@ import { formatLastMessageTime, parseWebhookPayload } from '@/utils/functions';
 import { Conversation, Message } from '@/types/interfaces';
 import Image from 'next/image';
 import { io } from 'socket.io-client';
-const socket = io('http://localhost:3001/'); 
+const socket = io('http://commentzap.com:3001/'); 
 
 const Messages = () => {
   const [selectedConversation, setSelectedConversation] = useState<Conversation>();
