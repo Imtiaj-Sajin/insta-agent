@@ -6,7 +6,7 @@ import ImageModal from '@/utils/imagePreview';
 import { determineFileType, parseWebhookPayload, isLink, getImageUrl, sendText, sendImage, sendVideo} from '@/utils/functions';
 import { Conversation, Message } from '@/types/interfaces';
 import Image from 'next/image';
-const socket = io('http://localhost:3001/'); 
+const socket = io('https://commentzap.com:3001/'); 
 
 interface InboxProps {
   pageAccessToken: string ;
