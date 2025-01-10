@@ -347,27 +347,26 @@ const dbDMs = async (action: string) => {
       >
         {isEditMode ? "✔" : "🖍"}
       </button>
+      <button 
+  // onClick={}
+      style={{
+        position: "fixed",
+        top: "50%",  // vertically center the button
+        left: "50%",  // horizontally center the button
+        transform: "translate(-50%, -50%)",  // fine-tune centering by adjusting the button's position
+        background: 'tomato',  // Set the button color to tomato (or 'red' if preferred)
+        color: 'white',
+        border: 'none',
+        borderRadius: '50%',
+        width: 50,
+        height: 50,
+        cursor: 'pointer',
+        zIndex: 100,
+      }}
+    >
+      <MdDelete />
+    </button>
 
-      <button
-              // onClick={}
-              style={{
-                // position: 'absolute',
-                top: 220,
-                right: 30,
-                background: 'var(--navbar-active-bg)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '50%',
-                width: 50,
-                height: 50,
-                cursor: 'pointer',
-                position:"fixed",
-                zIndex:"100",
-
-              }}
-            >
-             <MdDelete/>
-            </button>
 
 {/* save button */}
       <button
