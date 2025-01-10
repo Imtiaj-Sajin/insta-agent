@@ -162,7 +162,7 @@ return {
             padding: "8px",
             border: "1px solid #ddd",
             borderRadius: "4px",
-            fontSize: "1rem",
+            // fontSize: "1rem",
           }}
           onChange={(e) => handleSearch(e.target.value)} 
         />
@@ -172,10 +172,13 @@ return {
           value={selectedFilter}
           onChange={(e) => setSelectedFilter(e.target.value)} 
           style={{
+            maxWidth:'30%',
             padding: "8px",
             border: "1px solid #ddd",
             borderRadius: "4px",
-            fontSize: "1rem",
+            // background:'#ec4b00de',
+            // color:'#fff',
+            // fontSize: "1rem",
           }}
         >
           <option value="All">All</option>
