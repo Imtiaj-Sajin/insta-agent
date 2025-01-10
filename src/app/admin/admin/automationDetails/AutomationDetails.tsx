@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from "react"; // Add useState
   import * as d3 from "d3";
   import { drawConnections } from "./drawConnections";
-
+  import { MdDelete } from "react-icons/md";
 
   import "./AutomationDetails.css";
 
@@ -348,6 +348,27 @@ const dbDMs = async (action: string) => {
         {isEditMode ? "✔" : "🖍"}
       </button>
 
+      <button
+              // onClick={}
+              style={{
+                // position: 'absolute',
+                top: 220,
+                right: 30,
+                background: 'var(--navbar-active-bg)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '50%',
+                width: 50,
+                height: 50,
+                cursor: 'pointer',
+                position:"fixed",
+                zIndex:"100",
+
+              }}
+            >
+             <MdDelete/>
+            </button>
+
 {/* save button */}
       <button
         onClick={()=>{
@@ -434,6 +455,7 @@ const dbDMs = async (action: string) => {
       >
         ▶
       </button> 
+
         <svg
           ref={svgRef}
           className="connection-layer"
