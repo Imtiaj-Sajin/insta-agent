@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
           }),
         });
         
-        await fetch("http://ss.com:3001/api/sendMessage", {
+        await fetch("http://146.190.92.168:3001/api/sendMessage", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: body }),
@@ -118,7 +118,7 @@ export async function POST(req: NextRequest) {
       // }
       // else if(parsedData.commentId){return new Response('Comment replied', { status: 200 });}
       else{
-        await fetch("http://xx.com:3001/api/sendMessage", {
+        await fetch("http://146.190.92.168:3001/api/sendMessage", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: body }),
