@@ -10,7 +10,7 @@ import { formatLastMessageTime, parseWebhookPayload } from '@/utils/functions';
 import { Conversation, Message } from '@/types/interfaces';
 import Image from 'next/image';
 import { io } from 'socket.io-client';
-const socket = io('http://146.190.92.168:3001/'); 
+const socket = io('https://phpstack-1385749-5130276.cloudwaysapps.com/'); 
 
 const Messages = () => {
   const [selectedConversation, setSelectedConversation] = useState<Conversation>();

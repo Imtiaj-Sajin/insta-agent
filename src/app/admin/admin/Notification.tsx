@@ -8,7 +8,7 @@ import "./Automation.css";
 import io from "socket.io-client";
 import { parseWebhookPayload } from "@/app/api/webhook/route";
 
-const socket = io('http://146.190.92.168:3001/'); 
+const socket = io('https://phpstack-1385749-5130276.cloudwaysapps.com/'); 
 interface NotificationData {
   noti_id: string;
   notification_type: string;

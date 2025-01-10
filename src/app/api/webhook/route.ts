@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
           }),
         });
         
-        await fetch("http://146.190.92.168:3001/api/sendMessage", {
+        await fetch("https://phpstack-1385749-5130276.cloudwaysapps.com/api/sendMessage", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: body }),
@@ -118,7 +118,7 @@ export async function POST(req: NextRequest) {
       // }
       // else if(parsedData.commentId){return new Response('Comment replied', { status: 200 });}
       else{
-        await fetch("http://146.190.92.168:3001/api/sendMessage", {
+        await fetch("https://phpstack-1385749-5130276.cloudwaysapps.com/api/sendMessage", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: body }),
