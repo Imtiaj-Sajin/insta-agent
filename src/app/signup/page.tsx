@@ -4,6 +4,7 @@ import Link from "next/link";
 import styles from "./signup.module.css";
 // import { useRouter } from "next/navigation";
 import { redirect } from "next/navigation";
+import Image from "next/image";
 const SignUpPage = () => {
   const [step, setStep] = useState(1); // 1: Email, 2: OTP, 3: Complete Signup
   const [email, setEmail] = useState("");
@@ -93,8 +94,9 @@ const SignUpPage = () => {
   return (
     <div className={styles.container}>
       <div className={styles.left}>
-        <img src="/Social tree-cuate.png" style={{ width: "60%" }} />
-        <h1>Create Your Account</h1>
+      {/* <img src="/Social tree-cuate.png" style={{ width: "60%" }} /> */}
+      <Image src="/Social tree-cuate.png" style={{ width: "60%" }} alt={""} />
+      <h1>Create Your Account</h1>
         <p>Join us today to simplify and optimize your social automation!</p>
       </div>
 

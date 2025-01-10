@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Image from 'next/image';
 const ProfileCard = ({ profileData }: { profileData: any }) => {
   return (
     <span
@@ -28,7 +28,17 @@ const ProfileCard = ({ profileData }: { profileData: any }) => {
           display: 'inline-block',
         }}
       >
-        <img
+        {/* <img
+          src={profileData?.profile_pic || 'https://fakeimg.pl/300'}
+          alt={`${profileData.name}'s Profile`}
+          style={{
+            borderRadius: '50%',
+            width: '100px',
+            height: '100px',
+            objectFit: 'cover',
+          }}
+        /> */}
+        <Image
           src={profileData?.profile_pic || 'https://fakeimg.pl/300'}
           alt={`${profileData.name}'s Profile`}
           style={{
