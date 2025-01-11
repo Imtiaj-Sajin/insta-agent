@@ -36,7 +36,7 @@ const AutomationSlider: React.FC<AutomationSliderProps> = ({
 
     if (delayType === "message") {
       setLocalMessageDelay((prev) => {
-        let newDelay = { ...prev };
+        const newDelay = { ...prev };
         if (type === "min" && value < prev.max) {
           newDelay.min = value;
         }
@@ -50,7 +50,7 @@ const AutomationSlider: React.FC<AutomationSliderProps> = ({
       });
     } else if (delayType === "comment") {
       setLocalCommentDelay((prev) => {
-        let newDelay = { ...prev };
+        const newDelay = { ...prev };
         if (type === "min" && value < prev.max) {
           newDelay.min = value;
         }
