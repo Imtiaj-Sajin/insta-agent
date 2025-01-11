@@ -163,7 +163,7 @@ function verifySignature(payload: string, signature: string): boolean {
 //     return {};
 //   }
 // }
-export function parseWebhookPayload(payload: any) {
+function parseWebhookPayload(payload: any) {
   try {
     const entry = payload.entry?.[0];
     const changes = entry?.changes?.[0];
@@ -186,7 +186,7 @@ export function parseWebhookPayload(payload: any) {
   }
 }
 
-export async function replyToComment(commentId:any, replyMessage:string) {
+ async function replyToComment(commentId:any, replyMessage:string) {
   try {
     if (!PAGE_ACCESS_TOKEN) {
       console.error("Access token is missing from cookies");
@@ -218,7 +218,7 @@ export async function replyToComment(commentId:any, replyMessage:string) {
   }
 }
 
-export async function sendTextMessage(recipientId: string, newMessage: string) {
+ async function sendTextMessage(recipientId: string, newMessage: string) {
   if (!PAGE_ACCESS_TOKEN) {
     console.error('Access token is missing.');
     return;
