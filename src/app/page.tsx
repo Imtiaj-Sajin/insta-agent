@@ -38,7 +38,7 @@ const HomePage = async() => {
 
         <img src="/rb_4898.png" style={{width:"60%"}}/>
         <h1>Where would you like to start?</h1>
-        <p>Don’t worry, you can connect other channels later.</p>
+        <p>Don&apos;t worry, you can connect other channels later.</p>
         <Link href="/forgot-pass">
             Forgot Password?
           </Link> 

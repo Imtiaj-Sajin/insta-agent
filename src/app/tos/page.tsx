@@ -22,7 +22,7 @@ const TermsOfService = () => {
      
       <Head>
         <title>Terms of Service - Commentzap</title>
-        <meta name="description" content="Detailed Terms of Service for Commentzap, the Instagram automation platform tailored for efficiency and compliance with Meta's guidelines." />
+        <meta name="description" content="Detailed Terms of Service for Commentzap, the Instagram automation platform tailored for efficiency and compliance with Meta&apos;s guidelines." />
         <meta name="keywords" content="Terms of Service, Instagram Automation, Commentzap, Meta APIs, User Agreement" />
         <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
         <script
@@ -103,7 +103,7 @@ const TermsOfService = () => {
     <li><strong>Automation Workflows:</strong> Set up custom workflows based on specific triggers to automatically engage with followers, potential customers, or users based on predefined rules.</li>
     <li><strong>Meta API Integration:</strong> Commentzap integrates with Meta’s official APIs, ensuring compliance with their platform policies while providing seamless automation functionalities.</li>
   </ul>
-  <p>These services are intended to help you save time, increase engagement, and enhance customer service efficiency on Instagram. By using the service, you acknowledge that automation must always comply with Meta's platform policies and community standards.</p>
+  <p>These services are intended to help you save time, increase engagement, and enhance customer service efficiency on Instagram. By using the service, you acknowledge that automation must always comply with Meta&apos;s platform policies and community standards.</p>
 </section>
 
 <section id="account-registration" className={styles.section}>
@@ -111,7 +111,7 @@ const TermsOfService = () => {
   <p>To use Commentzap, you must create an account by providing accurate and complete information during the registration process. You will need to:</p>
   <ul>
     <li><strong>Provide your email address:</strong> Use a valid email address and choose a secure password.</li>
-    <li><strong>Connect with Meta/Instagram:</strong> Authenticate your account by logging in through Meta’s OAuth authentication (Meta Login) to enable Commentzap’s Instagram-related features. This allows Commentzap to interact with your Instagram account on your behalf in compliance with Meta’s API guidelines.</li>
+    <li><strong>Connect with Meta/Instagram:</strong> Authenticate your account by logging in through Meta’s OAuth authentication (Meta Login) to enable Commentzap&apos;s Instagram-related features. This allows Commentzap to interact with your Instagram account on your behalf in compliance with Meta’s API guidelines.</li>
     <li><strong>Maintain account security:</strong> You are responsible for maintaining the security of your account credentials. If your credentials are compromised, you must notify us immediately.</li>
     <li><strong>Use of Personal Data:</strong> By registering, you consent to our collection and use of personal data as described in our Privacy Policy. This includes information provided during registration, authentication, and usage data generated through interactions with the platform.</li>
   </ul>
@@ -139,7 +139,7 @@ const TermsOfService = () => {
   <p>Commentzap provides powerful automation features that allow you to create automated workflows for Instagram interactions. To ensure responsible usage and compliance with Meta’s guidelines, you agree to:</p>
   <ul>
     <li><strong>Automation Compliance:</strong> Ensure that all automated actions (e.g., comment replies, direct messages) align with <a href="https://developers.facebook.com/policy/">Meta’s Platform Policies</a>. Avoid using automation in ways that could be seen as spammy, deceptive, or violating <a href="https://www.facebook.com/communitystandards/">Instagram’s Community Standards</a>.</li>
-    <li><strong>Keyword Triggered Automation:</strong> Define appropriate keywords and triggers for automated interactions that respect the Instagram user experience and adhere to Meta's guidelines.</li>
+    <li><strong>Keyword Triggered Automation:</strong> Define appropriate keywords and triggers for automated interactions that respect the Instagram user experience and adhere to Meta&apos;s guidelines.</li>
     <li><strong>Regular Monitoring:</strong> Regularly review your automation settings to ensure compliance with the latest Meta policies and guidelines.</li>
     <li><strong>Non-Deceptive Practices:</strong> Avoid using automation for practices that may deceive or mislead Instagram users, such as pretending to be a human account, spamming, or manipulating engagement.</li>
     <li><strong>Automation Limits:</strong> Do not set up excessive or intrusive automated interactions that could harm the platform’s integrity. Any perceived violation of Meta’s usage limits will be subject to review and termination.</li>
@@ -160,7 +160,7 @@ const TermsOfService = () => {
 
       <section id="not-allowed-uses" className={styles.section}>
         <h2>Not Allowed Uses</h2>
-        <p>While CommentZap provides extensive tools to enhance user engagement, the following activities are prohibited as they violate <a href="https://help.instagram.com/477434105621119">Instagram's Community Guidelines</a> and 
+        <p>While CommentZap provides extensive tools to enhance user engagement, the following activities are prohibited as they violate <a href="https://help.instagram.com/477434105621119">Instagram&apos;s Community Guidelines</a> and 
         <a href="https://help.instagram.com/581066165581870/"> Instagram Terms</a>:</p>
         <ul>
           <li><strong>Spamming:</strong> Sending repetitive, unsolicited messages or comments, creating an excessive volume of interactions that overwhelm other users.</li>
@@ -239,7 +239,7 @@ const TermsOfService = () => {
 
         <section id="liability" className={styles.section}>
           <h2>Limitations of Liability</h2>
-          <p>CommentZap is provided on an "as is" and "as available" basis. While we strive for excellence, certain limitations apply:</p>
+          <p>CommentZap is provided on an &quot;as is&quot; and &quot;as available&quot; basis. While we strive for excellence, certain limitations apply:</p>
           <ul>
             <li>We are not liable for actions or restrictions imposed by Meta, including account bans or suspensions.</li>
             <li>Losses resulting from misuse of the platform or unauthorized account access fall outside our liability scope.</li>
