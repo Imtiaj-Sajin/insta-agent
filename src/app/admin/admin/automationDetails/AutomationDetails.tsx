@@ -322,8 +322,44 @@ const dbDMs = async (action: string) => {
       return prev.filter((_, i) => i !== index);
     });
   };
-    
-
+  
+  const deleteAutomation = async (id: string) => {
+    const userConfirmed = window.confirm(
+      "Are you sure you want to delete this automation? This action cannot be undone."
+    );
+  
+    if (!userConfirmed) {
+      return; // Exit if the user cancels
+    }
+  
+    try {
+      const response = await fetch('/api/deleteAutomation', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ auto_id: id }),
+      });
+  
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Automation deleted successfully:", result.message);
+        alert("Automation deleted successfully!");
+  
+        // Optionally update UI to reflect deletion
+        // For example, you can filter out the deleted automation from the current state
+      } else {
+        const errorResult = await response.json();
+        console.error("Error deleting automation:", errorResult.error);
+        alert(errorResult.error || "Failed to delete automation.");
+      }
+    } catch (error) {
+      console.error("Fetch error during automation deletion:", error);
+      alert("An error occurred while trying to delete the automation. Please try again.");
+    }
+  };
+  
+  
     return (
       <div ref={containerRef} className="automation-details-container">
         {/* SVG for connections */}
@@ -348,9 +384,12 @@ const dbDMs = async (action: string) => {
         {isEditMode ? "✔" : "🖍"}
       </button>
 
-{/* delete button */}
+      {/* delete button */}
       <button
+        onClick={()=>deleteAutomation(auto_id)}
+
         style={{
+          
           top: 220,
           right: 30,
           background: '#ff5555',
