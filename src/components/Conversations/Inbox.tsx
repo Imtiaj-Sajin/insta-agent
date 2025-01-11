@@ -6,7 +6,7 @@ import ImageModal from '@/utils/imagePreview';
 import { determineFileType, parseWebhookPayload, isLink, getImageUrl, sendText, sendImage, sendVideo} from '@/utils/functions';
 import { Conversation, Message } from '@/types/interfaces';
 import Image from 'next/image';
-const socket = io('http://146.190.92.168:3001/'); 
+const socket = io('https://phpstack-1385749-5130276.cloudwaysapps.com/'); 
 
 interface InboxProps {
   pageAccessToken: string ;
