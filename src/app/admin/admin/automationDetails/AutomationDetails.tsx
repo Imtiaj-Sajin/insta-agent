@@ -348,11 +348,12 @@ const dbDMs = async (action: string) => {
         {isEditMode ? "✔" : "🖍"}
       </button>
 
+{/* delete button */}
       <button
         style={{
           top: 220,
           right: 30,
-          background: 'tomato',
+          background: '#ff5555',
           color: 'white',
           border: 'none',
           borderRadius: '50%',
@@ -361,14 +362,15 @@ const dbDMs = async (action: string) => {
           cursor: 'pointer',
           position: 'fixed',
           zIndex: 100,
-          display: 'flex',            // Center the icon horizontally and vertically
+          display: 'flex',            
           alignItems: 'center',
           justifyContent: 'center'
         }}
       >
-<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="48" height="48" viewBox="0,0,256,256">
-<g fill="#ffffff" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" ><g transform="scale(5.33333,5.33333)"><path d="M20.5,4c-0.49034,-0.00628 -0.95279,0.22749 -1.23848,0.62606c-0.28569,0.39856 -0.35854,0.9116 -0.19511,1.37394h-4.42578c-1.844,0 -3.55417,0.91622 -4.57617,2.44922l-2.36719,3.55078h-0.19727c-0.54095,-0.00765 -1.04412,0.27656 -1.31683,0.74381c-0.27271,0.46725 -0.27271,1.04514 0,1.51238c0.27271,0.46725 0.77588,0.75146 1.31683,0.74381h33c0.54095,0.00765 1.04412,-0.27656 1.31683,-0.74381c0.27271,-0.46725 0.27271,-1.04514 0,-1.51238c-0.27271,-0.46725 -0.77588,-0.75146 -1.31683,-0.74381h-0.19727l-2.36719,-3.55078c-1.022,-1.533 -2.73317,-2.44922 -4.57617,-2.44922h-4.42578c0.16343,-0.46234 0.09058,-0.97538 -0.19511,-1.37394c-0.28569,-0.39856 -0.74814,-0.63234 -1.23848,-0.62606zM8.97266,18l2.15234,20.08594c0.3,2.802 2.65075,4.91406 5.46875,4.91406h14.8125c2.817,0 5.16775,-2.11206 5.46875,-4.91406l2.15234,-20.08594z"></path></g></g>
-</svg>
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 448 512">
+        <path fill="#ffffff" d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3zM32 128l384 0 0 320c0 35.3-28.7 64-64 64L96 512c-35.3 0-64-28.7-64-64l0-320zm96 64c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16z"/></svg>
+
+
       </button>
 
 
@@ -444,7 +446,7 @@ const dbDMs = async (action: string) => {
         }}  
         style={{
           top: 160,  
-                    right: 30,
+          right: 30,
           background: 'var(--secondary-color)',
           color: 'white',
           border: 'none',
@@ -452,12 +454,17 @@ const dbDMs = async (action: string) => {
           width: 50,
           height: 50,
           cursor: 'pointer',
-          position: "fixed",
-          zIndex:"100",
+          position: 'fixed',
+          zIndex: 100,
+          display: 'flex',            
+          alignItems: 'center',
+          justifyContent: 'center'
         }}
       >
-        ▶
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 448 512"> <path fill="#ffffff" d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-242.7c0-17-6.7-33.3-18.7-45.3L352 50.7C340 38.7 323.7 32 306.7 32L64 32zm0 96c0-17.7 14.3-32 32-32l192 0c17.7 0 32 14.3 32 32l0 64c0 17.7-14.3 32-32 32L96 224c-17.7 0-32-14.3-32-32l0-64zM224 288a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
       </button> 
+      
+
 
         <svg
           ref={svgRef}
