@@ -145,7 +145,7 @@ const PrivacyPolicy = () => {
               <strong>Service Providers:</strong> We engage trusted third-party vendors for services like hosting, analytics, payment processing, and technical support. These providers are contractually obligated to protect your data.
             </li>
             <li>
-              <strong>Meta Platforms (Instagram):</strong> To provide Instagram automation features, certain data is transmitted to Meta’s APIs. Meta’s use of your data is governed by Meta's own privacy policy and platform terms. We do not share your data with Meta for advertising purposes.
+              <strong>Meta Platforms (Instagram):</strong> To provide Instagram automation features, certain data is transmitted to Meta’s APIs. Meta’s use of your data is governed by Meta&apos;s own privacy policy and platform terms. We do not share your data with Meta for advertising purposes.
             </li>
             <li>
               <strong>Legal Obligations:</strong> We may disclose your information if required by law, such as to comply with a subpoena, legal process, or government request.
@@ -258,7 +258,7 @@ const PrivacyPolicy = () => {
         <section id="changes" className={styles.section}>
           <h2>12. Changes to This Policy</h2>
           <p>
-            We may update this Privacy Policy from time to time to reflect changes in our practices or legal requirements. We will notify you of any significant changes by posting the new Privacy Policy on this page and updating the "Effective Date" at the top.
+            We may update this Privacy Policy from time to time to reflect changes in our practices or legal requirements. We will notify you of any significant changes by posting the new Privacy Policy on this page and updating the &quot;Effective Date&quot; at the top.
           </p>
           <p>
             We encourage you to review this Privacy Policy periodically to stay informed about how we are protecting your information.
