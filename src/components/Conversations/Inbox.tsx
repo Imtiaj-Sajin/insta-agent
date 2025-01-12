@@ -15,6 +15,7 @@ interface InboxProps {
 
 const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) => {
   const [newMessage, setNewMessage] = useState('');
+  const [newMessageImageUrl, setNewMessageImageUrl] = useState('');
   const [attachments, setAttachments] = useState<{ file: File; previewUrl: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -158,7 +159,20 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
         message: newMessage,
         created_time: new Date().toISOString(),
         id: Math.random().toString(36).substr(2, 9),
-        attachments: [],
+        attachments: fileType === "image" 
+        ? [
+            {
+              data: [
+                {
+                  type: "image",
+                  image_data: {
+                    url: newMessageImageUrl, // Use the provided image URL
+                  },
+                },
+              ],
+            },
+          ]
+        : [],
       };
   
       queryClient.setQueryData(['messages', pageAccessToken, recipientId], (oldMessages?: Message[]) => {
@@ -178,6 +192,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
       } else if (fileType === 'image') {
         try {
           const attachmentUrl = await getImageUrl(attachment);
+          setNewMessageImageUrl(attachmentUrl);
           await sendImage(attachmentUrl, recipientId, pageAccessToken);
           console.log('Image sent successfully');
         } catch (error) {
