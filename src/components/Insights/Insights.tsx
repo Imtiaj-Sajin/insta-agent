@@ -2,24 +2,62 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import * as echarts from "echarts";
-import insightsData from "./insightsData.json";
 import "./Insights.css";
+
+interface DailyPerformance {
+  date: string;
+  chatsHandled: number;
+  newConversations: number;
+  avgResponseTime: number;
+}
+
+interface Agent {
+  id: number;
+  name: string;
+  dailyPerformance: DailyPerformance[];
+  insights: {
+    totalChats: number;
+    totalNewConversations: number;
+    avgResponseTime: number;
+  };
+}
 
 const Insights = () => {
   const chartRef = useRef<HTMLDivElement>(null);
-  const [selectedAgent, setSelectedAgent] = useState(insightsData.agents[0]);
+  const [agents, setAgents] = useState<Agent[]>([]);
+  const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
+
+  const fetchAgentsData = async () => {
+    try {
+      const response = await fetch("/api/agents-performance");
+      if (!response.ok) {
+        throw new Error(`Failed to fetch: ${response.statusText}`);
+      }
+      const data = await response.json();
+      setAgents(data.agents);
+      setSelectedAgent(data.agents[0] || null); // Set the first agent as default
+    } catch (error) {
+      console.error("Error fetching agents data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAgentsData();
+  }, []);
 
   useEffect(() => {
     if (!chartRef.current || !selectedAgent) return;
 
     const chartInstance = echarts.init(chartRef.current);
 
-    const dailyMessages = selectedAgent.insights.dailyMessages;
+    // Prepare chart data
+    const dates = selectedAgent.dailyPerformance.map((item) => item.date);
+    const chatsHandled = selectedAgent.dailyPerformance.map((item) => item.chatsHandled);
 
     const option: echarts.EChartsOption = {
       xAxis: {
         type: "category",
-        data: dailyMessages.map((item) => item.date),
+        data: dates, // Use actual dates
         axisLine: {
           lineStyle: {
             color: "#dfe4ea",
@@ -27,11 +65,12 @@ const Insights = () => {
         },
         axisLabel: {
           fontSize: 12,
+          formatter: (value: string) => new Date(value).toLocaleDateString(), // Format dates
         },
       },
       yAxis: {
         type: "value",
-        name: "Messages",
+        name: "Chats Handled",
         axisLine: {
           show: false,
         },
@@ -66,8 +105,8 @@ const Insights = () => {
       },
       series: [
         {
-          name: "Messages Replied",
-          data: dailyMessages.map((item) => item.messagesReplied),
+          name: "Chats Handled",
+          data: chatsHandled, // Use chats handled data
           type: "bar",
           barWidth: "30%",
           itemStyle: {
@@ -82,12 +121,13 @@ const Insights = () => {
 
     chartInstance.setOption(option);
 
+    // Cleanup the chart instance on component unmount
     return () => chartInstance.dispose();
   }, [selectedAgent]);
 
   const handleAgentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const agent = insightsData.agents.find((a) => a.id === e.target.value);
-    setSelectedAgent(agent || insightsData.agents[0]);
+    const agent = agents.find((a) => a.id === parseInt(e.target.value));
+    setSelectedAgent(agent || null);
   };
 
   return (
@@ -95,47 +135,40 @@ const Insights = () => {
       {/* Header */}
       <div className="dashboard-header">
         <div className="agent-select-wrapper">
-          {/* <label htmlFor="agent-selector" className="agent-label">
-            Agent
-          </label> */}
           <select
             id="agent-selector"
             className="agent-selector"
             onChange={handleAgentChange}
           >
-            {insightsData.agents.map((agent) => (
+            {agents.map((agent) => (
               <option key={agent.id} value={agent.id}>
                 {agent.name}
               </option>
             ))}
           </select>
         </div>
-        <input
-          type="text"
-          placeholder="Search"
-          className="search-box"
-        />
+        <input type="text" placeholder="Search" className="search-box" />
       </div>
 
       {/* Insights Boxes */}
       <div className="insights-boxes">
         <div className="insight-box total-messages">
-          <h3>Total Messages Replied</h3>
-          <p>{selectedAgent.insights.monthlySummary.totalMessagesReplied}</p>
+          <h3>Total Chats</h3>
+          <p>{selectedAgent?.insights.totalChats || 0}</p>
         </div>
         <div className="insight-box new-conversations">
           <h3>New Conversations</h3>
-          <p>{selectedAgent.insights.monthlySummary.totalNewConversations}</p>
+          <p>{selectedAgent?.insights.totalNewConversations || 0}</p>
         </div>
         <div className="insight-box avg-response-time">
           <h3>Average Response Time</h3>
-          <p>{selectedAgent.insights.monthlySummary.totalFollowUps}s</p>
+          <p>{selectedAgent?.insights.avgResponseTime || 0}s</p>
         </div>
       </div>
 
       {/* Chart Section */}
       <div className="chart-wrapper">
-        <h3>Daily Messages Replied</h3>
+        <h3>Daily Performance</h3>
         <div ref={chartRef} className="chart"></div>
       </div>
     </div>
