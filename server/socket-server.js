@@ -1,7 +1,10 @@
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
-const backgroundTaskAutoDMCM = require( './autoDmComment.js');
+const cron = require("node-cron");
+
+const dailyPerformanceJob = require("./dailyPerformanceJob.js");
+const backgroundTaskAutoDMCM = require("./autoDmComment.js");
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -36,9 +39,23 @@ app.post("/api/sendMessage", (req, res) => {
 server.listen(3001, () => {
   console.log("Socket.IO server running on http://localhost:3001");
 
+  // Start background task (continuous loop)
   (async () => {
-    console.log('Starting the background task...');
+    console.log("Starting the background task...");
     await backgroundTaskAutoDMCM();
-  })().catch((error) => console.error('Background task error:', error));
-});
+  })().catch((error) => console.error("Background task error:", error));
 
+  console.log('test');
+  
+  // ----------------performance test---------
+  // Run dailyPerformanceJob every minute in parallel
+  setInterval(async () => {
+    try {
+      console.log("Running dailyPerformanceJob...");
+      await dailyPerformanceJob();
+      console.log("dailyPerformanceJob completed successfully.");
+    } catch (error) {
+      console.error("Error during dailyPerformanceJob:", error);
+    }
+  }, 60000); 
+});
