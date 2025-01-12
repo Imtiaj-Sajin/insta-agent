@@ -193,6 +193,7 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
         try {
           const attachmentUrl = await getImageUrl(attachment);
           setNewMessageImageUrl(attachmentUrl);
+          console.log("zzzzzzzzzzzzzzzzzzzzz: ", newMessageImageUrl)
           await sendImage(attachmentUrl, recipientId, pageAccessToken);
           console.log('Image sent successfully');
         } catch (error) {
@@ -268,9 +269,9 @@ const Inbox: React.FC<InboxProps> = ({ pageAccessToken, selectedConversation }) 
                     <a href={attachment.image_data?.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", color: "#007BFF" }}>📄 File</a>
                   ) : attachment.video_data ? (
                     <video controls src={attachment.video_data?.url} style={{ width: "100%", borderRadius: "8px" }} />
-                  ) : (
-                    <ImageModal imageUrl={attachment.image_data?.url || ""} />
-                  )}
+                  ) : (<><p>url- {newMessageImageUrl}</p>
+                    <ImageModal imageUrl={attachment.image_data?.url || newMessageImageUrl} />
+                  </>)}
                 </div>
               ))}
             </div>
