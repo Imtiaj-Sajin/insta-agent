@@ -89,12 +89,16 @@ export const authConfig: NextAuthOptions = {
             if (dbUser) {
               token.type = "moderator";
             } else {
-              return null; // If no user or admin found, return null
+              // return null; 
+              token.invalid = true; // Optional marker for invalid state
+              // If no user or admin found, return null
             }
           }
         } catch (error) {
           console.error("Error in JWT callback:", error);
-          return null; // Return null in case of error during JWT callback
+          // return null; // Return null in case of error during JWT callback
+          token.error = true; // Optional marker for error state
+
         }
       } else {
         if (user) {

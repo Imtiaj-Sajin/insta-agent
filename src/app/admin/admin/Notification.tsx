@@ -6,8 +6,7 @@ import "../../../styles/index.css";
 import "../../../styles/globals.css";
 import "./Automation.css";
 import io from "socket.io-client";
-import { parseWebhookPayload } from "@/app/api/webhook/route";
-
+import {parseWebhookPayloadNotifications} from '@/utils/functions'
 const socket = io('https://phpstack-1385749-5130276.cloudwaysapps.com/'); 
 interface NotificationData {
   noti_id: string;
@@ -56,7 +55,7 @@ const Notification: FC = () => {
 
   requestNotificationPermission();
     socket.on("receiveMessage", (data) => {
-        const parsedNotification = parseWebhookPayload(JSON.parse(data));
+        const parsedNotification = parseWebhookPayloadNotifications(JSON.parse(data));
   
         if (parsedNotification&&parsedNotification.commentId) {
           setNotifications((prevNotifications) => [

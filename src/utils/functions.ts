@@ -176,7 +176,28 @@ export const getImageUrl = async (imageFile: File) => {
   }
 };
 
+export function parseWebhookPayloadNotifications(payload: any) {
+  try {
+    const entry = payload.entry?.[0];
+    const changes = entry?.changes?.[0];
+    const value = changes?.value;
 
+    return {
+      commentId: value?.id,
+      postId: value?.media?.id,
+      text: value?.text,
+      username: value?.from?.username,
+      senderId: value?.from?.id,
+      parentCommentId: value?.parent_id,
+      mediaType: value?.media?.media_product_type,
+      pageId: entry?.id,
+      eventTime: payload?.entry?.[0]?.time,
+    };
+  } catch (error: any) {
+    console.error("Error parsing webhook payload:", error.message);
+    return {};
+  }
+}
 
 export const formatLastMessageTime = (ms: number) => {
   const seconds = Math.floor((ms / 1000) % 60);
